@@ -1,0 +1,75 @@
+GET http://localhost:3000/Producto
+
+
+####
+POST http://localhost:3000/registerUser
+Content-Type: application/json
+
+
+{
+  "Nombres": "NombreDePrueba",
+  "Apellidos": "ApellidoDePrueba",
+  "IdRol": 1,
+  "LoginUsuario": "omar",
+  "LoginClave": "12345"
+}
+
+###
+POST http://localhost:3000/Login
+Content-Type: application/json
+
+
+{
+ 
+  "user": "admin",
+  "password": "12345"
+
+
+}
+
+
+
+###
+DELETE http://localhost:3000/Categoria/1
+Content-Type: application/json
+
+
+###
+PUT  http://localhost:3000/Producto/1
+Content-Type: application/json
+
+{
+  "nombre": "s",
+  "descripcion":"hola",
+  "estado": "true",
+  "id_categoria":1
+}
+
+
+
+
+###
+GET http://localhost:3000/Marcas
+
+####
+POST http://localhost:3000/Tallas
+Content-Type: application/json
+
+{
+  "Nombre": "dfdfd",
+  "estado": "true"
+}
+
+###
+DELETE http://localhost:3000/tallas/3
+Content-Type: application/json
+
+
+###
+PUT  http://localhost:3000/tallas/6
+Content-Type: application/json
+
+{
+ "nombre": "hola",
+  "estado": "0"
+}
