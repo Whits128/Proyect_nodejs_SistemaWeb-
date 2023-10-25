@@ -1,4 +1,4 @@
-import { getConnection, querys, sql } from "../database";
+import { getConnection, querys, sql } from "../DataBase";
 
 export const GetCategorias = async (req, res) => {
   try {
@@ -6,7 +6,7 @@ export const GetCategorias = async (req, res) => {
     //const result = await pool.request().query(querys.getAllProducts);
     //var data = JSON.stringify(Object.assign([], result.recordset));
     //var data = (result.recordset);
-    res.render('CtlCagoria.ejs');
+    res.render('CtlCagoria.ejs',{user:req.user});
     //res.json(result.recordset);
   } catch (error) {
     res.status(500);

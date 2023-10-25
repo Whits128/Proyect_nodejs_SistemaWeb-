@@ -1,0 +1,60 @@
+/* Importar fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Helvetica+Now:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+/* Variables para colores */
+:root {
+  --color-1: #f8fde8;
+  --color-2: #ecfacd;
+  --color-3: #daf5a1;
+  --color-4: #c0ec6a;
+  --color-5: #a6df3c;
+  --color-6: #94d720;
+  --color-7: #689d13;
+  --color-8: #4f7813;
+  --color-9: #415f15;
+  --color-10: #385017;
+  --color-11: #1b2c07;
+  --font-family: 'Helvetica Now', sans-serif;
+}
+
+/* Estilo de fuente para el cuerpo del sitio */
+body {
+  font-family:var(--font-family);
+  font-weight: 400; /* Peso de la fuente normal */
+  /* Tamaño de fuente y otros estilos para el cuerpo del sitio */
+}
+
+/* Estilo de fuente para títulos de nivel 1 (h1) */
+h1 {
+  font-family: var(--font-family);
+
+  font-size: 2rem; /* Tamaño de fuente para h1 */
+  color: var(--color-1);
+  /* Otros estilos para h1 */
+}
+
+/* Estilo de fuente para títulos de nivel 2 (h2) */
+h2 {
+  font-family: var(--font-family);
+
+  font-size: 1.1rem; /* Tamaño de fuente para h2 */
+  color:var(--color-2);
+  /* Otros estilos para h2 */
+}
+
+/* Estilo de fuente para títulos de nivel 3 (h3) */
+h3 {
+  font-family: var(--font-family);
+  
+  font-size: 1rem; /* Tamaño de fuente para h3 */
+color: var(--color-3);
+  /* Otros estilos para h3 */
+}
+
+/* Estilo de fuente para texto de párrafo */
+p {
+  font-family: var(--font-family);
+  font-weight: 400; /* Peso de la fuente normal para párrafos */
+  /* Tamaño de fuente y otros estilos para párrafos */
+  color: var(--color-1);
+}

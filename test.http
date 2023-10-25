@@ -1,5 +1,17 @@
-GET http://localhost:3000/Producto
 
+GET http://localhost:3000/Categoria
+###
+POST http://localhost:3000/Categoria
+Content-Type: application/json
+
+
+{
+  "nombre": "hola"
+
+}
+### Prueba de acceso al recurso protegido con un usuario "Admin"
+GET http://localhost:3000/Categorias
+Authorization: Bearer <Admin>
 
 ####
 POST http://localhost:3000/registerUser
@@ -7,12 +19,13 @@ Content-Type: application/json
 
 
 {
-  "Nombres": "NombreDePrueba",
-  "Apellidos": "ApellidoDePrueba",
-  "IdRol": 1,
-  "LoginUsuario": "omar",
-  "LoginClave": "12345"
+  "Nombres": "jh",
+  "Apellidos": "sd",
+  "LoginUsuario": "User",
+  "LoginClave": "12345",
+  "IdRol": 1
 }
+
 
 ###
 POST http://localhost:3000/Login
@@ -21,7 +34,7 @@ Content-Type: application/json
 
 {
  
-  "user": "admin",
+  "user": "User",
   "password": "12345"
 
 

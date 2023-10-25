@@ -6,13 +6,16 @@ import {
     UpdateCategoria,
 
 } from "../Controllers/Categoriacontroller";
-
+import {isAuthenticated,checkAccess} from"../Controllers/InicioSesionController";
 
 
 const router = Router();
 
+router.get("/Categorias", isAuthenticated, checkAccess('Categoria', 'Admin'), GetCategorias);
+router.get("/Categorias", isAuthenticated, checkAccess('Categoria', 'Empleado'), GetCategorias);
 
-router.get("/Categorias", GetCategorias);
+  
+
 
 router.get("/Categoria", GetCategoria);
 

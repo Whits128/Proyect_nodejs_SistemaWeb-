@@ -6,58 +6,39 @@ GO
 USE TiendaZapateria;
 GO
 
--- Tabla MENU
-CREATE TABLE MENU (
-    IdMenu INT PRIMARY KEY IDENTITY(1,1),
-    Nombre VARCHAR(60),
-    Icono VARCHAR(60),
-    Activo BIT DEFAULT 1,
-    FechaRegistro DATETIME DEFAULT GETDATE()
-);
-GO
-
--- Tabla SUBMENU
-CREATE TABLE SUBMENU (
-    IdSubMenu INT PRIMARY KEY IDENTITY(1,1),
-    IdMenu INT REFERENCES MENU(IdMenu),
-    Nombre VARCHAR(60),
-    NombreFormulario VARCHAR(60),
-    Accion VARCHAR(50),
-    Activo BIT DEFAULT 1,
-    FechaRegistro DATETIME DEFAULT GETDATE()
-);
-GO
-
--- Tabla ROL
-CREATE TABLE ROL (
+-- Tabla de Roles
+CREATE TABLE Roles (
     IdRol INT PRIMARY KEY IDENTITY(1,1),
-    Descripcion VARCHAR(60),
-    Activo BIT DEFAULT 1,
-    FechaRegistro DATETIME DEFAULT GETDATE()
+    NombreRol NVARCHAR(50) UNIQUE NOT NULL
 );
-GO
-
--- Tabla PERMISOS
-CREATE TABLE PERMISOS (
-    IdPermisos INT PRIMARY KEY IDENTITY(1,1),
-    IdRol INT REFERENCES ROL(IdRol),
-    IdSubMenu INT REFERENCES SUBMENU(IdSubMenu),
-    Activo BIT DEFAULT 1,
-    FechaRegistro DATETIME DEFAULT GETDATE()
-);
-GO
-
--- Tabla USUARIO
+go
+-- Tabla de Usuarios
 CREATE TABLE USUARIO (
     IdUsuario INT PRIMARY KEY IDENTITY(1,1),
     Nombres VARCHAR(100),
     Apellidos VARCHAR(100),
-    IdRol INT REFERENCES ROL(IdRol),
     LoginUsuario VARCHAR(50),
-    LoginClave VARCHAR(50),
+    LoginClave VARCHAR(100),
+	IdRol int references Roles(IdRol),
     Activo BIT DEFAULT 1,
     FechaRegistro DATETIME DEFAULT GETDATE()
 );
+
+go
+-- Tabla de Recursos (páginas o funcionalidades)
+CREATE TABLE Recursos (
+    IdRecurso INT PRIMARY KEY IDENTITY(1,1),
+    NombreRecurso NVARCHAR(100) UNIQUE NOT NULL
+);
+go
+-- Tabla de Permisos (asignación de roles a recursos)
+CREATE TABLE Permisos (
+    IdPermiso INT PRIMARY KEY IDENTITY(1,1),
+    IdRol INT FOREIGN KEY REFERENCES Roles(IdRol),
+    IdRecurso INT FOREIGN KEY REFERENCES Recursos(IdRecurso)
+);
+
+
 GO
 
 -- Tabla Configuraciones
@@ -212,14 +193,7 @@ GO
 -- Tabla Ventas
 CREATE TABLE Ventas (
     ID_Venta INT PRIMARY KEY IDENTITY(1,1),
-    ID_Inventario INT FOREIGN KEY REFERENCES Inventario(ID_Inventario) NOT NULL,
-    ID_Promocion INT FOREIGN KEY REFERENCES Promociones(ID_Promocion),
-    ID_Empleado INT FOREIGN KEY REFERENCES Empleados(ID_Empleado),
-    Cantidad INT,
-    Descuento DECIMAL(10, 2),
     Total DECIMAL(10, 2),
-    Subtotal DECIMAL(10, 2),
-    IVA DECIMAL(10, 2),
     Fecha DATE,
 	Estado BIT DEFAULT 1 -- 1: Activa, 0: Anulada
 );
@@ -228,11 +202,11 @@ GO
 -- Tabla DetalleVenta
 CREATE TABLE DetalleVenta (
     ID_DetalleVenta INT PRIMARY KEY IDENTITY(1,1),
-   ID_Inventario INT FOREIGN KEY REFERENCES Inventario(ID_Inventario) NOT NULL,
+    ID_Inventario INT FOREIGN KEY REFERENCES Inventario(ID_Inventario) NOT NULL,
     ID_Promocion INT FOREIGN KEY REFERENCES Promociones(ID_Promocion),
     ID_Empleado INT FOREIGN KEY REFERENCES Empleados(ID_Empleado),
     Cantidad INT,
-      Descuento DECIMAL(10, 2),
+    Descuento DECIMAL(10, 2),
     Total DECIMAL(10, 2),
     Subtotal DECIMAL(10, 2),
     IVA DECIMAL(10, 2),
@@ -259,16 +233,9 @@ GO
 -- Tabla Compras
 CREATE TABLE Compras (
     ID_Compra INT PRIMARY KEY IDENTITY(1,1),
-    ID_ProductoZapatos INT FOREIGN KEY REFERENCES Productos_Zapatos(ID_ProductoZapatos),
-    ID_Proveedor INT FOREIGN KEY REFERENCES Proveedores(ID_Proveedor),
-    ID_Empleado INT FOREIGN KEY REFERENCES Empleados(ID_Empleado),
     FechaCompra DATETIME NOT NULL,
-    Cantidad INT,
-    PrecioUnitario DECIMAL(10, 2),
-    Descuento DECIMAL(10, 2),
     Total DECIMAL(10, 2),
-    Subtotal DECIMAL(10, 2),
-    IVA DECIMAL(10, 2)
+    Estado BIT DEFAULT 1
 );
 GO
 

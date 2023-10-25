@@ -1,4 +1,8 @@
+/*Importamos variables globales*/
+@import '/css/VariablesGlobales.css'; 
 /* Estilos generales */
+
+
 html, body {
   margin: 0;
 }
@@ -22,12 +26,13 @@ body {
 /* Estilos para el header */
 header {
 grid-area: header;
-background-color: #2E86C1;
+background-color:var(--color-8);
 color: white;
 padding: 10px;
 display: grid;
 grid-template-columns: 2fr 1fr auto 1fr; /* Dividir en cuatro columnas */
 align-items: center;
+
 }
 
 /* Estilos para la sección del logo */
@@ -44,7 +49,7 @@ margin-right: 10px;
 }
 
 .local-name {
-font-size: 1.2em;
+font-family: var(--font-family);
 }
 
 /* Estilos para la sección de notificaciones */
@@ -62,14 +67,15 @@ position: relative;
 
 .button_notifications {
 padding: 10px 20px;
-background-color: #3498db;
-color: #fff;
+background-color:var(--color-10);
+color: var(--color-1);
 border: none;
 cursor: pointer;
 border-radius: 5px;
 }
 .button_notifications:hover {
-background-color: #2980b9;
+background-color:var(--color-1);
+color: var(--color-8);
 }
 
 .notification-dropdown {
@@ -80,7 +86,7 @@ padding: 0;
 width: 300px;
 display: none;
 flex-direction: column;
-background-color: #8d8d8d;
+background-color:var(--color-3);
 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 border-radius: 5px;
 border: 1px solid #ccc;
@@ -98,7 +104,7 @@ padding: 0;
 
 .notification-dropdown.active li {
 padding: 10px;
-border-bottom: 1px solid #050505;
+border-bottom: 1px solid var(--color-2);
 cursor: pointer;
 transition: background-color 0.3s ease;
 }
@@ -108,7 +114,7 @@ border-bottom: none;
 }
 
 .notification-dropdown.active li:hover {
-background-color: #db4949;
+background-color: var(--color-8);
 }
 
 
@@ -145,8 +151,9 @@ display: none;
 position: absolute;
 top: 60px;
 left: 0;
-background-color: #fff;
-border: 2px solid #ccc;
+background-color: var(--color-1);
+border: 2px solid var(--color-6);
+background:var(--color-6);
 padding: 10px;
 width: 200px;
 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -162,7 +169,7 @@ width: 0;
 height: 0;
 border-left: 10px solid transparent;
 border-right: 10px solid transparent;
-border-bottom: 10px solid #fff;
+border-bottom: 10px solid var(--color-7);
 position:absolute;
 top: -10px;
 right: 190px;
@@ -171,7 +178,7 @@ right: 190px;
 /* Estilos para la barra lateral (sidebar) */
 aside {
 grid-area: aside;
-background-color: #333;
+background-color:var(--color-11);
 color: white;
 padding: 15px;
 display: flex;
@@ -181,7 +188,7 @@ justify-content: flex-start;
 
 /* Estilos para el menú */
 .menu-section {
-background-color: #444;
+background-color:var(--color-8);
 border-radius: 10px;
 margin-top: 30px;
 overflow: hidden;
@@ -206,7 +213,7 @@ transition: background-color 0.3s ease;
 }
 
 .menu a:hover {
-background-color: #555;
+background-color: var(--color-6);
 }
 
 /* Estilos para los submenús */
@@ -259,3 +266,11 @@ grid-area: main;
 padding: 20px;
 }
 
+li{
+  font-family: var(--font-family);
+  color: var(--color-1);
+}
+a{
+  font-family: var(--font-family);
+  color: var(--color-1);
+}

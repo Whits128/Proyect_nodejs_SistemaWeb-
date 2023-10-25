@@ -15,13 +15,14 @@
     <header>
       <div class="logo-section">
         <img src="perfil.png" alt="Logo">
-        <span class="local-name">Nombre del Local</span>
+        <H1  class="local-name">Nombre del Local</H1>
+    
       </div>
       <div class="container_notifications">
         <div class="notifications-section">
           <button class="button_notifications" onclick="toggleNotifications()">Notificaciones</button>
           <div id="notification-dropdown" class="notification-dropdown">
-            <div class="notification-header">Notificaciones</div>
+            <div class="notification-header"> <h2>Notificaciones</h2></div>
             <ul id="notification-list">
               <!-- Notificaciones se cargarán aquí -->
             </ul>
@@ -30,14 +31,17 @@
       </div>
       <div class="user-section" id="user-section">
         <img src="perfil.png" alt="Usuario">
-        <span class="user-name" id="user-name">Nombre de Usuario</span>
+        <% if (typeof user === 'undefined') { %>
+          <% user = {} %>
+        <% } %>
+        <span class="user-name" id="user-name"><%= user.Nombres || 'Usuario no autenticado' %></span>
         <div id="user-menu" class="user-menu">
-            <ul>
-                <li><a href="#">Perfil</a></li>
-                <li><a href="#">Configuración</a></li>
-                <li><a href="#">Salir</a></li>
-            </ul>
-            <div class="arrow-up"></div>
+          <ul>
+            <li><a href="#">Perfil</a></li>
+            <li><a href="#">Configuración</a></li>
+            <li><a href="/logout">Salir</a></li>
+          </ul>
+          <div class="arrow-up"></div>
         </div>
       </div>
     </header>
@@ -50,8 +54,8 @@
       <img src="perfil.png" alt="Avatar"> 
     </div>
     <div class="profile-card__info">
-      <div class="profile-card__title">Williamson</div>
-      <div class="profile-card__subtitle">Desarrollo Web</div>
+      <div class="profile-card__title"><H1>Omar</H1></div>
+      <div class="profile-card__subtitle"><H3>Desarrollo Web</H3></div>
     </div>
   </div>
 </div>
@@ -67,7 +71,7 @@
           <li>
             <a href=""  onclick="changeContent('Agregar Producto')">Categoria</a>
             <ul class="submenu">
-              <li><a href="/Categorias" onclick="changeContent('Agregar Producto')">Agregar Producto</a></li>
+              <li><a href="/Categorias" onclick="changeContent('Agregar Producto')">Agregar Producto </a></li>
               <li><a href="/Productos" onclick="changeContent('Agregar Categoria')">Agregar Categoria</a></li>
             </ul>
           </li>
@@ -105,6 +109,6 @@
     </main>
   </div>
 <script src="/js/index.js"></script>
-<script src="/js/Notificacion.js"></script>
+
 </body>
 </html>
