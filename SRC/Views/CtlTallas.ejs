@@ -1,0 +1,191 @@
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css" integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.bundle.min.js" integrity="sha384-BOsAfwzjNJHrJ8cZidOg56tcQWfp6y72vEJ8xQ9w6Quywb24iOsW913URv1IS4GD" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.0.2/dist/sweetalert2.min.css"> 
+	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap5.min.css">
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/plug-ins/1.10.22/i18n/Spanish.json"></script>
+<section class="Contenido-Main">
+ 
+    <div class="container-fluid">
+        <button id="btnCrear" class="btn btn-dark mt-2">Crear</button>
+        <div class="row shadow-lg p-3 mb-5">
+            <div class="col">
+                <table id="Tabla" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>CODIGO</th>
+                        <th>NOMBRE</th>
+                        <th>ESTADO</th>     
+                                                  
+                                         
+                        <th class="text-center">ACCIONES</th>                      
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                </table> 
+            </div>
+        </div>
+    </div>
+
+    <!--Modal para CRUD-->
+    <div id="modalCRUD" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"></h5>                
+                </div>
+                <form id="formArticulos">    
+                    <div class="modal-body">                
+                            <input id="id" hidden>
+                            <label for="" class="col-form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="nombre">
+                            <label for="" class="col-form-label">Estado:</label>
+                            <select id="estado" class="form-select">
+                                <option value="Activo">Activo</option>
+                                <option value="Inactivo">Inactivo</option>
+                                <option value="En revisión">En revisión</option>
+                                <option value="Suspendido">Suspendido</option>
+                                <option value="Eliminado">Eliminado</option>
+                            </select>
+                                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" id="btnGuardar" class="btn btn-dark">Guardar</button>
+                    </div>
+                </form>    
+            </div>
+        </div>
+    </div>  
+
+<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.min.js" integrity="sha384-5h4UG+6GOuV9qXh6HqOLwZMY4mnLPraeTrjT5v07o347pj6IkfuoASuGBhfDsp3d" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.0.2/dist/sweetalert2.all.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap5.min.js"></script>        
+
+    </section> 
+    <script>
+
+window.onload = async () => {
+    $(document).ready(function() {
+    // Definir variables
+    let url = 'http://localhost:3000/MaterialesZapato/';
+    let opcion = null;
+    let codigo, nombre, estado, fila;
+
+    // Inicializar la tabla DataTable
+    let tablaArticulos = $('#Tabla').DataTable({
+        "ajax": {
+            "url": url,
+            "dataSrc": ""
+        },
+        "columns": [
+            {"data": "Codigo"},
+            {"data": "Nombre"},
+            {"data": "Descripcion"},
+            {"data": "TipoMaterial"},
+            {"data": "TipodeCostura"},
+            {"data": "TipoSuela"},
+            {"data": "Fabricante"},
+            {"data": "Observaciones"},
+            {"data": "Estado"},
+            {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-info btn-sm btnEditar'>Editar</button><button class='btn btn-danger btn-sm btnBorrar'>Borrar</button></div></div>"}
+        ]
+    });
+
+    // Mostrar el modal para crear un nuevo registro
+    $("#btnCrear").click(function() {
+        opcion = 'crear';
+        codigo = null; // No es necesario
+        $("#Formulario").trigger("reset");
+        $('#modalCRUD').modal('show');
+    });
+
+    // Editar un registro existente
+    $(document).on("click", ".btnEditar", function() {
+        opcion = 'editar';
+        fila = $(this).closest("tr");
+        codigo = parseInt(fila.find('td:eq(0)').text());
+        nombre = fila.find('td:eq(1)').text();
+        estado = fila.find('td:eq(2)').text();
+        $("#id").val(codigo);
+        $("#nombre").val(nombre);
+        $("#estado").val(estado);
+        $(".modal-header").css("background-color", "#7303c0");
+        $(".modal-header").css("color", "white");
+        $(".modal-title").text("Editar Artículo");
+        $('#modalCRUD').modal('show');
+    });
+
+    // Borrar un registro
+    $(document).on("click", ".btnBorrar", function() {
+        fila = $(this);
+        codigo = parseInt($(this).closest('tr').find('td:eq(0)').text());
+        Swal.fire({
+            title: '¿Confirma eliminar el registro?',
+            showCancelButton: true,
+            confirmButtonText: `Confirmar`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: url + codigo,
+                    method: 'delete',
+                    data: { id: codigo },
+                    success: function() {
+                        tablaArticulos.row(fila.parents('tr')).remove().draw();
+                    }
+                });
+                Swal.fire('¡Registro Eliminado!', '', 'success');
+            }
+        });
+    });
+
+    // Enviar el formulario para crear o editar registros
+    $('#Formulario').submit(function(e) {
+        e.preventDefault();
+        codigo = $.trim($('#id').val());
+        nombre = $.trim($('#nombre').val());
+        estado = $("#estado").val();
+        const dataToSend = { nombre, estado };
+
+        if (opcion === 'crear') {
+            // Crear nuevo registro
+            $.ajax({
+                url: url,
+                method: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify(dataToSend),
+                success: function(data) {
+                    tablaArticulos.ajax.reload(null, false);
+                }
+            });
+        } else if (opcion === 'editar') {
+            // Editar un registro existente
+            $.ajax({
+                url: url + codigo,
+                method: 'put',
+                contentType: 'application/json',
+                data: JSON.stringify({ codigo, ...dataToSend }),
+                success: function(data) {
+                    tablaArticulos.ajax.reload(null, false);
+                }
+            });
+        }
+
+        // Ocultar el modal
+        $('#modalCRUD').modal('hide');
+    });
+});
+}
+        </script>
+
+
+
+
+
+    
+      
+    

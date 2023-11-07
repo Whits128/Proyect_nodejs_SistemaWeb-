@@ -2,11 +2,8 @@ import { getConnection, querys, sql } from "../DataBase";
 
 export const GetProductos= async (req, res) => {
   try {
-    //const pool = await getConnection();
-    //const result = await pool.request().query(querys.getAllProducts);
-    //var data = JSON.stringify(Object.assign([], result.recordset));
-    //var data = (result.recordset);
-    res.render('CtlProducto.ejs');
+
+    res.render('CtlProducto.ejs',{ pageTitle: 'Proctos', user:req.user });
     //res.json(result.recordset);
   } catch (error) {
     res.status(500);
@@ -47,7 +44,7 @@ export const saveProducto = async (req, res) => {
         .input("nombre", sql.VarChar,nombre)
         .input("descripcion", sql.VarChar,descripcion)
         .input("id_categoria", sql.Int,id_categoria)
-        .input("estado", sql.Bit,estado)
+        .input("estado", sql.VarChar,estado)
    
         .query(querys.GuardarProducto);
   
@@ -77,7 +74,7 @@ export const  UpdateProducto= async (req, res) => {
       .input("nombre", sql.VarChar, nombre)
       .input("descripcion", sql.VarChar, descripcion)
       .input("id_categoria", sql.Int, id_categoria)
-      .input("estado", sql.Bit, estado)
+      .input("estado", sql.VarChar, estado)
       .query(querys.updateProducto);
     res.json({ nombre,descripcion,id_categoria, estado});
   } catch (error) {

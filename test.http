@@ -1,14 +1,32 @@
-
-GET http://localhost:3000/Categoria
 ###
-POST http://localhost:3000/Categoria
+
+GET http://localhost:3000/MaterialesZapato
+###
+PUT http://localhost:3000/MaterialesZapato/1
 Content-Type: application/json
 
+{
+  "nombre": "2sd",
+  "descripcion": "Descripción del material",
+  "tipoMaterial": "Tipo de material",
+  "tipodeCostura": "Tipo de costura",
+  "tipoSuela": "Tipo de suela",
+  "fabricante": "Nombre del fabricante",
+  "observaciones": "Observaciones adicionales",
+  "estado": "Activo"
+}
+
+
+###
+
+PUT  http://localhost:3000/color/1
+Content-Type: application/json
 
 {
-  "nombre": "hola"
-
+  "color": "s",
+  "estado": 0
 }
+
 ### Prueba de acceso al recurso protegido con un usuario "Admin"
 GET http://localhost:3000/Categorias
 Authorization: Bearer <Admin>
@@ -19,11 +37,12 @@ Content-Type: application/json
 
 
 {
-  "Nombres": "jh",
-  "Apellidos": "sd",
+  "Nombres": "Omar",
+  "Apellidos": "Navas",
   "LoginUsuario": "User",
   "LoginClave": "12345",
-  "IdRol": 1
+  "IdRol": 1,
+ "Estado":"Activo"
 }
 
 

@@ -16,8 +16,7 @@
                     <tr>
                         <th>CODIGO</th>
                         <th>NOMBRE</th>
-                        <th>DESCRIPCION</th>
-                        <th>CATEGORIA</th>
+                        <th>DETALLE</th>
                         <th>ESTADO</th>     
                                                   
                                          
@@ -40,14 +39,11 @@
                 </div>
                 <form id="formArticulos">    
                     <div class="modal-body">                
-                            <input id="codigo" hidden>
+                            <input id="id" hidden>
                             <label for="" class="col-form-label">Nombre:</label>
                             <input type="text" class="form-control" id="nombre">
-                            <label for="" class="col-form-label">Descripcion:</label>
-                            <input type="text" class="form-control" id="descripcion">
-                            <label for="ddcategory" class="form-label">Categoria</label>
-            <select class="form-control form-select form-select-sm" id="id_categoria" aria-label="select">
-            </select>
+                            <label for="" class="col-form-label">Detalle:</label>
+                            <input type="text" class="form-control" id="detalleMarca" name="detalleMarca">                            
                             <label for="" class="col-form-label">Estado:</label>
                             <select id="estado" class="form-select">
                                 <option value="Activo">Activo</option>
@@ -55,8 +51,8 @@
                                 <option value="En revisión">En revisión</option>
                                 <option value="Suspendido">Suspendido</option>
                                 <option value="Eliminado">Eliminado</option>
-                            </select>                              
-                    </div>
+                            </select>
+                                </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                         <button type="submit" id="btnGuardar" class="btn btn-dark">Guardar</button>
@@ -74,25 +70,13 @@
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap5.min.js"></script>        
 
     </section> 
-    <script type="module">
-import CreateDropDown from "../js/DropDownComponent.js"
+    <script>
+
 window.onload = async () => {
-    try {
-        const categoriasResponse = await fetch('http://localhost:3000/Categoria');
-        const categoriasData = await categoriasResponse.json();
-
-        const selectCategoria = document.getElementById('id_categoria');
-        CreateDropDown(categoriasData, selectCategoria, 'Nombre', 'Codigo');
-
-        // Resto del código...
-    } catch (error) {
-        console.error('Error:', error.message);
-    }
         $(document).ready(function() {   
-            let url = 'http://localhost:3000/Producto/';
-           
+            let url = 'http://localhost:3000/Marca/';
             let opcion = null;
-            let codigo, nombre,descripcion, estado,ddcategory, fila;
+            let codigo, nombre, estado,detalleMarca , fila;
             //MOSTRAR
             let tablaArticulos = $('#Tabla').DataTable({            
                 "ajax":{
@@ -100,10 +84,9 @@ window.onload = async () => {
                     "dataSrc":""
                 },
                 "columns":[
-                {"data":"Codigo"},
+                    {"data":"Codigo"},
                     {"data":"Nombre"},
-                    {"data":"Descripcion"},
-                    {"data":"Categoria"},
+                    {"data":"Detalle"},
                     {"data":"Estado"},
                     {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-info btn-sm btnEditar'>Editar</button><button class='btn btn-danger btn-sm btnBorrar'>Borrar</button></div></div>"}
                 ]            
@@ -111,7 +94,7 @@ window.onload = async () => {
             //CREAR
             $("#btnCrear").click(function(){
                 opcion='crear';            
-            codigo=null;
+                id=null;
                 $("#formArticulos").trigger("reset");
                 $(".modal-header").css( "background-color", "#23272b");
                 $(".modal-header").css( "color", "white" );
@@ -124,13 +107,11 @@ window.onload = async () => {
                 fila = $(this).closest("tr");	        
                 codigo = parseInt(fila.find('td:eq(0)').text());
                 nombre = fila.find('td:eq(1)').text();
-                descripcion = fila.find('td:eq(2)').text();
-                ddcategory = fila.find('td:eq(3)').text();          
-                estado = fila.find('td:eq(4)').text();    
-                $("#codigo").val(codigo);
+                detalleMarca  = fila.find('td:eq(2)').text();
+                estado = fila.find('td:eq(3)').text();            
+                $("#id").val(codigo);
                 $("#nombre").val(nombre);
-                $("#descripcion").val(descripcion);
-                $("#ddcategory").val(id_categoria);
+                $("#detalleMarca ").val(detalleMarca);
                 $("#estado").val(estado);
                 $(".modal-header").css("background-color", "#7303c0");
                 $(".modal-header").css("color", "white" );
@@ -164,17 +145,16 @@ window.onload = async () => {
             $('#formArticulos').submit(function(e){       
                                             
                 e.preventDefault();
-                codigo = $.trim($('#codigo').val());    
+                codigo = $.trim($('#id').val());    
                 nombre = $.trim($('#nombre').val());
-                descripcion = $.trim($('#descripcion').val());
-                ddcategory = $.trim($('#id_categoria').val());
-                estado = $.trim($('#estado').val());                
+                detalleMarca  = $.trim($('#detalleMarca').val());
+                estado = $("#estado").val() ;          
                 if(opcion=='crear'){                
                     $.ajax({                    
                         url: url,
                         method: 'post',                                                         
                         contentType: 'application/json',  
-                        data:  JSON.stringify({nombre:nombre, descripcion:descripcion, id_categoria: ddcategory, estado:estado}),                       
+                        data:  JSON.stringify({nombre:nombre,detalleMarca:detalleMarca , estado:estado}),                       
                         success: function(data) {                       
                             tablaArticulos.ajax.reload(null, false);    
                             $('#btnCrear').prop('disabled',false);  
@@ -189,7 +169,7 @@ window.onload = async () => {
                         url: url+codigo,
                         method: 'put',                                        
                         contentType: 'application/json',  
-                        data:  JSON.stringify({nombre:nombre, descripcion:descripcion, id_categoria: ddcategory, estado:estado}),                       
+                        data:  JSON.stringify({codigo:codigo, nombre:nombre,detalleMarca:detalleMarca , estado:estado}),                       
                         success: function(data) {                       
                             tablaArticulos.ajax.reload(null, false);                        
                         }

@@ -1,10 +1,10 @@
 import { getConnection, querys, sql } from "../DataBase";
 
-export const GetCategorias = async (req, res) => {
+export const GetTallas = async (req, res) => {
   try {
     // Recopila los datos específicos para esta vista
   
-    res.render('CtlCagoria.ejs',{ pageTitle: 'Categorias', user: req.user });
+    res.render('CtlTallas.ejs',{ pageTitle: 'Tallas', user: req.user });
     //res.json(result.recordset);
   } catch (error) {
     res.status(500);
@@ -12,10 +12,10 @@ export const GetCategorias = async (req, res) => {
   }
 };
 
-export const GetCategoria = async (req, res) => {
+export const GetTalla = async (req, res) => {
   try {
     const pool = await getConnection();
-    const result = await pool.request().query(querys.MostrarCategoria);
+    const result = await pool.request().query(querys.MostrarTallas);
     
     res.json(result.recordset);
   } catch (error) {
@@ -26,12 +26,12 @@ export const GetCategoria = async (req, res) => {
 
 
 
-export const saveCategoria = async (req, res) => {
+export const saveTalla = async (req, res) => {
   const { nombre } = req.body;
   let { estado } = req.body;
 
   // Validación
-  if (nombre == null) {
+  if (nombre == null  ) {
     return res.status(400).json({ msg: "Bad Request. Please provide a nombre" });
   }
 
@@ -44,11 +44,11 @@ export const saveCategoria = async (req, res) => {
       .request()
       .input("nombre", sql.VarChar, nombre)
       .input("estado", sql.VarChar, estado)
-      .query(querys.GuardarCategoria);
+      .query(querys.GuardarTallas);
 
     console.log("Nuevo registro creado:", { nombre, estado });
 
-    res.json({ nombre, estado });
+    res.json({ nombre,estado });
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -59,7 +59,7 @@ export const saveCategoria = async (req, res) => {
 
 
 
-export const  UpdateCategoria = async (req, res) => {
+export const  UpdateTalla = async (req, res) => {
   const {  nombre, estado } = req.body;
 
   // validating
@@ -75,8 +75,8 @@ export const  UpdateCategoria = async (req, res) => {
       .input("nombre", sql.VarChar, nombre)
       .input("estado", sql.VarChar, estado)
   
-      .query(querys.updateCategoria);
-    res.json({ nombre, estado });
+      .query(querys.UpdateTallas);
+    res.json({ nombre,estado });
   } catch (error) {
     res.status(500);
     res.send(error.message);

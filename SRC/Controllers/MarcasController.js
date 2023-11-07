@@ -1,10 +1,10 @@
 import { getConnection, querys, sql } from "../DataBase";
 
-export const GetCategorias = async (req, res) => {
+export const GetMarcas = async (req, res) => {
   try {
     // Recopila los datos específicos para esta vista
   
-    res.render('CtlCagoria.ejs',{ pageTitle: 'Categorias', user: req.user });
+    res.render('CtlMarcas.ejs',{ pageTitle: 'Marcas', user: req.user });
     //res.json(result.recordset);
   } catch (error) {
     res.status(500);
@@ -12,10 +12,10 @@ export const GetCategorias = async (req, res) => {
   }
 };
 
-export const GetCategoria = async (req, res) => {
+export const GetMarca = async (req, res) => {
   try {
     const pool = await getConnection();
-    const result = await pool.request().query(querys.MostrarCategoria);
+    const result = await pool.request().query(querys.MostrarMarcas);
     
     res.json(result.recordset);
   } catch (error) {
@@ -26,12 +26,12 @@ export const GetCategoria = async (req, res) => {
 
 
 
-export const saveCategoria = async (req, res) => {
-  const { nombre } = req.body;
+export const saveMarca = async (req, res) => {
+  const { nombre,detalleMarca } = req.body;
   let { estado } = req.body;
 
   // Validación
-  if (nombre == null) {
+  if (nombre == null  || detalleMarca == null) {
     return res.status(400).json({ msg: "Bad Request. Please provide a nombre" });
   }
 
@@ -43,12 +43,13 @@ export const saveCategoria = async (req, res) => {
     await pool
       .request()
       .input("nombre", sql.VarChar, nombre)
+      .input("detalleMarca", sql.VarChar, detalleMarca)
       .input("estado", sql.VarChar, estado)
-      .query(querys.GuardarCategoria);
+      .query(querys.GuardarMarcas);
 
     console.log("Nuevo registro creado:", { nombre, estado });
 
-    res.json({ nombre, estado });
+    res.json({ nombre,detalleMarca,estado });
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -59,8 +60,8 @@ export const saveCategoria = async (req, res) => {
 
 
 
-export const  UpdateCategoria = async (req, res) => {
-  const {  nombre, estado } = req.body;
+export const  UpdateMarca = async (req, res) => {
+  const {  nombre, estado,detalleMarca } = req.body;
 
   // validating
   if ( nombre == null || estado == null) {
@@ -73,10 +74,11 @@ export const  UpdateCategoria = async (req, res) => {
       .request()
       .input("codigo", req.params.id)
       .input("nombre", sql.VarChar, nombre)
+      .input("detalleMarca", sql.VarChar, detalleMarca)
       .input("estado", sql.VarChar, estado)
   
-      .query(querys.updateCategoria);
-    res.json({ nombre, estado });
+      .query(querys.updateMarcas);
+    res.json({ nombre,detalleMarca,estado });
   } catch (error) {
     res.status(500);
     res.send(error.message);

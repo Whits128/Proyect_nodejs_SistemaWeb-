@@ -7,7 +7,7 @@ import { promisify } from 'util';
 //seccion de registro
 export const registerUser = async (req, res) => {
   try {
-    const { Nombres, Apellidos,IdRol, LoginUsuario, LoginClave } = req.body;
+    const { Nombres, Apellidos,IdRol, LoginUsuario, LoginClave ,Estado} = req.body;
 
     // Hash de la contraseña
     const hashedPassword = await bcrypt.hash(LoginClave, 10);
@@ -22,8 +22,9 @@ export const registerUser = async (req, res) => {
       .input('LoginUsuario', sql.VarChar, LoginUsuario)
       .input('LoginClave', sql.VarChar, hashedPassword)
       .input('IdRol', sql.Int, IdRol)
+      .input('Estado', sql.VarChar, Estado)
       .query(
-        'INSERT INTO USUARIO (Nombres, Apellidos, LoginUsuario, LoginClave,IdRol) VALUES (@Nombres, @Apellidos, @LoginUsuario, @LoginClave,@IdRol)'
+        'INSERT INTO USUARIO (Nombres, Apellidos, LoginUsuario, LoginClave,IdRol,Estado) VALUES (@Nombres, @Apellidos, @LoginUsuario, @LoginClave,@IdRol,@Estado)'
       );
 
     pool.close();

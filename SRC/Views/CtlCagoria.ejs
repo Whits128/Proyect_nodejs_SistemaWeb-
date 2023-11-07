@@ -42,11 +42,14 @@
                             <label for="" class="col-form-label">Nombre:</label>
                             <input type="text" class="form-control" id="nombre">
                             <label for="" class="col-form-label">Estado:</label>
-    <select id="estado" class="form-select">
-        <option value="1">Activo</option>
-        <option value="0">Inactivo</option>
-    </select>                               
-                    </div>
+                            <select id="estado" class="form-select">
+                                <option value="Activo">Activo</option>
+                                <option value="Inactivo">Inactivo</option>
+                                <option value="En revisión">En revisión</option>
+                                <option value="Suspendido">Suspendido</option>
+                                <option value="Eliminado">Eliminado</option>
+                            </select>
+                                </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                         <button type="submit" id="btnGuardar" class="btn btn-dark">Guardar</button>
@@ -138,7 +141,7 @@ window.onload = async () => {
                 e.preventDefault();
                 codigo = $.trim($('#id').val());    
                 nombre = $.trim($('#nombre').val());
-                estado = $.trim($('#estado').val());                
+                estado = $("#estado").val() ;          
                 if(opcion=='crear'){                
                     $.ajax({                    
                         url: url,

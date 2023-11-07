@@ -5,7 +5,10 @@ import config from './config';
 import  InicioSesionRutes from "./Routes/InicioSesionRutes";
 import  CategoriaRutes from "./Routes/CategoriaRutes";
 import  ProductoZapatosRutes from "./Routes/ProductoZapatosRutes";
-
+import  ColoresRutes from "./Routes/ColoresRutes";
+import  MarcasRutes from "./Routes/MarcasRutes";
+import  TallasRoutes from "./Routes/TallasRoutes";
+import  MaterialesZapatosRutes from "./Routes/MaterialesZapatosRutes";
 import morgan from "morgan";
 import path from "path";
 const expressEjsLayouts = require('express-ejs-layouts');
@@ -32,5 +35,8 @@ app.use(InicioSesionRutes);
 
 app.use(CategoriaRutes);
 app.use(ProductoZapatosRutes);
-
+app.use(ColoresRutes);
+app.use(MarcasRutes);
+app.use(TallasRoutes);
+app.use(MaterialesZapatosRutes);
 export default app

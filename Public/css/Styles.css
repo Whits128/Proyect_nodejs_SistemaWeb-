@@ -174,6 +174,11 @@ position:absolute;
 top: -10px;
 right: 190px;
 }
+aside {
+  min-height: calc(100vh - 90px); /* Resta la altura del encabezado (header) */
+  overflow-y: auto; /* Agregar desbordamiento vertical si es necesario */
+}
+
 
 /* Estilos para la barra lateral (sidebar) */
 aside {
@@ -184,6 +189,7 @@ padding: 15px;
 display: flex;
 flex-direction: column;
 justify-content: flex-start;
+height: 100%;
 }
 
 /* Estilos para el menú */
@@ -262,13 +268,20 @@ color: #555;
 
 /* Estilos para el contenido principal */
 .Contenido-Main {
+
+  min-height: calc(100vh - 90px); 
+  overflow-x: auto;
+  overflow-y: auto; /* Agregar desbordamiento vertical si es necesario */ 
 grid-area: main;
 padding: 20px;
+
 }
 
-li{
+.Contenido-Main h1{
   font-family: var(--font-family);
-  color: var(--color-1);
+  color: var(--color-10);
+  
+  border-bottom: 5px solid var(--color-11);
 }
 a{
   font-family: var(--font-family);

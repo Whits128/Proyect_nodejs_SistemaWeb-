@@ -6,13 +6,13 @@ import {
     UpdateProducto,
 
 } from "../Controllers/ProductoZapatosController";
-
+import {isAuthenticated,checkAccess} from"../Controllers/InicioSesionController";
 
 
 const router = Router();
 
 
-router.get("/Productos", GetProductos);
+router.get("/Productos",isAuthenticated, checkAccess('Gestión de Categorias', 'Administrador'), GetProductos);
 
 router.get("/Producto", GetProducto);
 
