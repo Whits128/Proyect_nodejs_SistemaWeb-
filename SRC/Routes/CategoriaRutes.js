@@ -4,32 +4,21 @@ import {
     GetCategoria,
     saveCategoria,
     UpdateCategoria,
-
+    DarDeBaja,
+    Activar
 } from "../Controllers/Categoriacontroller";
 import {isAuthenticated,checkAccess} from"../Controllers/InicioSesionController";
 
 
 const router = Router();
 
-router.get("/Categorias", isAuthenticated, checkAccess('Gestión de Categorias', 'Administrador'), GetCategorias);
-
-
-  
-
-
+router.get("/Categorias", isAuthenticated, checkAccess, GetCategorias);
 router.get("/Categoria", GetCategoria);
-
-router.post("/Categoria", saveCategoria);
-
-
-//router.delete("/Categoria/:Id", deleteTalla);
-
+router.post("/Categoria", saveCategoria)
 router.put("/Categoria/:id", UpdateCategoria);
-/*router.get("/tallas/count", getTotalTallas);
+router.put('/Categoria/DarDeBaja/:id', DarDeBaja);
+router.put('/Categoria/Activar/:id', Activar);
 
-router.get("/tallas/:id", getTallasById);
 
-
-*/
 
 export default router;

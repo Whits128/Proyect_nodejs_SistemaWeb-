@@ -20,9 +20,16 @@
                 <thead>
                     <tr>
                         <th>CODIGO</th>
-                        <th>NOMBRE</th>
-                        <th>ESTADO</th>     
-                                                  
+                        <th>NOMBRE NEGOCIO</th>
+                        <th>LOGO </th>
+                        <th>RUC</th>
+                        <th>TELEFONOS</th>
+                        <th>CORREO</th>
+                        <th>DIRECCION</th>
+                        <th>ESTADO</th>
+                        <th>FECHA MODIFICACION</th>
+                        <th>USUARIO MODIFICACION</th>
+                        <th>TIPO OPERACION</th>          
                                          
                         <th class="text-center">ACCIONES</th>                      
                     </tr>
@@ -45,9 +52,34 @@
                     <div class="modal-body form">                
                             <input id="id" hidden>
                             <div class="input-container ">
-                                <input placeholder="" type="text" class="input" id="nombre" >
-                                <label  for=" nombre">Nombre</label>
+                                <input placeholder="" type="text" class="input" id="nombreNegocio" required>
+                                <label  for="nombreNegocio">Nombre Negocio</label>
                             </div>
+        
+                            <div class="input-container">
+                                <!-- Cambia el tipo de input a file para manejar archivos -->
+                                <input type="file" class="image" name="logoLocal" id="logoLocal" accept="image/*" required>
+
+                                <label for="logoLocal">Seleccionar Logo Local</label>
+                            </div>
+                            <div class="input-container">
+                                <input placeholder="" type="text" class="input" id="ruc" required>
+                                <label for="ruc">RUC</label>
+                            </div>
+                          
+                            <div class="input-container">
+                                <input placeholder="" type="text" class="input" id="telefonos"  required>
+                                <label for="telefonos">Telefonos</label>
+                            </div>
+                            <div class="input-container">
+                                <input placeholder="" type="text" class="input" id="correo"  required>
+                                <label for="correo">Correo</label>
+                            </div>
+                            <div class="input-container">
+                                <input placeholder="" type="text" class="input" id="direccion"  required>
+                                <label for="direccion">Direccion</label>
+                            </div>
+                            
                             <div class="input-container">
                                 <select id="estado" class="input">
                                     <option value="Activo">Activo</option>
@@ -57,6 +89,23 @@
                                     <option value="Eliminado">Eliminado</option>
                                 </select>
                                 <label for="estado">Estado</label>
+                            </div>
+                            <% if (user) { %>
+                                <div class="input-container">
+                                  <input placeholder=""  type="text" id="usuarioModificacion" class="input"  value="<%= user.Nombres %>" required readonly >
+                                  <label for="usuarioModificacion">Usuario Modificacion</label>
+                                </div>
+                              <% } %>
+                              
+                              
+                              
+
+                            <div class="input-container">
+                                <select id="tipoOperacion" class="input">
+                                    <option value="INSERT">INSERT</option>
+                                    <option value="UPDATE">UPDATE</option>
+                                </select>
+                                <label for="tipoOperacion">Tipo Operacion</label>
                             </div>
                          
                             
@@ -84,7 +133,7 @@
     <script>
         window.onload = async () => {
         $(document).ready(function() {   
-                 let url = 'http://localhost:3000/Categoria/';
+                 let url = 'http://localhost:3000/Configuracion/';
                  let opcion = null;
                  let codigo, nombre, estado, fila;
      
@@ -106,10 +155,32 @@
                      "ajax":{
                          "url": url,
                          "dataSrc":""
-                     },       "columns":[
+                     },  "scrollX": true, // Habilita el scroll horizontal
+    "scrollCollapse": true, // Colapso de scroll si no es necesario
+                     
+                     "columns":[
                          {"data":"Codigo"},
-                         {"data":"Nombre"},
-                         {"data":"Estado"},
+                         { "data": "NombreNegocio" },
+                    {
+                        "data": "LogoLocal",
+                        "render": function (data) {
+                            // Verifica si hay datos en la imagen
+                            if (data) {
+                                // Crea un elemento de imagen con la fuente de datos
+                                return `<img src="data:image/jpeg;base64,${data}" alt="Logo" style="width:50px;height:50px;">`;
+                            } else {
+                                return "Sin imagen";
+                            }
+                        }
+                    },
+                    { "data": "RUC" },
+                    { "data": "Telefonos" },
+                    { "data": "Correo" },
+                    { "data": "Direccion" },
+                    { "data": "Estado" },
+                    { "data": "FechaModificacion" },
+                    { "data": "UsuarioModificacion" },
+                    { "data": "TipoOperacion" },
                          {
                      "render": function (data, type, row) {
                          // Conditionally render buttons based on estado
@@ -158,7 +229,7 @@
                      $("#form").trigger("reset");
                      $(".modal-header").css( "background-color", "#23272b");
                      $(".modal-header").css( "color", "white" );
-                     $(".modal-title").text("Crear Artículo");
+                     $(".modal-title").text("Crear Configuraciones");
                      $('#modalCRUD').modal('show');	    
                  });    
                  //EDITAR        
@@ -166,24 +237,33 @@
                      opcion='editar';
                      fila = $(this).closest("tr");	        
                      codigo = parseInt(fila.find('td:eq(0)').text());
-                     nombre = fila.find('td:eq(1)').text();
-                     estado = fila.find('td:eq(2)').text();            
-                     $("#id").val(codigo);
-                     $("#nombre").val(nombre);
-                     $("#estado").val(estado);
+                     nombreNegocio = fila.find('td:eq(1)').text();
+                ruc = fila.find('td:eq(3)').text();
+                telefonos = fila.find('td:eq(4)').text();
+                correo = fila.find('td:eq(5)').text();
+                direccion = fila.find('td:eq(6)').text();
+                estado = fila.find('td:eq(7)').text();
+                tipoOperacion = fila.find('td:eq(8)').text();
+    
+                $("#id").val(codigo);
+                $("#nombreNegocio").val(nombreNegocio);
+                $("#ruc").val(ruc);
+                $("#telefonos").val(telefonos);
+                $("#correo").val(correo);
+                $("#direccion").val(direccion);
+                $("#estado").val(estado);
+                $("#tipoOperacion").val(tipoOperacion);
                      $(".modal-header").css("background-color", "#7303c0");
                      $(".modal-header").css("color", "white" );
-                     $(".modal-title").text("Editar Artículo");		
+                     $(".modal-title").text("Editar Configuraciones");		
                      $('#modalCRUD').modal('show');		  
                       
-                 });
-             
-     
-     // Dar Baja o Activar
+                 });         
+    
      // Dar Baja o Activar
      $(document).on("click", ".btnBorrar, .btnActivar", function () {
          fila = $(this).closest("tr");
-         estado = fila.find('td:eq(2)').text();
+         estado = fila.find('td:eq(7)').text();
          codigo = parseInt(fila.find('td:eq(0)').text());
      
          if (estado.toLowerCase() === 'activo') {
@@ -193,10 +273,10 @@
                  confirmButtonText: `Confirmar`,
              }).then((result) => {
                  if (result.isConfirmed) {
-                     console.log('Enviando solicitud para dar de baja:', 'http://localhost:3000/Categoria/DarDeBaja/' + codigo);
+                     console.log('Enviando solicitud para dar de baja:', 'http://localhost:3000/Configuracion/DarDeBaja/' + codigo);
      
                      $.ajax({
-                         url: 'http://localhost:3000/Categoria/DarDeBaja/' + codigo,
+                         url: 'http://localhost:3000/Configuracion/DarDeBaja/' + codigo,
                          method: 'put',
                          success: function () {
                              console.log('Éxito al dar de baja el registro');
@@ -216,10 +296,10 @@
                  confirmButtonText: `Confirmar`,
              }).then((result) => {
                  if (result.isConfirmed) {
-                     console.log('Enviando solicitud para activar:', 'http://localhost:3000/Categoria/Activar/' + codigo);
+                     console.log('Enviando solicitud para activar:', 'http://localhost:3000/Configuracion/Activar/' + codigo);
      
                      $.ajax({
-                         url: 'http://localhost:3000/Categoria/Activar/' + codigo,
+                         url: 'http://localhost:3000/Configuracion/Activar/' + codigo,
                          method: 'put',
                          success: function () {
                              console.log('Éxito al activar el registro');
@@ -237,45 +317,71 @@
      });
      
      
-     
-                 //submit para el CREAR y EDITAR
-                 $('#form').submit(function(e){       
-                                                 
-                     e.preventDefault();
-                     
-                     codigo = $.trim($('#id').val());    
-                     nombre = $.trim($('#nombre').val());
-                     estado = $("#estado").val() ;          
-                     if(opcion=='crear'){                
-                         $.ajax({                    
-                             url: url,
-                             method: 'post',                                                         
-                             contentType: 'application/json',  
-                             data:  JSON.stringify({nombre:nombre, estado:estado}),                       
-                             success: function(data) {                       
-                                 tabla.ajax.reload(null, false);    
-                                 $('#btnCrear').prop('disabled',false);  
-                                                  
-                             }
-                             
-                         });	
-                     }
-                     if(opcion=='editar'){
-                         console.log("EDITAR");
-                         $.ajax({                    
-                             url: url+codigo,
-                             method: 'put',                                        
-                             contentType: 'application/json',  
-                             data:  JSON.stringify({codigo:codigo, nombre:nombre, estado:estado}),                       
-                             success: function(data) {                       
-                                 tabla.ajax.reload(null, false);                        
-                             }
-                         });	
-                      }        		        
-                     $('#modalCRUD').modal('hide');											     			
-                 });
-             });
-     
-            }
-             </script>
-     
+     // Submit para CREAR y EDITAR
+     $('#form').submit(function (e) {
+                e.preventDefault();
+    
+                codigo = $.trim($('#id').val());
+                nombreNegocio = $.trim($('#nombreNegocio').val());
+                ruc = $.trim($('#ruc').val());
+                telefonos = $("#telefonos").val();
+                correo = $.trim($('#correo').val());
+                direccion = $("#direccion").val();
+                estado = $.trim($('#estado').val());
+                usuarioModificacion = $.trim($('#usuarioModificacion').val());
+                tipoOperacion = $("#tipoOperacion").val();
+    
+                var formData = new FormData();
+                formData.append('nombreNegocio', nombreNegocio);
+                formData.append('ruc', ruc);
+                formData.append('telefonos', telefonos);
+                formData.append('correo', correo);
+                formData.append('direccion', direccion);
+                formData.append('estado', estado);
+                formData.append('usuarioModificacion', usuarioModificacion);
+                formData.append('tipoOperacion', tipoOperacion);
+    
+                // Agrega el campo de archivo correctamente
+                formData.append('logoLocal', $('#logoLocal')[0].files[0]);
+    
+                console.log("Datos a enviar:", formData);
+    
+                if (opcion == 'crear') {
+                    $.ajax({
+                        url: url,
+                        method: 'post',
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (data) {
+                            tabla.ajax.reload(null, false);
+                            $('#btnCrear').prop('disabled', false);
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            console.error('Error al crear el registro:', textStatus, errorThrown);
+                            console.log('Respuesta del servidor:', xhr.responseText);
+                        }
+                    });
+                }
+    
+                if (opcion == 'editar') {
+                    $.ajax({
+                        url: url + codigo,
+                        method: 'put',
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (data) {
+                            tabla.ajax.reload(null, false);
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            console.error('Error al editar el registro:', textStatus, errorThrown);
+                        }
+                    });
+                }
+                $('#modalCRUD').modal('hide');
+            });
+        });
+    }
+    </script>
+    

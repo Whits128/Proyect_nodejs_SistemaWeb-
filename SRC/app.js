@@ -9,6 +9,11 @@ import  ColoresRutes from "./Routes/ColoresRutes";
 import  MarcasRutes from "./Routes/MarcasRutes";
 import  TallasRoutes from "./Routes/TallasRoutes";
 import  MaterialesZapatosRutes from "./Routes/MaterialesZapatosRutes";
+import  EmpleadoRoutes from "./Routes/EmpleadoRoutes";
+import  ZapatosDañados from "./Routes/ZapatosDañadosRoutes";
+import  PromocionesRutes from "./Routes/PromocionesRutes";
+import  ConfiguracionRutes from "./Routes/ConfiguracionRutes";
+import  BodegaRutes from "./Routes/BodegaRutes";
 import morgan from "morgan";
 import path from "path";
 const expressEjsLayouts = require('express-ejs-layouts');
@@ -39,4 +44,10 @@ app.use(ColoresRutes);
 app.use(MarcasRutes);
 app.use(TallasRoutes);
 app.use(MaterialesZapatosRutes);
+app.use(EmpleadoRoutes);
+app.use(ZapatosDañados);
+app.use(PromocionesRutes);
+app.use(ConfiguracionRutes);
+app.use(BodegaRutes);
+
 export default app

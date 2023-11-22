@@ -69,9 +69,12 @@
         <ul class="menu">
           <li><a href="/Inicio" onclick="changeContent('Dashboard')">Dashboard</a></li>
           <li>
-            <a href="/Categorias"  onclick="changeContent('Agregar Producto')">Categoria</a>
+            <a href="#"  onclick="changeContent('Inventario')">Inventario</a>
             <ul class="submenu">
-              <li><a href="#" onclick="changeContent('Agregar Producto')">Agregar Producto </a></li>
+              <li><a href="/Categorias" onclick="changeContent('Categorias')">Categorias </a></li>
+              <li><a href="/Colores" onclick="changeContent('Colores')">Colores </a></li>
+              <li><a href="/Marcas" onclick="changeContent('Marcas')">Marcas </a></li>
+              <li><a href="/Tallas" onclick="changeContent('Categorias')">Categorias </a></li>
               <li><a href="#" onclick="changeContent('Agregar Categoria')">Agregar Categoria</a></li>
             </ul>
           </li>
@@ -83,7 +86,7 @@
             </ul>
           </li>
           <li>
-            <a href="#">Productos</a>
+            <a href="/Configuraciones">Configuraciones</a>
             <ul class="submenu">
               <li><a href="#" onclick="changeContent('Agregar Producto')">Agregar Producto</a></li>
               <li><a href="#" onclick="changeContent('Editar Producto')">Editar Producto</a></li>
@@ -102,10 +105,13 @@
       </div>
     </aside>
 
-    <main class="Contenido-Main">
-      <h1  id="page-title"><%= pageTitle %></h1> 
+    <main class="Contenido-Main"  id="dynamic-content">
+      <div class="Contenedor_Mostrar">
+        <h1  id="page-title"><%= pageTitle %></h1> 
       
-      <%-body%>
+        <%-body%>
+      </div>
+     
     </main>
   </div>
 <script src="/js/index.js"></script>

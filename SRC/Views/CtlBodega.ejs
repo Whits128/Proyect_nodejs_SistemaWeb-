@@ -21,6 +21,7 @@
                     <tr>
                         <th>CODIGO</th>
                         <th>NOMBRE</th>
+                        <th>UBICACION</th>
                         <th>ESTADO</th>     
                                                   
                                          
@@ -47,6 +48,10 @@
                             <div class="input-container ">
                                 <input placeholder="" type="text" class="input" id="nombre" >
                                 <label  for=" nombre">Nombre</label>
+                            </div>
+                            <div class="input-container ">
+                                <input placeholder="" type="text" class="input" id="ubicacion" >
+                                <label  for="ubicacion">Ubicacion</label>
                             </div>
                             <div class="input-container">
                                 <select id="estado" class="input">
@@ -84,9 +89,9 @@
     <script>
         window.onload = async () => {
         $(document).ready(function() {   
-                 let url = 'http://localhost:3000/Categoria/';
+                 let url = 'http://localhost:3000/Bodega/';
                  let opcion = null;
-                 let codigo, nombre, estado, fila;
+                 let codigo, nombre, detalle ,estado, fila;
      
                   // Función para mostrar u ocultar el botón de agregar
              function mostrarBotonAgregar(mostrar) {
@@ -101,14 +106,15 @@
      
                  //MOSTRAR
            
-                 console.log('Json', 'http://localhost:3000/Categoria/');
+                 
                  let tabla = $('#Tabla').DataTable({            
                      "ajax":{
                          "url": url,
                          "dataSrc":""
                      },       "columns":[
                          {"data":"Codigo"},
-                         {"data":"Nombre"},
+                         {"data":"NOMBRE"},
+                         {"data":"UBICACION"},
                          {"data":"Estado"},
                          {
                      "render": function (data, type, row) {
@@ -158,7 +164,7 @@
                      $("#form").trigger("reset");
                      $(".modal-header").css( "background-color", "#23272b");
                      $(".modal-header").css( "color", "white" );
-                     $(".modal-title").text("Crear Artículo");
+                     $(".modal-title").text("Crear Bodega");
                      $('#modalCRUD').modal('show');	    
                  });    
                  //EDITAR        
@@ -167,23 +173,24 @@
                      fila = $(this).closest("tr");	        
                      codigo = parseInt(fila.find('td:eq(0)').text());
                      nombre = fila.find('td:eq(1)').text();
-                     estado = fila.find('td:eq(2)').text();            
+                     ubicacion= fila.find('td:eq(2)').text();
+                     estado = fila.find('td:eq(3)').text();            
                      $("#id").val(codigo);
                      $("#nombre").val(nombre);
+                     $("#ubicacion").val(ubicacion);
                      $("#estado").val(estado);
                      $(".modal-header").css("background-color", "#7303c0");
                      $(".modal-header").css("color", "white" );
-                     $(".modal-title").text("Editar Artículo");		
+                     $(".modal-title").text("Editar Bodega");		
                      $('#modalCRUD').modal('show');		  
                       
                  });
              
-     
-     // Dar Baja o Activar
+   
      // Dar Baja o Activar
      $(document).on("click", ".btnBorrar, .btnActivar", function () {
          fila = $(this).closest("tr");
-         estado = fila.find('td:eq(2)').text();
+         estado = fila.find('td:eq(3)').text();
          codigo = parseInt(fila.find('td:eq(0)').text());
      
          if (estado.toLowerCase() === 'activo') {
@@ -193,10 +200,10 @@
                  confirmButtonText: `Confirmar`,
              }).then((result) => {
                  if (result.isConfirmed) {
-                     console.log('Enviando solicitud para dar de baja:', 'http://localhost:3000/Categoria/DarDeBaja/' + codigo);
+                     console.log('Enviando solicitud para dar de baja:', 'http://localhost:3000/Bodega/DarDeBaja/' + codigo);
      
                      $.ajax({
-                         url: 'http://localhost:3000/Categoria/DarDeBaja/' + codigo,
+                         url: 'http://localhost:3000/Bodega/DarDeBaja/' + codigo,
                          method: 'put',
                          success: function () {
                              console.log('Éxito al dar de baja el registro');
@@ -216,10 +223,10 @@
                  confirmButtonText: `Confirmar`,
              }).then((result) => {
                  if (result.isConfirmed) {
-                     console.log('Enviando solicitud para activar:', 'http://localhost:3000/Categoria/Activar/' + codigo);
+                     console.log('Enviando solicitud para activar:', 'http://localhost:3000/Bodega/Activar/' + codigo);
      
                      $.ajax({
-                         url: 'http://localhost:3000/Categoria/Activar/' + codigo,
+                         url: 'http://localhost:3000/Bodega/Activar/' + codigo,
                          method: 'put',
                          success: function () {
                              console.log('Éxito al activar el registro');
@@ -245,13 +252,14 @@
                      
                      codigo = $.trim($('#id').val());    
                      nombre = $.trim($('#nombre').val());
+                     ubicacion = $.trim($('#ubicacion').val());
                      estado = $("#estado").val() ;          
                      if(opcion=='crear'){                
                          $.ajax({                    
                              url: url,
                              method: 'post',                                                         
                              contentType: 'application/json',  
-                             data:  JSON.stringify({nombre:nombre, estado:estado}),                       
+                             data:  JSON.stringify({nombre:nombre,ubicacion:ubicacion, estado:estado}),                       
                              success: function(data) {                       
                                  tabla.ajax.reload(null, false);    
                                  $('#btnCrear').prop('disabled',false);  
@@ -266,7 +274,7 @@
                              url: url+codigo,
                              method: 'put',                                        
                              contentType: 'application/json',  
-                             data:  JSON.stringify({codigo:codigo, nombre:nombre, estado:estado}),                       
+                             data:  JSON.stringify({codigo:codigo,nombre:nombre,ubicacion:ubicacion, estado:estado}),                       
                              success: function(data) {                       
                                  tabla.ajax.reload(null, false);                        
                              }

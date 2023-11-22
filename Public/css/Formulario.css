@@ -1,16 +1,33 @@
+/*Importamos variables globales*/
+@import '/css/VariablesGlobales.css'; 
+
+
 /* Estilos generales para el formulario */
 .modal-dialog {
-    margin: 1.75rem auto;
+    margin: auto;
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    transform: translate(-20%, -20%);
 }
 
 .modal-content {
-    background-color: #f8f8f8;
+    background-color:var(--color-8);
     border-radius: 20px;
     box-sizing: border-box;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+   
     width: 900px;
 
 }
+.modal-footer{
+    display: flex;
+    justify-content: center;
+   
+}
+#modalCRUD .modal-header {
+    background-color:var(--color-11) !important; /* Usa !important para asegurarte de que esta regla tenga prioridad */
+}
+
 .custom-container {
     margin-bottom: 20px;
     padding: 5px;
@@ -20,22 +37,24 @@
 /* Estilo para el contenedor de la tabla */
 .table-container {
     width: 1100px; /* Ancho deseado */
+    overflow-x: auto;
   
 }
 
 
 
 .row{
-
+width: 100%;
     margin-bottom: 20px; padding: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 .modal-title {
-    color: #eee;
-    font-family: sans-serif;
+    color: var(--color-1);
+    font-family:var(--font-family);
     font-size: 36px;
     font-weight: 600;
     margin-bottom: 10px;
     width: 100%;
+
 }
 
 .form {
@@ -50,44 +69,53 @@
     margin-bottom: 20px;
 }
 
-/* Estilos para el campo de entrada y textarea */
-.input-container input, .input-container textarea {
+.input-container input,
+.input-container textarea,
+.input-container select {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
+   font-family: var(--font-family);
+    background-color: var(--color-3);
+    border: 1px solid var(--color-1);
+    color: var(--color-11);
     border-radius: 5px;
     resize: vertical;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color var(--color-3), box-shadow 0.2s;
+
+}
+.input-container input[type="date"] + label {
+    top: -16px !important;
+    font-size: 16px !important;
+    border-radius: 10px !important;
+    color: var(--color-2) !important;
+    background-color: var(--color-8) !important;
+    padding: 0 5px !important;
+}
+.input-container input[type="file"] + label {
+    top: -16px !important;
+    font-size: 16px !important;
+    border-radius: 10px !important;
+    color: var(--color-2) !important;
+    background-color: var(--color-8) !important;
+    padding: 0 5px !important;
 }
 
-/* Estilos para el label */
+
 .input-container label {
     position: absolute;
     top: 10px;
     left: 10px;
+    display: flex;
+    color: var(--color-10);
+    justify-content: center;
     pointer-events: none;
     transition: 0.2s;
-    background: #f8f8f8;
+    
     transform-origin: left;
     padding: 0 5px;
     z-index: 1;
 }
-input, select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
 
-/* Estilo para el campo de entrada o select cuando está enfocado */
-input:focus, select:focus {
-    border-color: #007BFF;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-}
-
-/* Estilo para el label cuando el campo de entrada o select tiene el foco o contiene texto */
-/* Estilo para el label cuando el campo de entrada o select tiene el foco o contiene texto */
 .input-container input:focus + label,
 .input-container select:focus + label,
 .input-container input:valid + label,
@@ -95,29 +123,19 @@ input:focus, select:focus {
 .input-container textarea:focus + label,
 .input-container textarea:valid + label {
     top: -16px;
-    font-size: 14px;
-    color: #007BFF;
-    background: #f8f8f8;
+   font-family: var(--font-family);
+    font-size: 16px;
+    border-radius: 10px;
+    color: var(--color-2);
+    background-color: var(--color-8);
     padding: 0 5px;
 }
-
+div.dataTables_wrapper div.dataTables_length select {
+     width: 50px; 
+    display: inline-block;
+}
 
 /* Estilo especial para el select cuando tiene el foco */
 select:focus + label {
     top: -16px;
-}
-/* Estilos para el botón de envío */
-.submit {
-    background-color: #007BFF;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.submit:hover {
-    background-color: #0056b3;
 }

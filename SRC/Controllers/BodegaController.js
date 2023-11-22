@@ -1,18 +1,19 @@
 import { getConnection, querys, sql } from "../DataBase";
-
-export const GetMarcas = async (req, res) => {
+export const GetBodegas = async (req, res) => {
   try {
-    // Recopila los datos específicos para esta vista
-  
-    res.render('CtlMarcas.ejs',{ pageTitle: 'Marcas', user: req.user });
-    //res.json(result.recordset);
+    const { filtro } = req.params;
+
+    // Lógica para recopilar datos específicos para esta vista
+    // Puedes pasar el filtro a la vista
+    res.render('CtlBodega.ejs', { pageTitle: 'Bodega', user: req.user, filtro, });
   } catch (error) {
     res.status(500);
-    //res.send(error.message);  
+    res.send(error.message);
   }
 };
 
-export const GetMarca = async (req, res) => {
+
+export const GetBodega = async (req, res) => {
   try {
     const { filtro } = req.query; // Cambio aquí
 
@@ -20,11 +21,11 @@ export const GetMarca = async (req, res) => {
     let result;
 
     if (filtro === 'Activos') {
-      result = await pool.request().query(`${querys.MostrarMarcas} WHERE Estado = 'Activo'`);
+      result = await pool.request().query(`${querys.MostrarBodegas} WHERE Estado = 'Activo'`);
     } else if (filtro === 'Inactivos') {
-      result = await pool.request().query(`${querys.MostrarMarcas} WHERE Estado != 'Activo'`);
+      result = await pool.request().query(`${querys.MostrarBodegas} WHERE Estado != 'Activo'`);
     } else {
-      result = await pool.request().query(querys.MostrarMarcas);
+      result = await pool.request().query(querys.MostrarBodegas);
     }
 
     res.json(result.recordset);
@@ -34,14 +35,12 @@ export const GetMarca = async (req, res) => {
   }
 };
 
-
-
-export const saveMarca = async (req, res) => {
-  const { nombre,detalleMarca } = req.body;
+export const saveBodega = async (req, res) => {
+  const { nombre ,ubicacion} = req.body;
   let { estado } = req.body;
 
   // Validación
-  if (nombre == null  || detalleMarca == null) {
+  if (nombre == null) {
     return res.status(400).json({ msg: "Bad Request. Please provide a nombre" });
   }
 
@@ -53,13 +52,13 @@ export const saveMarca = async (req, res) => {
     await pool
       .request()
       .input("nombre", sql.VarChar, nombre)
-      .input("detalleMarca", sql.VarChar, detalleMarca)
+      .input("ubicacion", sql.VarChar, ubicacion)
       .input("estado", sql.VarChar, estado)
-      .query(querys.GuardarMarcas);
+      .query(querys.GuardarBodega);
 
-    console.log("Nuevo registro creado:", { nombre, estado });
+    console.log("Nuevo registro creado:", { nombre,ubicacion, estado });
 
-    res.json({ nombre,detalleMarca,estado });
+    res.json({ nombre, ubicacion,estado });
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -70,8 +69,8 @@ export const saveMarca = async (req, res) => {
 
 
 
-export const  UpdateMarca = async (req, res) => {
-  const {  nombre, estado,detalleMarca } = req.body;
+export const  UpdateBodega = async (req, res) => {
+  const { nombre,ubicacion, estado } = req.body;
 
   // validating
   if ( nombre == null || estado == null) {
@@ -84,16 +83,17 @@ export const  UpdateMarca = async (req, res) => {
       .request()
       .input("codigo", req.params.id)
       .input("nombre", sql.VarChar, nombre)
-      .input("detalleMarca", sql.VarChar, detalleMarca)
+      .input("ubicacion", sql.VarChar, ubicacion)
       .input("estado", sql.VarChar, estado)
   
-      .query(querys.updateMarcas);
-    res.json({ nombre,detalleMarca,estado });
+      .query(querys.ActualizarBodega);
+    res.json({ nombre, ubicacion,estado });
   } catch (error) {
     res.status(500);
     res.send(error.message);
   }
 };
+
 
 
 
@@ -105,7 +105,7 @@ export const DarDeBaja = async (req, res) => {
     await pool
       .request()
       .input("codigo", req.params.id) 
-      .query(querys.DarDeBajaMarcas);
+      .query(querys.DarDeBajaColores);
     
     console.log('Talla dada de baja exitosamente.');
     res.json({ msg: "Size deactivated successfully" });
@@ -124,7 +124,7 @@ export const Activar = async (req, res) => {
     await pool
       .request()
       .input("codigo", req.params.id) 
-      .query(querys.ActivarMarcas);
+      .query(querys.ActivarColores);
     
     console.log('Talla activada exitosamente.');
     res.json({ msg: "Size activated successfully" });

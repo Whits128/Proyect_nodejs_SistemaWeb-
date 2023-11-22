@@ -21,8 +21,10 @@
                     <tr>
                         <th>CODIGO</th>
                         <th>NOMBRE</th>
-                        <th>ESTADO</th>     
-                                                  
+                        <th>DESCRIPCION</th>
+                        <th>FECHA DE INICIO</th>
+                        <th>FECHA FIN</th>
+                        <th>ESTADO</th>  
                                          
                         <th class="text-center">ACCIONES</th>                      
                     </tr>
@@ -45,9 +47,23 @@
                     <div class="modal-body form">                
                             <input id="id" hidden>
                             <div class="input-container ">
-                                <input placeholder="" type="text" class="input" id="nombre" >
-                                <label  for=" nombre">Nombre</label>
+                                <input placeholder="" type="text" class="input" id="nombre" required>
+                                <label  for="nombre">Nombre</label>
                             </div>
+                            <div class="input-container ">
+                                <input placeholder="" type="text" class="input" id="descripcion" required>
+                                <label  for="descripcion">Descripcion</label>
+                            </div>
+        
+                            <div class="input-container ">
+                                <input placeholder="" type="date" class="input" id="fechaInicio" required>
+                                <label  for="fechaInicio">Fecha de Inicio</label>
+                            </div>
+                            <div class="input-container ">
+                                <input placeholder="" type="date" class="input" id="fechaFin" required>
+                                <label  for="fechaFin">Fecha  Fin</label>
+                            </div>
+                        
                             <div class="input-container">
                                 <select id="estado" class="input">
                                     <option value="Activo">Activo</option>
@@ -58,8 +74,6 @@
                                 </select>
                                 <label for="estado">Estado</label>
                             </div>
-                         
-                            
                                 </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -79,12 +93,12 @@
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     </section> 
     <script>
         window.onload = async () => {
         $(document).ready(function() {   
-                 let url = 'http://localhost:3000/Categoria/';
+                 let url = 'http://localhost:3000/Promocion/';
                  let opcion = null;
                  let codigo, nombre, estado, fila;
      
@@ -106,10 +120,28 @@
                      "ajax":{
                          "url": url,
                          "dataSrc":""
-                     },       "columns":[
+                     },  "scrollX": true, // Habilita el scroll horizontal
+    "scrollCollapse": true, // Colapso de scroll si no es necesario
+                     
+                     "columns":[
                          {"data":"Codigo"},
-                         {"data":"Nombre"},
-                         {"data":"Estado"},
+                         {"data": "Nombre"},
+        {"data": "Descripcion"},
+        {
+            "data": "FechaInicio",
+            "targets": 3,
+            "render": function (data, type, row) {
+                return moment.utc(data).format('YYYY-MM-DD');
+            }
+        },
+        {
+            "data": "FechaFin",
+            "targets": 4,
+            "render": function (data, type, row) {
+                return moment.utc(data).format('YYYY-MM-DD');
+            }
+        },
+        {"data": "Estado"},
                          {
                      "render": function (data, type, row) {
                          // Conditionally render buttons based on estado
@@ -158,7 +190,7 @@
                      $("#form").trigger("reset");
                      $(".modal-header").css( "background-color", "#23272b");
                      $(".modal-header").css( "color", "white" );
-                     $(".modal-title").text("Crear Artículo");
+                     $(".modal-title").text("Crear Promociones");
                      $('#modalCRUD').modal('show');	    
                  });    
                  //EDITAR        
@@ -167,13 +199,24 @@
                      fila = $(this).closest("tr");	        
                      codigo = parseInt(fila.find('td:eq(0)').text());
                      nombre = fila.find('td:eq(1)').text();
-                     estado = fila.find('td:eq(2)').text();            
-                     $("#id").val(codigo);
-                     $("#nombre").val(nombre);
-                     $("#estado").val(estado);
+                    descripcion = fila.find('td:eq(2)').text();
+                    fechaInicio = fila.find('td:eq(3)').text();
+                    fechaFin = fila.find('td:eq(4)').text();
+                    estado = fila.find('td:eq(5)').text();
+    
+                    
+    
+                    $("#id").val(codigo);
+                    $("#nombre").val(nombre);
+                    $("#descripcion").val(descripcion);
+                    const fechaFormateada = moment(fechaInicio).format('YYYY-MM-DD');
+                    $("#fechaInicio").val(fechaFormateada);
+                    const fechaFormateada2 = moment(fechaFin).format('YYYY-MM-DD');
+                    $("#fechaFin").val(fechaFormateada2);
+                    $("#estado").val(estado);
                      $(".modal-header").css("background-color", "#7303c0");
                      $(".modal-header").css("color", "white" );
-                     $(".modal-title").text("Editar Artículo");		
+                     $(".modal-title").text("Editar Promociones");		
                      $('#modalCRUD').modal('show');		  
                       
                  });
@@ -183,7 +226,7 @@
      // Dar Baja o Activar
      $(document).on("click", ".btnBorrar, .btnActivar", function () {
          fila = $(this).closest("tr");
-         estado = fila.find('td:eq(2)').text();
+         estado = fila.find('td:eq(8)').text();
          codigo = parseInt(fila.find('td:eq(0)').text());
      
          if (estado.toLowerCase() === 'activo') {
@@ -193,10 +236,10 @@
                  confirmButtonText: `Confirmar`,
              }).then((result) => {
                  if (result.isConfirmed) {
-                     console.log('Enviando solicitud para dar de baja:', 'http://localhost:3000/Categoria/DarDeBaja/' + codigo);
+                     console.log('Enviando solicitud para dar de baja:', 'http://localhost:3000/Promocion/DarDeBaja/' + codigo);
      
                      $.ajax({
-                         url: 'http://localhost:3000/Categoria/DarDeBaja/' + codigo,
+                         url: 'http://localhost:3000/Promocion/DarDeBaja/' + codigo,
                          method: 'put',
                          success: function () {
                              console.log('Éxito al dar de baja el registro');
@@ -216,10 +259,10 @@
                  confirmButtonText: `Confirmar`,
              }).then((result) => {
                  if (result.isConfirmed) {
-                     console.log('Enviando solicitud para activar:', 'http://localhost:3000/Categoria/Activar/' + codigo);
+                     console.log('Enviando solicitud para activar:', 'http://localhost:3000/Promocion/Activar/' + codigo);
      
                      $.ajax({
-                         url: 'http://localhost:3000/Categoria/Activar/' + codigo,
+                         url: 'http://localhost:3000/Promocion/Activar/' + codigo,
                          method: 'put',
                          success: function () {
                              console.log('Éxito al activar el registro');
@@ -245,13 +288,20 @@
                      
                      codigo = $.trim($('#id').val());    
                      nombre = $.trim($('#nombre').val());
-                     estado = $("#estado").val() ;          
+                    descripcion =$.trim($('#descripcion').val());
+                    tipoMaterial=$.trim($('#tipoMaterial').val());
+                    tipodeCostura =$.trim($('#tipodeCostura').val());
+                    tipoSuela =$.trim($('#tipoSuela').val());
+                    fabricante=$.trim($('#fabricante').val());
+                    observaciones=$.trim($('#observaciones').val());
+                    estado = $("#estado").val() ;          
                      if(opcion=='crear'){                
                          $.ajax({                    
                              url: url,
                              method: 'post',                                                         
                              contentType: 'application/json',  
-                             data:  JSON.stringify({nombre:nombre, estado:estado}),                       
+                             data:  JSON.stringify({nombre:nombre, descripcion:descripcion,tipoMaterial:tipoMaterial, 
+                                    tipodeCostura:tipodeCostura,tipoSuela:tipoSuela,fabricante:fabricante,observaciones:observaciones, estado:estado}),                       
                              success: function(data) {                       
                                  tabla.ajax.reload(null, false);    
                                  $('#btnCrear').prop('disabled',false);  
@@ -266,7 +316,8 @@
                              url: url+codigo,
                              method: 'put',                                        
                              contentType: 'application/json',  
-                             data:  JSON.stringify({codigo:codigo, nombre:nombre, estado:estado}),                       
+                             data:  JSON.stringify({codigo:codigo,nombre:nombre, descripcion:descripcion,tipoMaterial:tipoMaterial, 
+                                    tipodeCostura:tipodeCostura,tipoSuela:tipoSuela,fabricante:fabricante,observaciones:observaciones, estado:estado}),                       
                              success: function(data) {                       
                                  tabla.ajax.reload(null, false);                        
                              }

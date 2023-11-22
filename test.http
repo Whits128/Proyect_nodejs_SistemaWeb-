@@ -1,40 +1,79 @@
 ###
 
-GET http://localhost:3000/MaterialesZapato
-###
-PUT http://localhost:3000/MaterialesZapato/1
-Content-Type: application/json
+GET http://localhost:3000/Promocion
 
+###
+PUT  http://localhost:3000/Bodega/1
+Content-Type: application/json
+ 
 {
-  "nombre": "2sd",
-  "descripcion": "Descripción del material",
-  "tipoMaterial": "Tipo de material",
-  "tipodeCostura": "Tipo de costura",
-  "tipoSuela": "Tipo de suela",
-  "fabricante": "Nombre del fabricante",
-  "observaciones": "Observaciones adicionales",
+  "nombre": "khsdjsdhj",
+  "ubicacion": "nuevo",
   "estado": "Activo"
 }
 
 
 ###
+POST http://localhost:3000/Configuracion
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
-PUT  http://localhost:3000/color/1
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="nombreNegocio"
+
+Nombre de Mi Negocio
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="logoLocal"; filename="3fa3d6b5dc400bb1dsdbfb051ce48fc4afb.jpg"
+Content-Type: image/jpeg
+
+(binary data of your image file)
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="ruc"
+
+12345678901
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="telefonos"
+
+123-456-7890
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="correo"
+
+correo@miempresa.com
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="direccion"
+
+Calle Principal #123
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="estado"
+
+Activo
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="usuarioModificacion"
+
+NombreUsuario
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="tipoOperacion"
+
+INSERT
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+
+###
+
+PUT  http://localhost:3000/Talla/Activar/2
 Content-Type: application/json
 
 {
-  "color": "s",
-  "estado": 0
+ 
+
 }
 
 ### Prueba de acceso al recurso protegido con un usuario "Admin"
-GET http://localhost:3000/Categorias
+GET http://localhost:3000/registerUser
 Authorization: Bearer <Admin>
 
 ####
 POST http://localhost:3000/registerUser
 Content-Type: application/json
-
 
 {
   "Nombres": "Omar",
