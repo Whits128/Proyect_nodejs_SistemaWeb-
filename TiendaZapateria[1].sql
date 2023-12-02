@@ -8,7 +8,8 @@ GO
 -- Tabla de Roles
 CREATE TABLE Roles (
     IdRol INT PRIMARY KEY IDENTITY(1,1),
-    NombreRol NVARCHAR(50) UNIQUE NOT NULL
+    NombreRol NVARCHAR(50) UNIQUE NOT NULL,
+	 Estado NVARCHAR(50) DEFAULT 'Activo'
 );
 GO
 
@@ -22,8 +23,13 @@ CREATE TABLE USUARIO (
     LoginClave VARCHAR(100),
     IdRol INT REFERENCES Roles(IdRol),
     Estado NVARCHAR(50) DEFAULT 'Activo',
-    FechaRegistro DATETIME DEFAULT GETDATE()
+    FechaRegistro DATETIME DEFAULT GETDATE(),
+    NumSesiones INT DEFAULT 0,
+    FechaInicioSesion DATETIME,
+    FechaFinSesion DATETIME
 );
+GO
+
 GO
 -- Tabla de Recursos (páginas o funcionalidades)
 CREATE TABLE Recursos (
@@ -248,20 +254,7 @@ CREATE TABLE Proveedores (
     Direccion VARCHAR(200),
     Telefono VARCHAR(20),
     Ruc NVARCHAR(100) NULL,
-    DireccionProveedor NVARCHAR(650) NOT NULL,
-    Departamento NVARCHAR(100) NULL,
-    Municipio NVARCHAR (50),
     EmailProveedor NVARCHAR(200) NOT NULL,
-  Estado Nvarchar(50) DEFAULT 'Activo'
-);
-GO
-
--- Tabla Compras
-CREATE TABLE Compras (
-    ID_Compra INT PRIMARY KEY IDENTITY(1,1),
-	CodigoCompra nvarchar(max) NOT NULL,
-    FechaCompra DATETIME NOT NULL,
-    Total DECIMAL(10, 2),
   Estado Nvarchar(50) DEFAULT 'Activo'
 );
 GO
@@ -285,6 +278,15 @@ CREATE TABLE Detalle_Factura (
     Subtotal DECIMAL(10, 2),
     Descuento DECIMAL(10, 2),
 	  Estado Nvarchar(50) DEFAULT 'Activo'
+);
+GO
+-- Tabla Compras
+CREATE TABLE Compras (
+    ID_Compra INT PRIMARY KEY IDENTITY(1,1),
+	CodigoCompra nvarchar(max) NOT NULL,
+    FechaCompra DATETIME NOT NULL,
+    Total DECIMAL(10, 2),
+  Estado Nvarchar(50) DEFAULT 'Activo'
 );
 GO
 
@@ -361,17 +363,7 @@ VALUES
     ('Usuario Regular'),
     ('Moderador'),
     ('Invitado');
-go
-INSERT INTO ConfiguracionAcceso (Ruta, IdRecurso, IdRol) VALUES
- ('/Promociones',17, 1),
- ('/Categorias', 11, 1),
- ('/Colores', 10,1),
- ('/Configuraciones',7,1),
- ('/Empleados',14, 1),
-  ('/Marcas', 9,1),
- ('/MaterialesZapatos',13,1),
-  ('/Tallas',12,1);
-  go
+go 
 	   -- Tabla Marcas
 INSERT INTO Marcas (Nombre, DetalleMarca, Estado)
 VALUES
@@ -516,9 +508,10 @@ BEGIN
         INSERT INTO HistorialConfiguraciones (FKConfiguraciones, ColumnaModificada, ValorAntiguo, ValorNuevo, FechaModificacion, UsuarioModificacion, TipoOperacion)
         VALUES (@PKConfiguraciones, 'NombreNegocio', @OldNombreNegocio, ISNULL(@NombreNegocio, ''), GETDATE(), @UsuarioModificacion, @TipoOperacion);
 
-    IF @OldLogoLocal != ISNULL(@LogoLocal, '') 
-        INSERT INTO HistorialConfiguraciones (FKConfiguraciones, ColumnaModificada, ValorAntiguo, ValorNuevo, FechaModificacion, UsuarioModificacion, TipoOperacion)
-        VALUES (@PKConfiguraciones, 'LogoLocal', @OldLogoLocal, ISNULL(@LogoLocal, ''), GETDATE(), @UsuarioModificacion, @TipoOperacion);
+   IF (@OldLogoLocal IS NULL AND @LogoLocal IS NOT NULL) OR (@OldLogoLocal IS NOT NULL AND @LogoLocal IS NULL) OR (@OldLogoLocal != ISNULL(@LogoLocal, ''))
+    INSERT INTO HistorialConfiguraciones (FKConfiguraciones, ColumnaModificada, ValorAntiguo, ValorNuevo, FechaModificacion, UsuarioModificacion, TipoOperacion)
+    VALUES (@PKConfiguraciones, 'LogoLocal', @OldLogoLocal, ISNULL(@LogoLocal, ''), GETDATE(), @UsuarioModificacion, @TipoOperacion);
+
 
     IF @OldRUC != ISNULL(@RUC, '') 
         INSERT INTO HistorialConfiguraciones (FKConfiguraciones, ColumnaModificada, ValorAntiguo, ValorNuevo, FechaModificacion, UsuarioModificacion, TipoOperacion)

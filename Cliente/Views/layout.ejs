@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tu Tienda de Zapatos - Sistema de Facturación</title>
+  <link rel="stylesheet" type="text/css" href="/css/Styles.css">
+  <script src="https://kit.fontawesome.com/2cb25f2c39.js"></script>
+  <!-- Aquí se enlaza el archivo CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body>
+  <div class="ContenedorPadre-CSS-GRID">
+    <header>
+      <div class="logo-section">
+        <div class="Conteiner-logo">
+          <img src="/perfil.png" alt="Logo" class="logo-image">
+        </div>
+        
+        <div class="local-name">
+          <h1 >Nombre del Local</h1>
+        </div>
+      </div>
+      <div class="container_notifications">
+        <div class="notifications-section">
+          <button class="button_notifications" onclick="toggleNotifications()">Notificaciones</button>
+          <div id="notification-dropdown" class="notification-dropdown">
+            <div class="notification-header"> <h2>Notificaciones</h2></div>
+            <ul id="notification-list">
+              <!-- Notificaciones se cargarán aquí -->
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="user-section" id="user-section">
+        <img src="/perfil.png" alt="Usuario">
+        <% if (typeof userData === 'undefined') { %>
+          <% userData = {} %>
+        <% } %>
+        <span class="user-name" id="user-name"><%= userData.Nombres || 'Usuario no autenticado' %></span>
+        <div id="user-menu" class="user-menu">
+          <ul>
+            <li><a href="#">Perfil</a></li>
+            <li><a href="#">Configuración</a></li>
+            <li><a href="/logout">Salir</a></li>
+          </ul>
+          <div class="arrow-up"></div>
+        </div>
+      </div>
+    </header>
+
+    <aside>
+ <!-- Sección del perfil de usuario -->
+<div class="user-profile">
+  <div class="profile-card">
+    <div class="profile-card__img">
+      <img src="/perfil.png" alt="Avatar"> 
+    </div>
+    <div class="profile-card__info">
+      <% if (!userData) { userData = {} } %>
+      
+      <div class="profile-card__title">
+        <h1><%= userData.Nombres || 'Usuario no autenticado' %></h1>
+      </div>
+
+      <% console.log('userData object:', userData); %>
+
+      <div class="profile-card__subtitle">
+        <h3><%= userData.NombreRol || 'Rol no definido' %></h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+    
+
+      <!-- Sección del menú -->
+       <!-- Contenido de la sección del menú -->
+       <div class="menu-section">
+        <ul class="menu">
+          <li><a href="/Inicio" onclick="changeContent('Dashboard')">Dashboard</a></li>
+          <li>
+            <a href="#"  onclick="changeContent('Inventario')">Inventario</a>
+            <ul class="submenu">
+              <li><a href="/api/categorias/page" onclick="changeContent('Categorias')">Categorias </a></li>
+              <li><a href="/Colores" onclick="changeContent('Colores')">Colores </a></li>
+              <li><a href="/Marcas" onclick="changeContent('Marcas')">Marcas </a></li>
+              <li><a href="/Tallas" onclick="changeContent('Categorias')">Categorias </a></li>
+              <li><a href="#" onclick="changeContent('Agregar Categoria')">Agregar Categoria</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="/Productos">Productos</a>
+            <ul class="submenu">
+              <li><a href="#" onclick="changeContent('Agregar Producto')">Agregar Producto</a></li>
+              <li><a href="#" onclick="changeContent('Editar Producto')">Editar Producto</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="/Configuraciones">Configuraciones</a>
+            <ul class="submenu">
+              <li><a href="#" onclick="changeContent('Agregar Producto')">Agregar Producto</a></li>
+              <li><a href="#" onclick="changeContent('Editar Producto')">Editar Producto</a></li>
+            </ul>
+          </li>
+          <li><a href="#" onclick="changeContent('Pedidos')">Pedidos</a></li>
+          <li><a href="#" onclick="changeContent('Clientes')">Clientes</a></li>
+          <li>
+            <a href="#">Informes</a>
+            <ul class="submenu">
+              <li><a href="#" onclick="changeContent('Informe Mensual')">Informe Mensual</a></li>
+              <li><a href="#" onclick="changeContent('Informe Anual')">Informe Anual</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="Contenido-Main"  id="dynamic-content">
+      <div class="Contenedor_Mostrar">
+        <h1  id="page-title"><%= pageTitle %></h1> 
+      
+        <%-body%>
+      </div>
+     
+    </main>
+  </div>
+<script src="/js/index.js"></script>
+
+</body>
+</html>

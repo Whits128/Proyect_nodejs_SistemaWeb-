@@ -1,0 +1,153 @@
+/*Importamos variables globales*/
+@import '/css/VariablesGlobales.css'; 
+
+
+/* Estilos generales para el formulario */
+.modal-dialog {
+    margin: auto;
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    transform: translate(-20%, -20%);
+}
+
+.modal-content {
+    background-color:var(--color-8);
+    border-radius: 20px;
+    box-sizing: border-box;
+   
+    width: 1000px;
+
+}
+.modal-footer{
+    display: flex;
+    justify-content: center;
+   
+}
+#modalCRUD .modal-header {
+    background-color:var(--color-11) !important; /* Usa !important para asegurarte de que esta regla tenga prioridad */
+}
+
+.custom-container {
+    margin-bottom: 20px;
+    padding: 5px;
+
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+/* Estilo para el contenedor de la tabla */
+.table-container {
+    width: 100%; /* Ancho deseado */
+    overflow-x: auto;
+  
+}
+
+#Tabla th.custom-column {
+    width: 110px; /* Establece el ancho máximo para el encabezado de la columna específica */
+}
+
+#Tabla td.custom-column {
+    width: 110px; /* Establece el ancho máximo para las celdas de la columna específica */
+}
+#Tabla td.custom-column2 {
+    width: 180px; /* Establece el ancho máximo para las celdas de la columna específica */
+}
+#Tabla th.custom-column2 {
+    width: 180px; /* Establece el ancho máximo para el encabezado de la columna específica */
+}
+
+.row{
+
+    margin-bottom: 20px; padding: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+.modal-title {
+    color: var(--color-1);
+    font-family:var(--font-family);
+    font-size: 36px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    width: 100%;
+
+}
+
+.form {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding-top: 30px;
+}
+
+.input-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-container input,
+.input-container textarea,
+.input-container select {
+    width: 100%;
+    padding: 10px;
+   font-family: var(--font-family);
+    background-color: var(--color-3);
+    border: 1px solid var(--color-1);
+    color: var(--color-11);
+    border-radius: 5px;
+    resize: vertical;
+    transition: border-color var(--color-3), box-shadow 0.2s;
+
+}
+.input-container input[type="date"] + label {
+    top: -16px !important;
+    font-size: 16px !important;
+    border-radius: 10px !important;
+    color: var(--color-2) !important;
+    background-color: var(--color-8) !important;
+    padding: 0 5px !important;
+}
+.input-container input[type="file"] + label {
+    top: -16px !important;
+    font-size: 16px !important;
+    border-radius: 10px !important;
+    color: var(--color-2) !important;
+    background-color: var(--color-8) !important;
+    padding: 0 5px !important;
+}
+
+
+.input-container label {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    color: var(--color-10);
+    justify-content: center;
+    pointer-events: none;
+    transition: 0.2s;
+    
+    transform-origin: left;
+    padding: 0 5px;
+    z-index: 1;
+}
+
+.input-container input:focus + label,
+.input-container select:focus + label,
+.input-container input:valid + label,
+.input-container select:valid + label,
+.input-container textarea:focus + label,
+.input-container textarea:valid + label {
+    top: -16px;
+   font-family: var(--font-family);
+    font-size: 16px;
+    border-radius: 10px;
+    color: var(--color-2);
+    background-color: var(--color-8);
+    padding: 0 5px;
+}
+div.dataTables_wrapper div.dataTables_length select {
+     width: 50px; 
+    display: inline-block;
+}
+
+/* Estilo especial para el select cuando tiene el foco */
+select:focus + label {
+    top: -16px;
+}

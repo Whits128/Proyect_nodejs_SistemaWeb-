@@ -1,0 +1,61 @@
+/* Importar la fuente Open Sans */
+@font-face {
+  font-family: 'Open Sans';
+  src: url('../Fuente/static/OpenSans-Light.ttf') format('truetype');
+  font-style:italic;
+}
+
+/* Variables para colores y fuentes */
+:root {
+  --color-1: #f8fde8;
+  --color-2: #ecfacd;
+  --color-3: #daf5a1;
+  --color-4: #c0ec6a;
+  --color-5: #a6df3c;
+  --color-6: #94d720;
+  --color-7: #689d13;
+  --color-8: #4f7813;
+  --color-9: #415f15;
+  --color-10: #385017;
+  --color-11: #1b2c07;
+  --font-family: 'Open Sans', sans-serif;
+  --font-weight-normal: 400;
+  --font-weight-bold: normal;
+}
+
+/* Estilo común para fuente y color */
+body,
+h1,
+h2,
+h3,
+p,span {
+  font-family: var(--font-family);
+  color: var(--color-1);
+}
+
+/* Estilo de fuente para títulos de nivel 1 (h1) */
+h1 {
+  font-weight: var(--font-weight-bold);
+  font-size: 1.5rem; /* Tamaño de fuente para h1 */
+}
+
+span {
+  font-weight: var(--font-weight-bold);
+  font-size: 1.5rem; /* Tamaño de fuente para h1 */
+}
+/* Estilo de fuente para títulos de nivel 2 (h2) */
+h2 {
+  font-weight: var(--font-weight-bold);
+  font-size: 1.1rem; /* Tamaño de fuente para h2 */
+}
+
+/* Estilo de fuente para títulos de nivel 3 (h3) */
+h3 {
+  font-weight: var(--font-weight-bold);
+  font-size: 1rem; /* Tamaño de fuente para h3 */
+}
+
+/* Estilo de fuente para texto de párrafo */
+p {
+  font-weight: var(--font-weight-normal); /* Peso de la fuente normal para párrafos */
+}

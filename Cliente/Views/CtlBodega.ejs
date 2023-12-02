@@ -1,0 +1,197 @@
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css" integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK" crossorigin="anonymous">
+
+<!-- DataTables Bootstrap CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap5.min.css">
+
+<script  type="module" src="/js/ModulosJS/ModulosJSBodega.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/Formulario.css">
+    
+
+
+
+    <section class="Contenido-Main" id="dynamic-content">
+ 
+    
+        <!-- Contenedor Principal -->
+        <div class="Contenedor_Mostrar">
+            <div class="container-fluid">
+                <!-- Botón para Activar Modal CRUD -->
+                <button id="btnCrear" class="btn btn-dark">Crear</button>
+    
+                <!-- Visualización de DataTables -->
+                <div class="row shadow-lg p-3 mb-5">
+                    <div class="col">
+                        <table id="Tabla" class="table table-striped table-bordered" style="width:100%">
+                            <!-- Encabezados de la Tabla -->
+                            <thead>
+                                <tr>
+                                    <th>CODIGO</th>
+                                    <th>NOMBRE</th>
+                                    <th>UBICACION</th>
+                                    <th>ESTADO</th>                                  
+                                    <th class="text-center">ACCIONES</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody> <!-- El Cuerpo de la Tabla se Poblará Dinámicamente -->
+                        </table>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Modal para Operaciones CRUD -->
+            <div id="modalCRUD" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="error-container"></div>
+
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <!-- Encabezado del Modal -->
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel"></h5>
+                        </div>
+    
+                        <!-- Formulario en el Modal -->
+                        <form id="form">
+                            <!-- Cuerpo del Modal -->
+                            <div class="modal-body form">
+                                <!-- Campos del Formulario -->
+                                <input id="id" hidden>
+                                <div class="input-container">
+                                    <input placeholder="" type="text" class="input" id="nombre">
+                                    <label for="nombre">Nombre</label>
+                                </div>
+                                <div class="input-container">
+                                    <input placeholder="" type="text" class="input" id="ubicacion">
+                                    <label for="ubicacion">Ubicacion</label>
+                                </div>
+                                <div class="input-container">
+                                    <select id="estado" class="input">
+                                        <option value="Activo">Activo</option>
+                                    </select>
+                                    <label for="estado">Estado</label>
+                                </div>
+                            </div>
+    
+                            <!-- Pie del Modal con Botones de Cancelar y Guardar -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="btnGuardar" class="btn btn-dark">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+    </section>
+<!-- jQuery -->
+<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+<!-- Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.min.js" integrity="sha384-5h4UG+6GOuV9qXh6HqOLwZMY4mnLPraeTrjT5v07o347pj6IkfuoASuGBhfDsp3d" crossorigin="anonymous"></script>
+
+<!-- DataTables jQuery Plugin -->
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<!-- DataTables Bootstrap Plugin -->
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    
+
+<style>
+    .error-container {
+        display: none;
+        width: 300px;
+        margin: 10px auto;
+    }
+
+    .error-message {
+        padding: 15px;
+        margin-bottom: 15px;
+        border: 1px solid #d4edda;
+        border-radius: 5px;
+        color: #721c24;
+        background-color: #f8d7da;
+        width: 100%; /* Ajusta el ancho al 100% */
+    }
+
+    .error-message strong {
+        color: #721c24;
+    }
+
+    .error-message .close {
+        color: #721c24;
+    }
+</style>
+
+
+<script>
+    $(document).ready(function () {
+    $('#form').submit(function (e) {
+        e.preventDefault();
+        validarCampos();
+    });
+
+    function validarCampos() {
+        // Limpia los mensajes de error existentes
+        $('.error-message').remove();
+
+        var nombre = $('#nombre').val();
+        var ubicacion = $('#ubicacion').val();
+        var isValid = true;
+
+        if (nombre.trim() === '') {
+            mostrarError('Por favor, ingresa un nombre.');
+            isValid = false;
+        }
+
+        if (ubicacion.trim() === '') {
+            mostrarError('Por favor, ingresa una ubicación.');
+            isValid = false;
+        }
+
+        // Agrega más validaciones según tus requisitos
+
+        if (!isValid) {
+            // Muestra los mensajes de error en el contenedor específico
+            $('.error-container').show();
+        } else {
+            // Si el formulario es válido, oculta el contenedor de errores
+            $('.error-container').hide();
+            enviarFormulario();
+        }
+    }
+
+    function mostrarError(error) {
+        // Crea una nueva alerta de error
+        var alertaError = '<div class="alert alert-warning alert-dismissible show error-message" role="alert">';
+        alertaError += '<strong>Error:</strong> ' + error;
+        alertaError += '<button type="button" class="close" data-dismiss="alert" aria-label="Close">';
+        alertaError += '<span aria-hidden="true">&times;</span>';
+        alertaError += '</button>';
+        alertaError += '</div>';
+
+        // Agrega la alerta al contenedor de errores
+        $('.error-container').append(alertaError);
+    }
+
+    function enviarFormulario() {
+        // Realiza la lógica para enviar el formulario al servidor aquí
+        console.log('Formulario enviado con éxito!');
+    }
+});
+
+   </script>
+
+
+
+

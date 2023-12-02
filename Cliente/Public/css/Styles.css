@@ -1,0 +1,307 @@
+/*Importamos variables globales*/
+@import '/css/VariablesGlobales.css'; 
+/* Estilos generales */
+
+
+html, body {
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+.ContenedorPadre-CSS-GRID  {
+  display: grid;
+  height: 100vh;
+  grid-template-areas: 
+    'aside header' 
+    'aside main' 
+    'aside main';
+  grid-template-columns: 250px auto;
+  grid-template-rows: 90px 1fr;
+
+}
+
+/* Estilos para el header */
+header {
+grid-area: header;
+background-color:var(--color-8);
+color: white;
+
+display: grid;
+grid-template-columns: 2fr 1fr auto 1fr; /* Dividir en cuatro columnas */
+align-items: center;
+
+}
+
+/* Estilos para la sección del logo */
+.logo-section {
+grid-column: 1 / span 2;
+display: flex;
+
+gap: 10px;
+
+width: 100%; /* Cambia según el tamaño deseado */
+   /* Centra el contenedor */
+text-align: center; /* Centra el contenido dentro del contenedor */
+}
+.Conteiner-logo{
+  margin-left: 10px;
+}
+.logo-section img {
+width: 80px;
+height: 80px;
+
+}
+
+.local-name {
+
+
+  width: 80%; /* Evita que el texto se salga del contenedor */
+  margin: 0; /* Elimina el margen predeterminado del encabezado */
+  display: flex; /* Utiliza flexbox para centrar verticalmente */
+  align-items: center;
+
+}
+
+.local-name h1 {
+ 
+  margin: 0; /* Elimina el margen predeterminado del encabezado */
+font-size: 2.6rem;
+}
+
+/* Estilos para la sección de notificaciones */
+
+.container_notifications {
+grid-column: 3; /* Notificaciones en la tercera columna */
+display: flex;
+align-items: center;
+margin-right: 10px; 
+}
+
+.notifications-section {
+position: relative;
+}
+
+.button_notifications {
+padding: 10px 20px;
+background-color:var(--color-10);
+color: var(--color-1);
+border: none;
+cursor: pointer;
+border-radius: 5px;
+}
+.button_notifications:hover {
+background-color:var(--color-1);
+color: var(--color-8);
+}
+
+.notification-dropdown {
+position: absolute;
+top: 60px;
+left: 0;
+padding: 0;
+width: 300px;
+display: none;
+flex-direction: column;
+background-color:var(--color-3);
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+border-radius: 5px;
+border: 1px solid #ccc;
+}
+
+.notification-dropdown.ul{
+list-style: none;
+padding: 0;
+}
+/* Estilos para la lista de notificaciones */
+.notification-dropdown.active ul {
+list-style: none;
+padding: 0;
+}
+
+.notification-dropdown.active li {
+padding: 10px;
+border-bottom: 1px solid var(--color-2);
+cursor: pointer;
+transition: background-color 0.3s ease;
+}
+
+.notification-dropdown.active li:last-child {
+border-bottom: none;
+}
+
+.notification-dropdown.active li:hover {
+background-color: var(--color-8);
+}
+
+
+.notification-icon {
+margin-right: 10px;
+}
+.notification-dropdown.active {
+display: flex;
+}
+
+.user-section {
+grid-column: 4; /* Usuario en la cuarta columna */
+display: flex;
+align-items: center;
+margin-right: 10px; /* Ajuste de margen a la derecha */
+position: relative; /* Añadimos posición relativa para posicionar el submenú correctamente */
+}
+
+.user-section img {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+margin-right: 10px;
+cursor: pointer;
+}
+
+.user-name {
+font-size: 1.2em;
+}
+
+/* Estilos para el menú de usuario */
+.user-menu {
+display: none;
+position: absolute;
+top: 60px;
+left: 0;
+background-color: var(--color-1);
+border: 2px solid var(--color-6);
+background:var(--color-6);
+padding: 10px;
+width: 200px;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+border-radius: 5px;
+}
+
+.user-menu.active {
+display: block;
+}
+
+.user-menu .arrow-up {
+width: 0;
+height: 0;
+border-left: 10px solid transparent;
+border-right: 10px solid transparent;
+border-bottom: 10px solid var(--color-7);
+position:absolute;
+top: -10px;
+right: 190px;
+}
+aside {
+  min-height: calc(100vh - 90px); /* Resta la altura del encabezado (header) */
+  overflow-y: auto; /* Agregar desbordamiento vertical si es necesario */
+}
+
+
+/* Estilos para la barra lateral (sidebar) */
+aside {
+grid-area: aside;
+background-color:var(--color-11);
+color: white;
+padding: 15px;
+display: flex;
+flex-direction: column;
+justify-content: flex-start;
+height: 100%;
+}
+
+/* Estilos para el menú */
+.menu-section {
+background-color:var(--color-8);
+border-radius: 10px;
+margin-top: 30px;
+overflow: hidden;
+}
+
+.menu {
+list-style-type: none;
+padding: 0;
+margin: 0;
+}
+
+.menu li {
+position: relative;
+}
+
+.menu a {
+color: white;
+text-decoration: none;
+display: block;
+padding: 15px 20px;
+transition: background-color 0.3s ease;
+}
+
+.menu a:hover {
+background-color: var(--color-6);
+}
+
+/* Estilos para los submenús */
+.submenu {
+max-height: 0;
+overflow: hidden;
+transition: max-height 0.3s ease-in-out;
+border-top: 1px solid #556B2F;
+}
+
+.menu li:hover .submenu {
+max-height: 200px;
+}
+
+/* Estilos para la sección del perfil de usuario */
+.user-profile {
+  display: flex;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+}
+
+.profile-card__img img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+
+.profile-card__title {
+  font-weight: bold;
+  margin-bottom: 5px; /* Ajusta según sea necesario */
+}
+
+.profile-card__subtitle {
+  color: #555;
+  margin-top: 5px; /* Ajusta según sea necesario */
+}
+
+/* Estilos para el contenido principal */
+.Contenido-Main {
+
+  min-height: calc(100vh - 90px); 
+  overflow-x: auto;
+  overflow-y: auto; /* Agregar desbordamiento vertical si es necesario */ 
+grid-area: main;
+padding: 20px;
+
+}
+
+.Contenido-Main h1{
+  font-family: var(--font-family);
+  color: var(--color-10);
+  font-size: 2rem;
+  border-bottom: 5px solid var(--color-11);
+}
+a{
+  font-family: var(--font-family);
+  color: var(--color-1);
+}

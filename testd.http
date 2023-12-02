@@ -1,0 +1,28 @@
+# GET /api/rol
+GET http://localhost:3000/api/rol
+
+### 
+POST   http://localhost:3000/api/rol
+Content-Type: application/json
+
+{
+  "nombre": "nussevo2",
+  "estado": "Activo"
+}
+
+
+
+# PUT /api/rol/:id
+PUT http://localhost:3000/api/rol/id_del_rol_existente
+Content-Type: application/json
+
+{
+  "nombre": "RolActualizado",
+  "estado": "inactivo"
+}
+
+# PUT /api/rol/dardebaja/:id
+PUT http://localhost:3000/api/rol/dardebaja/id_del_rol_existente
+
+# PUT /api/rol/activar/:id
+PUT http://localhost:3000/api/rol/activar/id_del_rol_existente

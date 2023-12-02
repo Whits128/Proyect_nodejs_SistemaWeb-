@@ -1,14 +1,13 @@
 ###
 
-GET http://localhost:3000/Promocion
+GET http://localhost:3000/api/categorias
 
 ###
-PUT  http://localhost:3000/Bodega/1
+POST   http://localhost:3000/api/categorias
 Content-Type: application/json
  
 {
-  "nombre": "khsdjsdhj",
-  "ubicacion": "nuevo",
+  "nombre": "1",
   "estado": "Activo"
 }
 
@@ -72,7 +71,7 @@ GET http://localhost:3000/registerUser
 Authorization: Bearer <Admin>
 
 ####
-POST http://localhost:3000/registerUser
+POST http://localhost:3000/api/register
 Content-Type: application/json
 
 {
@@ -120,17 +119,32 @@ Content-Type: application/json
 
 
 ###
-GET http://localhost:3000/Marcas
+GET http://localhost:3000/api/Inicio/Pagina
 
 ####
-POST http://localhost:3000/Tallas
+PUT http://localhost:3000/api/rol/1
 Content-Type: application/json
 
 {
-  "Nombre": "dfdfd",
-  "estado": "true"
+  "codigo": 1,
+  "nombre": "nusevo2",
+  "estado": "Activo"
 }
 
+###
+PUT  http://localhost:3000/api/rol/dardebaja/1
+Content-Type: application/json
+
+{
+}
+###
+
+PUT  http://localhost:3000/api/talla/dardebaja/1
+Content-Type: application/json
+
+{
+
+}
 ###
 DELETE http://localhost:3000/tallas/3
 Content-Type: application/json
