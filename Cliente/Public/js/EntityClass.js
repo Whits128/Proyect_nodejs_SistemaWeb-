@@ -12,7 +12,7 @@ class EntityClass {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(body),
+            body: JSON.stringify(body), // Asegúrate de que body se
         });
 
         if (!response.ok) {
@@ -34,6 +34,8 @@ class EntityClass {
         throw error;
     }
 }
+
+
 
   async excuteGet(path = "") {
     try {

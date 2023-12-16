@@ -6,7 +6,7 @@
 .modal-dialog {
     margin: auto;
     position: absolute;
-    top: 20%;
+    top: 5%;
     left: 20%;
     transform: translate(-20%, -20%);
 }

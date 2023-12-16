@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Agrupar rutas bajo el prefijo '/api/categorias'
 router.get('/api/promociones', PromocionController.GetPromociones);
-router.get('/api/promociones/page',authMiddleware.isAuthenticated, PromocionController.renderPromocionesPage);
+router.get('/api/promociones/page',authMiddleware.isAuthenticated,authMiddleware.checkAccess, PromocionController.renderPromocionesPage);
 router.post('/api/promociones', PromocionController.guardarPromociones);
 router.put('/api/promociones/:id', PromocionController.updatePromociones);
 router.put('/api/promociones/dardebaja/:id', PromocionController.darDeBajaPromociones);

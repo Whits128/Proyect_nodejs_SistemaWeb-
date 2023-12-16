@@ -27,10 +27,7 @@ $(document).ready(async function () {
                 ],
                 // Resto de las opciones DataTable
             });
-        } else {
-            console.error('No hay datos de categorías disponibles.');
-        }
-
+        } 
         // CREAR
         $("#btnCrear").click(function () {
             opcion = 'crear';

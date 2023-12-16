@@ -33,7 +33,7 @@ export const mostrarPromociones = async () => {
     const pool = await getConnection();
     const result = await pool
       .request()
-      .query('SELECT ID_Promocion as Codigo, Nombre, Descripcion, FechaInicio, FechaFin, Estado FROM Promociones');
+      .query('SELECT ID_Promocion as Codigo, Nombre, Descripcion, FechaInicio, FechaFin, Estado FROM Promociones WHERE Estado = \'Activo\'');
     return result.recordset;
   } catch (error) {
     throw error;

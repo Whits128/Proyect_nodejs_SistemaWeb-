@@ -212,47 +212,88 @@ justify-content: flex-start;
 height: 100%;
 }
 
-/* Estilos para el menú */
+    /* Estilos para el menú */
+/* Estilos para el menú principal */
 .menu-section {
-background-color:var(--color-8);
-border-radius: 10px;
-margin-top: 30px;
-overflow: hidden;
+  background-color: var(--color-8);
+  border-radius: 10px;
+  margin-top: 30px;
+  width: 200px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
 .menu {
-list-style-type: none;
-padding: 0;
-margin: 0;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 
 .menu li {
-position: relative;
+  position: relative;
 }
 
 .menu a {
-color: white;
-text-decoration: none;
-display: block;
-padding: 15px 20px;
-transition: background-color 0.3s ease;
+  color: var(--color-1);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  transition: background-color 0.3s ease;
+}
+
+.menu a i {
+  margin-left: auto;
 }
 
 .menu a:hover {
-background-color: var(--color-6);
+  background-color: var(--color-6);
 }
 
 /* Estilos para los submenús */
-.submenu {
-max-height: 0;
-overflow: hidden;
-transition: max-height 0.3s ease-in-out;
-border-top: 1px solid #556B2F;
+.submenu-container {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 1;
+  transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+  background-color: var(--color-7); /* Color de fondo de los submenús */
+  border-radius: 0 10px 10px 0;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-.menu li:hover .submenu {
-max-height: 200px;
+.submenu {
+  background-color: var(--color-5);
+  border-radius: 10px;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  position: fixed;
 }
+
+.submenu a {
+  color: var(--color-1);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 12px 20px; /* Ajuste del padding para un aspecto más equilibrado */
+  transition: background-color 0.3s ease;
+}
+
+.submenu a:hover {
+  background-color: var(--color-6);
+  color: white; /* Texto blanco al hacer hover para mejor contraste */
+}
+
+.menu li:hover .submenu-container {
+  opacity: 1;
+  visibility: visible;
+}
+
+
 
 /* Estilos para la sección del perfil de usuario */
 .user-profile {

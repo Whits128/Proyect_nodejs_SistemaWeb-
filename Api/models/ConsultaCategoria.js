@@ -107,14 +107,4 @@ export const darDeBajaCategoria = async (codigo) => {
   }
 };
 
-export const activarCategoria = async (codigo) => {
-  try {
-    const pool = await getConnection();
-    await pool
-      .request()
-      .input('codigo', codigo)
-      .query('UPDATE Categorias SET Estado = \'Activo\' WHERE ID_Categoria = @codigo');
-  } catch (error) {
-    throw error;
-  }
-};
+

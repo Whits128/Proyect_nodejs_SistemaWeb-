@@ -20,7 +20,7 @@ export const mostrarColores = async () => {
     const pool = await getConnection();
     const result = await pool
       .request()
-      .query('SELECT ID_Colores as Codigo, Color as Color, Estado as Estado FROM Colores');
+      .query('SELECT ID_Colores as Codigo, Color as Color, Estado as Estado FROM Colores WHERE Estado = \'Activo\'');
     return result.recordset;
   } catch (error) {
     throw error;

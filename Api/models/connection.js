@@ -9,7 +9,7 @@ export const dbSettings = {
   options: {
     encrypt: true, 
     trustServerCertificate: true, 
-  },
+  }, 
 };
 
 export const getConnection = async () => {

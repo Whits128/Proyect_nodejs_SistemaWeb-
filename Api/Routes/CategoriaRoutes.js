@@ -10,6 +10,6 @@ router.get('/api/categorias', categoriaController.GetCategorias);
 router.post('/api/categorias', categoriaController.guardarCategoria);
 router.put('/api/categorias/:id', categoriaController.updateCategoria);
 router.put('/api/categorias/dardebaja/:id', categoriaController.darDeBajaCategoria);
-router.put('/api/categorias/activar/:id', categoriaController.activarCategoria);
+
 
 export default router;

@@ -1,5 +1,6 @@
 // Configuración del servidor (API)
 import express from 'express';
+import methodOverride from 'method-override';
 import cors from 'cors';
 import config from '../Config/config';
 import CategoriaRoutes from './Routes/CategoriaRoutes';
@@ -17,13 +18,17 @@ import InicioSesionRoutes from './Routes/InicioSesionRoutes';
 import InicioRoutes from './Routes/InicioRoutes';
 import ConfiguracionesRoutes from './Routes/ConfiguracionesRoutes';
 import ConfiguracionAccesoRoutes from './Routes/ConfiguracionAccesoRoutes';
-
+import DatosDebajaRoutes from './Routes/DatosDebajaRoutes';
+import InventarioRoute from './Routes/InventarioRoute';
+import CompraRoutes from './Routes/CompraRoutes';
+import configuracionesMiddleware from './Middleware/Middlewareparaconfiguraciones'; // Ajusta la ruta según tu estructura
 
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import path from "path";
 const expressEjsLayouts = require('express-ejs-layouts');
 const app = express();
+app.use(methodOverride('_method', { methods: ['POST', 'GET','PUT'] }));
 
 // Configuración del puerto
 app.set('port', config.port);
@@ -55,7 +60,7 @@ app.use(morgan('dev'));
 // Middleware para trabajar con cookies
 app.use(cookieParser());
 app.use(expressEjsLayouts);
-
+app.use(configuracionesMiddleware);
 // Rutas
 app.use(CategoriaRoutes);
 app.use(MarcaRoutes);
@@ -72,4 +77,7 @@ app.use(InicioRoutes);
 app.use(ConfiguracionesRoutes);
 app.use(ConfiguracionAccesoRoutes);
 app.use(ProductoZapatosRutas);
+app.use(DatosDebajaRoutes);
+app.use(InventarioRoute);
+app.use(CompraRoutes);
 export default app;

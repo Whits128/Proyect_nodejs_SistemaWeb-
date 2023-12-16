@@ -1,0 +1,119 @@
+/* Importamos variables globales */
+@import '/css/VariablesGlobales.css';
+.Contenido-Main {
+  margin: 0;  /* Asegura que no haya márgenes que empujen hacia abajo */
+  padding: 0; /* Asegura que no haya relleno que empuje hacia abajo */
+}
+.vista {
+  margin: 0;
+  padding: 0;
+}
+
+/* Estilos comunes */
+ h1, h2, h3, p, span {
+  font-family: var(--font-family);
+  color: var(--color-1);
+}
+
+/* Contenedor principal */
+.card {
+
+  width: 350px;
+  min-height: 350px; /* Cambiado a min-height para que se expanda con el contenido */
+  max-height: 500px; /* Altura máxima con scroll */
+  overflow-y: auto; /* Habilitar barra de desplazamiento vertical */
+  background: #E8EAEA;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s; /* Agregado para una transición suave */
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: var(--color-5); /* Color de fondo para el header */
+  border-radius: 15px 15px 0 0; /* Añadido para redondear las esquinas superiores */
+}
+
+.title {
+  font-weight: 900;
+  font-size: 1.3em;
+  margin: 0;
+}
+
+/* Contenedor de búsqueda */
+.search-container {
+  padding: 10px 15px;
+}
+
+#searchInput {
+  width: 100%;
+ height: 30px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 10px; /* Agregado para espacio entre el título y el campo de búsqueda */
+}
+
+/* Contenedor de usuarios */
+.user__container {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Usuario */
+.user {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+}
+
+/* Contenido de usuario */
+.user__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-grow: 1;
+  height: 45px;
+  border-radius: 5px;
+  background-color: var(--color-8);
+}
+
+/* Nombre del usuario */
+.name {
+  font-weight: 800;
+}
+
+/* Botón de seguir */
+.follow {
+  border: none;
+  border-radius: 25px;
+  background-color: #0f1113;
+  color: white;
+  padding: 8px 15px;
+  font-weight: 700;
+  margin-right: 10px;
+}
+
+/* Hover sobre el usuario */
+.user:hover {
+  background-color: #b3b6b6;
+}
+
+/* Hover sobre el botón de seguir */
+.follow:hover {
+  background-color: #2c3136;
+}
+
+/* Efecto de cambio de tamaño al enfocar el campo de búsqueda */
+#searchInput:focus ~ .card {
+  width: 400px; /* Puedes ajustar el tamaño deseado al enfocar */
+}
+
+.text{
+  margin-left: 10px;
+}

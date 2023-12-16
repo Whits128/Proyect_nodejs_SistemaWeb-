@@ -19,7 +19,7 @@ $(document).ready(async function () {
                 "scrollCollapse": true, // Colapso de scroll si no es necesario
                                  
                 columns: [
-                    { data: "Codigo" },
+                    { "data": "Codigo" },
                     {"data": "Nombre", className: "custom-column2"},
                         {"data": "Descripcion"},
                         {"data": "TipoMaterial"},

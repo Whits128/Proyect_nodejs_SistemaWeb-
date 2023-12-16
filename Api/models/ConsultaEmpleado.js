@@ -20,7 +20,7 @@ export const mostrarEmpleados = async () => {
     const pool = await getConnection();
     const result = await pool
       .request()
-      .query('SELECT ID_Empleado as Codigo, Nombre, Apellido, Direccion, Telefono, Estado FROM Empleados');
+      .query('SELECT ID_Empleado as Codigo, Nombre, Apellido, Direccion, Telefono, Estado FROM Empleados WHERE Estado = \'Activo\'');
     return result.recordset;
   } catch (error) {
     throw error;

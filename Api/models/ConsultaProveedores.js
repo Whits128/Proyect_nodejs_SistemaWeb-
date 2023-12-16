@@ -20,7 +20,7 @@ export const mostrarProveedores = async () => {
     const pool = await getConnection();
     const result = await pool
       .request()
-      .query('SELECT ID_Proveedor as Codigo, Nombre, Direccion, Telefono, Ruc, EmailProveedor, Estado FROM Proveedores');
+      .query('SELECT ID_Proveedor as Codigo, Nombre, Direccion, Telefono, Ruc, EmailProveedor, Estado FROM Proveedores WHERE Estado = \'Activo\'');
     return result.recordset;
   } catch (error) {
     throw error;

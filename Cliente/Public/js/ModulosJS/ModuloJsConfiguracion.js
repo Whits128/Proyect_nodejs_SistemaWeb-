@@ -1,87 +1,37 @@
+
 // Declaración de variables
-let opcion,id, configuraciones,logoLocalBase64, codigo,nombreNegocio, ruc, telefonos, correo, direccion, usuarioModificacion, tipoOperacion ,estado, fila;
+let opcion,id, codigo,nombreNegocio, ruc, telefonos, correo, direccion, usuarioModificacion, tipoOperacion ,estado, fila;
 
 import { EntityClass } from "../EntityClass.js";
 const api = new EntityClass();
+let Tabla;
+window.onload = async () => {
 
-$(document).ready(async function () {
-    let tabla;
-
+   
     try {
-const historialCF = await api.excuteGet('historial');
-
-
-// DataTable initialization Historial
-if (historialCF && historialCF.recordset && historialCF.recordset.length > 0) {
-    tabla = $('#Tabla').DataTable({
-        data: historialCF.recordset,
-        "scrollX": true, // Habilita el scroll horizontal
-    "scrollCollapse": true, // Colapso de scroll si no es necesario
-                     
-        columns: [
-            { "data": "PKHistorial" },
-            { "data": "NombreLocal" },
-            { "data": "ColumnaModificada" },
-            {
-                "data": "ValorAntiguo",
-                "render": function (data) {
-                    return renderizarValor(data);
-                }
-            },
-            {
-                "data": "ValorNuevo",
-                "render": function (data) {
-                    return renderizarValor(data);
-                }
-            },
-            { "data": "FechaModificacion" },
-            { "data": "UsuarioModificacion" },
-            { "data": "TipoOperacion" },
-            {
-                "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-info btn-sm btnEditar'>Editar</button><button class='btn btn-danger btn-sm btnBorrar'>Dar de baja</button></div></div>"
-            }
-        ],
-        responsive: true,
-        language: {
-            url: "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
-        },
-        // Resto de las opciones DataTable
-    });
-} else {
-    console.error('No hay datos de Historial disponibles.');
-}
-
-
-
 const configuracion = await api.excuteGet('configuraciones');
-
-// Verificar si hay configuraciones y ocultar el botón si es necesario
-if (configuracion && configuracion.length > 0) {
-    // Ocultar el botón de crear si ya existe una configuración
-    $("#btnCrear").hide();
-}
-
+console.log('configuracion',configuracion);
 // DataTable initialization Configuracion.
 if (configuracion && configuracion.length > 0) {
-    let TablaConfig = $('#TablaConfig').DataTable({
+    Tabla = $('#Tabla').DataTable({
         // Configuración de la tabla
-        data: configuracion,
+        data: configuracion|| [] ,
         "scrollX": true,
         "scrollCollapse": true,
         columns: [
-            {"data":"Codigo"},
+            { "data": "Codigo" },
             { "data": "NombreNegocio" },
-            {
-                "data": "LogoLocal",
-                "render": function (data) {
-                    // Verifica si hay datos en la imagen
-                    if (data) {
-                        // Crea un elemento de imagen con la fuente de datos
-                        return `<img src="data:image/jpeg;base64,${data}" alt="Logo" style="width:50px;height:50px;">`;
-                    } else {
-                        return "Sin imagen";
-                    }
+            { 
+            
+            "data": "LogoLocal",
+            render: function (data, type, row) {
+                // Asegúrate de que LogoLocal es una cadena base64
+                if (data && typeof data === 'string') {
+                    return '<img src="data:image/png;base64,' + data + '" alt="Logo" height="50">';
+                } else {
+                    return 'Imagen no válida';
                 }
+            }  
             },
             { "data": "RUC" },
             { "data": "Telefonos" },
@@ -98,42 +48,9 @@ if (configuracion && configuracion.length > 0) {
             url: "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
         },
     });
-
-    // Mostrar la vista de configuración por defecto
-    mostrarVista('vista1'); // Cambia 'vista1' por el ID de tu vista de configuración
-} else {
-    console.error('No hay datos de Configuracion disponibles.');
 }
 
-function renderizarValor(data) {
-    // Verifica si el valor es un número
-    if (!isNaN(data)) {
-        return data; // Renderiza el número directamente
-    } else if (esBase64(data)) {
-        // Verifica si el valor es base64 y renderiza como imagen
-        return `<img src="data:image/jpeg;base64,${data}" alt="Imagen" style="width:50px;height:50px;">`;
-    } else {
-        return data; // Renderiza otros tipos de datos directamente
-    }
-}
 
-    
-        function esBase64(str) {
-            // Verifica si el formato parece ser base64
-            const base64FormatRegex = /^[A-Za-z0-9+/]+={0,2}$/;
-            
-            // Intenta decodificar solo si el formato parece ser base64
-            if (base64FormatRegex.test(str)) {
-                try {
-                    return btoa(atob(str)) == str;
-                } catch (err) {
-                    return false;
-                }
-            }
-        
-            return false;
-        }
-        
         // CREAR
         $("#btnCrear").click(function () {
             opcion = 'crear';
@@ -144,8 +61,9 @@ function renderizarValor(data) {
             $(".modal-title").text("Crear Configuracion");
             $('#modalCRUD').modal('show');
         });
+        
         $(document).on("click", ".btnEditar", function () {
-            try {
+          
                 opcion = 'editar';
                 fila = $(this).closest("tr");	        
                 codigo = parseInt(fila.find('td:eq(0)').text());
@@ -154,6 +72,12 @@ function renderizarValor(data) {
                 telefonos = fila.find('td:eq(4)').text();
                 correo = fila.find('td:eq(5)').text();
                 direccion = fila.find('td:eq(6)').text();
+                
+                // Accede a la columna 'FechaModificacion'
+                const fechaModificacion = fila.find('td:eq(' + Tabla.column('FechaModificacion:name').index() + ')').text();
+        
+                // Accede a la columna 'UsuarioModificacion'
+                const usuarioModificacion = fila.find('td:eq(' + Tabla.column('UsuarioModificacion:name').index() + ')').text();
         
                 // Establece los valores en el formulario
                 $("#id").val(codigo);
@@ -162,6 +86,8 @@ function renderizarValor(data) {
                 $("#telefonos").val(telefonos);
                 $("#correo").val(correo);
                 $("#direccion").val(direccion);
+                $("#fechaModificacion").val(fechaModificacion);
+                $("#usuarioModificacion").val(usuarioModificacion);
         
                 // Muestra el modal después de asignar los valores
                 $(".modal-header").css("background-color", "#7303c0");
@@ -169,23 +95,8 @@ function renderizarValor(data) {
                 $(".modal-title").text("Editar Configuracion");
                 $('#modalCRUD').modal('show');
         
-                // Verifica si ya hay una imagen existente y configúrala para la edición
-                const imagenExistente = fila.find('td:eq(2) img');
-                if (imagenExistente.length > 0) {
-                    // Obtiene el nombre de la imagen desde el atributo 'alt'
-                    const nombreImagen = imagenExistente.attr('alt');
-                    // Muestra el nombre de la imagen en un lugar específico (puedes adaptar esto según tu estructura HTML)
-                    $('#nombreImagenExistente').text(nombreImagen);
-                } else {
-                    // Limpia el lugar donde se muestra el nombre de la imagen si no hay imagen existente
-                    $('#nombreImagenExistente').text('');
-                }
-        
-            } catch (error) {
-                console.error('Error al editar:', error.message);
-            }
+            
         });
-        
         
        // Dar de Baja
 $(document).on("click", ".btnBorrar", async function () {
@@ -212,7 +123,7 @@ $(document).on("click", ".btnBorrar", async function () {
 
             // Actualizar la tabla con las nuevas configuracion
             const nuevasconfiguracion= await api.excuteGet('configuracion');
-            TablaConfig.clear().rows.add(nuevasconfiguracion).draw();
+            Tabla.clear().rows.add(nuevasconfiguracion).draw();
 
             Swal.fire('¡Operación completada!', '', 'success');
         } catch (error) {
@@ -224,12 +135,11 @@ $(document).on("click", ".btnBorrar", async function () {
 
 
 
- // Submit para CREAR y EDITAR
-$('#form').submit(async function (e) {
-    e.preventDefault();
+        // Submit para CREAR y EDITAR
+        $('#form').submit(async function (e) {
+            e.preventDefault();
 
-
-    codigo = $.trim($('#id').val());
+            codigo = $.trim($('#id').val());
     nombreNegocio = $.trim($('#nombreNegocio').val());
     ruc = $.trim($('#ruc').val());
     telefonos = $("#telefonos").val();
@@ -237,7 +147,7 @@ $('#form').submit(async function (e) {
     direccion = $("#direccion").val();
  
     usuarioModificacion = $.trim($('#usuarioModificacion').val());
-
+console.log('usuarioModificacion',usuarioModificacion);
 
     var formData = new FormData();
     formData.append('nombreNegocio', nombreNegocio);
@@ -250,26 +160,40 @@ $('#form').submit(async function (e) {
  
     // Agrega el campo de archivo correctamente
     formData.append('logoLocal', $('#logoLocal')[0].files[0]);
-
+  // Verifica si logoLocal está presente en FormData
+  if (!formData.has('logoLocal')) {
+    console.error('Campo logoLocal no presente en FormData o sin valor.');
+    // Puedes mostrar un mensaje de error al usuario si es necesario
+    return;
+}
     console.log("Datos a enviar:", formData);
 
     try {
         if (opcion === 'crear') {
-            await api.excutePostConfiguracion('configuracion', formData);
+            await api.excutePostConfiguracion('configuracion/post', formData);
             
         } else if (opcion === 'editar') {
                 await api.excutePutConfiguracion(`configuracion/${codigo}`, formData);  
         }
         $('#modalCRUD').modal('hide');
-   
+// Actualizar la tabla de configuraciones
+const nuevasConfiguraciones = await api.excuteGet('configuraciones');
+Tabla.clear().rows.add(nuevasConfiguraciones).draw();
+console.log('nuevasConfiguraciones',nuevasConfiguraciones);
 
-    } catch (error) {
-        console.error('Error al guardar/editar:', error.message);
-    }
-});
+
+        // Recargar toda la vista después de la operación
+        location.reload();
+
+            } catch (error) {
+                console.error('Error al guardar/editar:', error.message);
+            }
+           
+        });
+
 
 
     } catch (error) {
         console.error('Error general:', error.message);
     }
-});
+}

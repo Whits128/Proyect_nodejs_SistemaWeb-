@@ -31,73 +31,85 @@ export const registerUser = async (req, res) => {
   };
   
   //seccion de logeo
-//seccion de logeo
-export const Login = async (req, res) => {
-  try {
-    const user = req.body.user;
-    const pass = req.body.pass;
-
-    if (!user || !pass) {
-      console.log('No se escribió usuario o contraseña.');
-      return res.render('Login', {
-        layout: false,
-        alert: true,
-        alertTitle: "Advertencia",
-        alertMessage: "Ingrese un usuario y contraseña",
-        alertIcon: 'info',
-        showConfirmButton: true,
-        timer: false,
-        ruta: '/'
-      });
-    }
-
-    const pool = await getConnection();
+  export const Login = async (req, res) => {
     try {
-      const result = await pool
-        .request()
-        .input('user', sql.VarChar, user)
-        .query('SELECT * FROM USUARIO WHERE LoginUsuario = @user');
-
-      if (result.recordset.length === 0 || !(await bcrypt.compare(pass, result.recordset[0].LoginClave))) {
-        console.log('Usuario y/o contraseña incorrectas.');
+      const user = req.body.user;
+      const pass = req.body.pass;
+  
+      if (!user || !pass) {
+        console.log('No se escribió usuario o contraseña.');
         return res.render('Login', {
           layout: false,
           alert: true,
-          alertTitle: "Error",
-          alertMessage: "Usuario y/o contraseña incorrectas",
+          alertTitle: "Advertencia",
+          alertMessage: "Ingrese un usuario y contraseña",
+          alertIcon: 'info',
+          showConfirmButton: true,
+          timer: false,
+          ruta: '/'
+        });
+      }
+  
+      const pool = await getConnection();
+      try {
+        const result = await pool
+          .request()
+          .input('user', sql.VarChar, user)
+          .query('SELECT * FROM USUARIO WHERE LoginUsuario = @user');
+  
+        if (result.recordset.length === 0 || !(await bcrypt.compare(pass, result.recordset[0].LoginClave))) {
+          console.log('Usuario y/o contraseña incorrectas.');
+          return res.render('Login', {
+            layout: false,
+            alert: true,
+            alertTitle: "Error",
+            alertMessage: "Usuario y/o contraseña incorrectas",
+            alertIcon: 'error',
+            showConfirmButton: true,
+            timer: false,
+            ruta: '/'
+          });
+        } else {
+          const id = result.recordset[0].IdUsuario;
+          
+          // Firmar el token sin expiresIn para que no tenga fecha de caducidad
+          const token = jwt.sign({ id: id }, config.JWT_SECRET);
+  
+          const cookieOptions = {
+            expires: new Date(Date.now() + config.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000),
+            path: "/"
+          };
+          res.cookie('jwt', token, cookieOptions);
+  
+          // Incrementar el contador de sesiones y registrar la fecha de inicio de sesión
+          const updatedResult = await pool
+            .request()
+            .input('idUsuario', sql.Int, result.recordset[0].IdUsuario)
+            .query(`
+              UPDATE USUARIO
+              SET NumSesiones = NumSesiones + 1,
+                  FechaInicioSesion = GETDATE()
+              WHERE IdUsuario = @idUsuario
+            `);
+  
+          return res.redirect('/Inicio'); // Redirect to '/Inicios' on successful login
+        }
+      } catch (error) {
+        console.error('Error en la consulta SQL:', error);
+        return res.render('Login', {
+          alert: true,
+          alertTitle: 'Error',
+          alertMessage: 'Error en el servidor',
           alertIcon: 'error',
           showConfirmButton: true,
           timer: false,
           ruta: '/'
         });
-      } else {
-     
-        const id = result.recordset[0].IdUsuario;
-        const token = jwt.sign({ id: id }, config.JWT_SECRET, {
-          expiresIn: config.JWT_EXPIRES_IN
-        });
-
-        const cookieOptions = {
-          expires: new Date(Date.now() + config.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000),
-          path: "/"
-        };
-        res.cookie('jwt', token, cookieOptions);
-   // Incrementar el contador de sesiones y registrar la fecha de inicio de sesión
-   const updatedResult = await pool
-   .request()
-   .input('idUsuario', sql.Int, result.recordset[0].IdUsuario)
-   .query(`
-     UPDATE USUARIO
-     SET NumSesiones = NumSesiones + 1,
-         FechaInicioSesion = GETDATE()
-     WHERE IdUsuario = @idUsuario
-   `);
-
-   
-        return res.redirect('/Inicio'); // Redirect to '/Inicios' on successful login
+      } finally {
+        pool.close();
       }
     } catch (error) {
-      console.error('Error en la consulta SQL:', error);
+      console.error(error);
       return res.render('Login', {
         alert: true,
         alertTitle: 'Error',
@@ -107,25 +119,9 @@ export const Login = async (req, res) => {
         timer: false,
         ruta: '/'
       });
-    } finally {
-      pool.close();
     }
-  } catch (error) {
-    console.error(error);
-    return res.render('Login', {
-      alert: true,
-      alertTitle: 'Error',
-      alertMessage: 'Error en el servidor',
-      alertIcon: 'error',
-      showConfirmButton: true,
-      timer: false,
-      ruta: '/'
-    });
-  }
-};
-
-
-
+  };
+  
 
 export const logout = async (req, res) => {
   try {

@@ -8,6 +8,7 @@
   <script src="https://kit.fontawesome.com/2cb25f2c39.js"></script>
   <!-- Aquí se enlaza el archivo CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
 </head>
 <body>
@@ -15,11 +16,16 @@
     <header>
       <div class="logo-section">
         <div class="Conteiner-logo">
-          <img src="/perfil.png" alt="Logo" class="logo-image">
+          <% if (DataLocal && DataLocal.LogoLocal) { %>
+            <img src="data:image/png;base64,<%= DataLocal.LogoLocal.toString('base64') %>" alt="Logo" class="logo-image">
+          <% } else { %>
+            <img src="/perfil.png" alt="Logo" class="logo-image">
+          <% } %>
         </div>
         
         <div class="local-name">
-          <h1 >Nombre del Local</h1>
+          <h1><%= DataLocal.NombreNegocio || 'Nombre del Local' %></h1>
+
         </div>
       </div>
       <div class="container_notifications">
@@ -78,45 +84,51 @@
     
 
       <!-- Sección del menú -->
-       <!-- Contenido de la sección del menú -->
-       <div class="menu-section">
-        <ul class="menu">
-          <li><a href="/Inicio" onclick="changeContent('Dashboard')">Dashboard</a></li>
-          <li>
-            <a href="#"  onclick="changeContent('Inventario')">Inventario</a>
-            <ul class="submenu">
-              <li><a href="/api/categorias/page" onclick="changeContent('Categorias')">Categorias </a></li>
-              <li><a href="/Colores" onclick="changeContent('Colores')">Colores </a></li>
-              <li><a href="/Marcas" onclick="changeContent('Marcas')">Marcas </a></li>
-              <li><a href="/Tallas" onclick="changeContent('Categorias')">Categorias </a></li>
-              <li><a href="#" onclick="changeContent('Agregar Categoria')">Agregar Categoria</a></li>
-            </ul>
-          </li>
-          <li>
-            <a href="/Productos">Productos</a>
-            <ul class="submenu">
-              <li><a href="#" onclick="changeContent('Agregar Producto')">Agregar Producto</a></li>
-              <li><a href="#" onclick="changeContent('Editar Producto')">Editar Producto</a></li>
-            </ul>
-          </li>
-          <li>
-            <a href="/Configuraciones">Configuraciones</a>
-            <ul class="submenu">
-              <li><a href="#" onclick="changeContent('Agregar Producto')">Agregar Producto</a></li>
-              <li><a href="#" onclick="changeContent('Editar Producto')">Editar Producto</a></li>
-            </ul>
-          </li>
-          <li><a href="#" onclick="changeContent('Pedidos')">Pedidos</a></li>
-          <li><a href="#" onclick="changeContent('Clientes')">Clientes</a></li>
-          <li>
-            <a href="#">Informes</a>
-            <ul class="submenu">
-              <li><a href="#" onclick="changeContent('Informe Mensual')">Informe Mensual</a></li>
-              <li><a href="#" onclick="changeContent('Informe Anual')">Informe Anual</a></li>
-            </ul>
-          </li>
+<!-- Contenido de la sección del menú -->
+<div class="menu-section">
+  <ul class="menu">
+    <li>
+      <a href="#"><i class="fas fa-archive"></i>&nbsp; Inventario <i class="fas fa-arrow-right"></i></a>
+      <div class="submenu-container">
+        <ul class="submenu">
+          <li><a href="/api/categorias/page"><i class="fas fa-certificate"></i> Categorías</a></li>
+          <li><a href="/api/movimientos-bodegas/page">Movimientos Bodegas</a></li>
+          <li><a href="/api/producto/page">Productos</a></li>
+          <li><a href="/api/bodega/page">Bodegas</a></li>
+          <li><a href="/api/marcas/page">Marcas</a></li>
+          <li><a href="/api/talla/page">Tallas</a></li>
+          <li><a href="/api/color/page">Color</a></li>
+          <li><a href="/api/materialesZapatos/page">Material Zapatos</a></li>
         </ul>
       </div>
+    </li>
+    
+    <li>
+      <a href="/Configuraciones">Configuraciones</a>
+      <div class="submenu-container">
+        <ul class="submenu">
+          <li><a href="/api/configuracionAcceso/page">configuracion Acceso</a></li>
+          <li><a href="/api/configuracion/page">Configuracion</a></li>
+          <li><a href="/api/historial/page">Ver historial</a></li>
+          <li><a href="/api/DatosDebaja/page">Ver Bajas</a></li>
+          
+        </ul>
+      </div>
+    </li>
+
+    <li>
+      <a href="#">Informes</a>
+      <div class="submenu-container">
+        <ul class="submenu">
+          <li><a href="/api/promociones/page">Promocioned</a></li>
+          <li><a href="/api/Proveedor/page">Proveedor</a></li>
+          <li><a href="/api/empleado/page">Empleado</a></li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+</div>
+
     </aside>
 
     <main class="Contenido-Main"  id="dynamic-content">
@@ -131,4 +143,7 @@
 <script src="/js/index.js"></script>
 
 </body>
+
+
+
 </html>

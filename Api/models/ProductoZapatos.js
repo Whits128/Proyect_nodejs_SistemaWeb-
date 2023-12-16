@@ -10,7 +10,7 @@ export const mostrarProductos = async () => {
     const pool = await getConnection();
     const result = await pool
       .request()
-      .query('SELECT  PZ.[ID_ProductoZapatos] as Codigo,PZ.Nombre as Nombre,PZ.Descripcion as Descripcion,C.Nombre as Categoria, PZ.Estado as Estado FROM Productos_Zapatos PZ JOIN Categorias C ON PZ.ID_Categoria = C.ID_Categoria');
+      .query('SELECT  PZ.[ID_ProductoZapatos] as Codigo,PZ.Nombre as Nombre,PZ.Descripcion as Descripcion,C.Nombre as Categoria, PZ.Estado as Estado FROM Productos_Zapatos PZ JOIN Categorias C ON PZ.ID_Categoria = C.ID_Categoria WHERE  pz.Estado = \'Activo\'');
     return result.recordset;
   } catch (error) {
     throw error;
@@ -62,11 +62,11 @@ export const agregarProducto = async (nombre, descripcion, idCategoria, estado) 
   };
   
   // Función para actualizar un producto existente
-  export const actualizarProducto = async (id, nombre, descripcion, idCategoria, estado) => {
+  export const actualizarProducto = async (codigo, nombre, descripcion, idCategoria, estado) => {
     try {
       // Validación de datos con Joi
       const schema = Joi.object({
-        id: Joi.number().integer().positive().required().messages({
+        codigo: Joi.number().integer().positive().required().messages({
           'any.required': 'El ID es obligatorio.',
           'number.base': 'El ID debe ser un número entero.',
           'number.integer': 'El ID debe ser un número entero.',
@@ -90,7 +90,7 @@ export const agregarProducto = async (nombre, descripcion, idCategoria, estado) 
         }),
       });
   
-      const validationResult = schema.validate({ id, nombre, descripcion, idCategoria, estado });
+      const validationResult = schema.validate({ codigo, nombre, descripcion, idCategoria, estado });
   
       if (validationResult.error) {
         throw new Error(validationResult.error.details[0].message);
@@ -99,12 +99,12 @@ export const agregarProducto = async (nombre, descripcion, idCategoria, estado) 
       const pool = await getConnection();
       const result = await pool
         .request()
-        .input('id', sql.Int, id)
+        .input('codigo', sql.Int, codigo)
         .input('nombre', sql.NVarChar(100), nombre)
         .input('descripcion', sql.NVarChar(sql.MAX), descripcion)
         .input('idCategoria', sql.Int, idCategoria)
         .input('estado', sql.NVarChar(50), estado)
-        .query('UPDATE Productos_Zapatos SET Nombre = @nombre, Descripcion = @descripcion, ID_Categoria = @idCategoria, Estado = @estado WHERE ID_ProductoZapatos = @id');
+        .query('UPDATE Productos_Zapatos SET Nombre = @nombre, Descripcion = @descripcion, ID_Categoria = @idCategoria, Estado = @estado WHERE ID_ProductoZapatos = @codigo');
   
       if (result.rowsAffected[0] === 0) {
         throw new Error('La actualización no afectó a ninguna fila. ¿El ID proporcionado es válido?');
@@ -115,13 +115,13 @@ export const agregarProducto = async (nombre, descripcion, idCategoria, estado) 
   };
   
   // Función para dar de baja un producto
-  export const darDeBajaProducto = async (id) => {
+  export const darDeBajaProducto = async (codigo) => {
     try {
       const pool = await getConnection();
       const result = await pool
         .request()
-        .input('id', sql.Int, id)
-        .query('UPDATE Productos_Zapatos SET Estado = @estado WHERE ID_ProductoZapatos = @id');
+        .input('codigo', codigo)
+        .query('UPDATE Productos_Zapatos SET Estado = \'Inactivo\' WHERE ID_ProductoZapatos = @codigo');
   
       if (result.rowsAffected[0] === 0) {
         throw new Error('No se pudo dar de baja el producto. ¿El ID proporcionado es válido?');
@@ -131,19 +131,19 @@ export const agregarProducto = async (nombre, descripcion, idCategoria, estado) 
     }
   };
   
-  // Función para activar un producto
-  export const activarProducto = async (id) => {
-    try {
-      const pool = await getConnection();
-      const result = await pool
-        .request()
-        .input('id', sql.Int, id)
-        .query('UPDATE Productos_Zapatos SET Estado = @estado WHERE ID_ProductoZapatos = @id');
-  
-      if (result.rowsAffected[0] === 0) {
-        throw new Error('No se pudo activar el producto. ¿El ID proporcionado es válido?');
-      }
-    } catch (error) {
-      throw error;
+// Función para activar un producto
+export const activarProducto = async (codigo) => {
+  try {
+    const pool = await getConnection();
+    const result = await pool
+      .request()
+      .input('codigo', codigo)
+      .query('UPDATE Productos_Zapatos SET Estado = \'Activo\' WHERE ID_ProductoZapatos = @codigo');
+
+    if (result.rowsAffected[0] === 0) {
+      throw new Error('No se pudo activar el producto. ¿El ID proporcionado es válido?');
     }
-  };
+  } catch (error) {
+    throw error;
+  }
+};

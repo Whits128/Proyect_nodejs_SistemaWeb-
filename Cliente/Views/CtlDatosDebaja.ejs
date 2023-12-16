@@ -1,0 +1,115 @@
+<!-- CtlDatosDebaja.ejs -->
+<link rel="stylesheet" type="text/css" href="/css/DatosDebaja.css">
+<style>
+  .vista {
+      display: none;
+  }
+</style>
+<section class="Contenido-Main" id="dynamic-content">
+  <div class="Contenedor_Bajas">
+    <div>
+      <button id="btnMostrarCategoria" class="btn" onclick="mostrarVista('vista1')">Mostrar Categoria</button>
+      <button id="btnMostrarBodega" class="btn" onclick="mostrarVista('vista2')">Mostrar Bodega</button>
+    </div>
+
+    <div id="vista1" class="vista">
+      <div class="card">
+        <div class="header">
+          <h2 class="title">Categorías Dadas de Baja</h2>
+        </div>
+
+        <!-- Agregar un campo de búsqueda -->
+        <div class="search-container">
+          <input type="text" id="searchInput" placeholder="Buscar">
+        </div>
+
+        <div class="user__container">
+          <% categoriasInactivas.forEach(categoria => { %>
+            <div class="user">
+              <!-- Aquí puedes personalizar según tus datos de la categoría -->
+              <div class="icon"></div> <!-- Reemplazar la imagen con un icono -->
+              <div class="user__content">
+                <div class="text">
+                  <span class="name"><%= categoria.Nombre %></span>
+                </div>
+                <form action="/api/categorias/activar" method="POST">
+                  <input type="hidden" name="codigo" value="<%= categoria.Codigo %>">
+                  <button class="follow" type="submit">Activar</button>
+                </form>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+
+    <div id="vista2" class="vista">
+      <div class="card">
+        <div class="header">
+          <h2 class="title">Bodegas Dadas de Baja</h2>
+        </div>
+
+        <!-- Agregar un campo de búsqueda -->
+        <div class="search-container">
+          <input type="text" id="searchInput" placeholder="Buscar">
+        </div>
+
+        <div class="user__container">
+          <% BodegaInactivas.forEach(Bodega => { %>
+            <div class="user">
+              <!-- Aquí puedes personalizar según tus datos de la categoría -->
+              <div class="icon"></div> <!-- Reemplazar la imagen con un icono -->
+              <div class="user__content">
+                <div class="text">
+                  <span class="name"><%= Bodega.Nombre %></span>
+                </div>
+                <form action="/api/bodega/activar" method="POST">
+                  <input type="hidden" name="codigo" value="<%= Bodega.Codigo %>">
+                  <button class="follow" type="submit">Activar</button>
+                </form>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.getElementById('searchInput').addEventListener('input', function() {
+    var searchTerm = this.value.toLowerCase();
+    var tableRows = document.querySelectorAll('.user__container .user');
+
+    tableRows.forEach(function(row) {
+      var rowData = row.textContent.toLowerCase();
+      if (rowData.includes(searchTerm)) {
+        row.style.display = 'flex'; // Mostrar fila
+      } else {
+        row.style.display = 'none'; // Ocultar fila
+      }
+    });
+  });
+
+  function mostrarVista(idVista) {
+            // Oculta todas las vistas
+            var vistas = document.getElementsByClassName('vista');
+            for (var i = 0; i < vistas.length; i++) {
+                vistas[i].style.display = 'none';
+            }
+
+            // Carga la vista si aún no se ha cargado
+            var vistaSeleccionada = document.getElementById(idVista);
+            if (vistaSeleccionada && vistaSeleccionada.innerHTML.trim() === "") {
+                // Puedes cargar contenido dinámicamente aquí, por ejemplo, con AJAX
+                cargarContenido(idVista);
+            }
+
+            // Muestra la vista deseada
+            if (vistaSeleccionada) {
+                vistaSeleccionada.style.display = 'block';
+            }
+        }
+
+
+</script>

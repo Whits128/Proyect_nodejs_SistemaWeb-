@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Agrupar rutas bajo el prefijo '/api/categorias'
 router.get('/api/rol', RolController.GetRol);
-router.get('/api/rol/page',authMiddleware.isAuthenticated, RolController.renderRolPage);
+router.get('/api/rol/page',authMiddleware.isAuthenticated,authMiddleware.checkAccess, RolController.renderRolPage);
 router.post('/api/rol', RolController.guardarRol);
 router.put('/api/rol/:id', RolController.updateRol);
 router.put('/api/rol/dardebaja/:id', RolController.darDeBajaRol);

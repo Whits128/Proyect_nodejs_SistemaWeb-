@@ -6,7 +6,7 @@ const router = express.Router();
 
 // Agrupar rutas bajo el prefijo '/api/categorias'
 router.get('/api/color', ColoresController.GetColor);
-router.get('/api/color/page',authMiddleware.isAuthenticated, ColoresController.renderColorPage);
+router.get('/api/color/page',authMiddleware.isAuthenticated,authMiddleware.checkAccess, ColoresController.renderColorPage);
 router.post('/api/color', ColoresController.guardarColor);
 router.put('/api/color/:id', ColoresController.updateColor);
 router.put('/api/color/dardebaja/:id', ColoresController.darDeBajaColor);

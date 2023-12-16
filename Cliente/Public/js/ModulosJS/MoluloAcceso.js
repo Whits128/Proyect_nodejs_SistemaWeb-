@@ -45,10 +45,7 @@ $(document).ready(async function () {
                 },
                 // Resto de las opciones DataTable
             });
-        } else {
-            console.error('No hay datos de categorías disponibles.');
-        }
-
+        } 
         // CREAR
         $("#btnCrear").click(function () {
             opcion = 'crear';
@@ -83,7 +80,7 @@ $(document).ready(async function () {
         });
 
        // Dar de Baja
-$(document).on("click", ".btnBorrar", async function () {
+/*$(document).on("click", ".btnBorrar", async function () {
     fila = $(this).closest("tr");
     estado = fila.find('td:eq(3)').text();
     codigo = parseInt(fila.find('td:eq(0)').text());
@@ -114,34 +111,49 @@ $(document).on("click", ".btnBorrar", async function () {
             console.error('Error al dar de baja:', error.message);
         }
     }
+});*/
+console.log("Antes de ejecutar la operación");
+
+// Submit para CREAR y EDITAR
+$('#form').submit(async function (e) {
+    e.preventDefault();
+
+    codigo = $.trim($('#id').val());
+    ruta = $.trim($('#ruta').val());
+    idRecurso = $.trim($("#idRecurso").val());
+    idRol = $.trim($("#idRol").val());
+
+    try {
+        let responseData;
+
+        if (opcion === 'crear') {
+            responseData = await api.excutePost('configuracionAcceso/post', { ruta, idRecurso, idRol });
+        } else if (opcion === 'editar') {
+            responseData = await api.excutePut(`configuracionAcceso/${codigo}`, { ruta, idRecurso, idRol });
+        }
+
+        // Actualizar la tabla con las nuevas configuracionAcceso
+        const nuevasconfiguracionAcceso = await api.excuteGet('configuracionAcceso');
+        tabla.clear().rows.add(nuevasconfiguracionAcceso).draw();
+
+        // Cerrar el modal manualmente
+        $('#modalCRUD').modal('hide');
+        // Limpiar el formulario después de cerrar el modal
+        $("#form").trigger("reset");
+    } catch (error) {
+        console.error('Error al guardar/editar:', error.message);
+    }
+});
+console.log("Cerrando el modal");
+$('#modalCRUD').modal('hide');
+
+// Cuando el modal se oculta, limpiar el formulario
+$('#modalCRUD').on('hidden.bs.modal', function () {
+    console.log("El modal se ha ocultado");
+    $("#form").trigger("reset");
 });
 
-        // Submit para CREAR y EDITAR
-        $('#form').submit(async function (e) {
-            e.preventDefault();
-
-    
-            codigo = $.trim($('#id').val());
-            ruta = $.trim($('#ruta').val());
-            idRecurso = $.trim($("#idRecurso").val());
-            idRol = $.trim($("#idRol").val());
-
-            try {
-                if (opcion === 'crear') {
-                    await api.excutePost('configuracionAcceso/post', { ruta, idRecurso, idRol });
-                } else if (opcion === 'editar') {
-                    await api.excutePut(`configuracionAcceso/${codigo}`, {ruta, idRecurso, idRol });
-                }
-
-                // Actualizar la tabla con las nuevas categorías
-                const nuevasBodega = await api.excuteGet('configuracionAcceso');
-                tabla.clear().rows.add(nuevasBodega).draw();
-
-                $('#modalCRUD').modal('hide');
-            } catch (error) {
-                console.error('Error al guardar/editar:', error.message);
-            }
-        });
+console.log("despues de ejecutar la operación");
 
     } catch (error) {
         console.error('Error general:', error.message);

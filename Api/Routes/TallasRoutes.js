@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Agrupar rutas bajo el prefijo '/api/categorias'
 router.get('/api/talla', TallasController.GetTalla);
-router.get('/api/talla/page',authMiddleware.isAuthenticated, TallasController.renderTallasPage);
+router.get('/api/talla/page',authMiddleware.isAuthenticated,authMiddleware.checkAccess, TallasController.renderTallasPage);
 router.post('/api/talla', TallasController.guardarTalla);
 router.put('/api/talla/:id', TallasController.updateTalla);
 router.put('/api/talla/dardebaja/:id', TallasController.darDeBajaTalla);

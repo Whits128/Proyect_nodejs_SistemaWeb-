@@ -3,130 +3,140 @@ import { getConnection ,sql} from "../models/connection";
 import * as ConfiguracionesModel from '../models/ConsultaConfiguraciones';
 import fs from 'fs';
 
+// Modifica la función encodeToBase64
 const encodeToBase64 = (filePath) => {
-    const data = fs.readFileSync(filePath);
-    return data.toString('base64');
+  const data = fs.readFileSync(filePath);
+  return data;
 };
+
 export const renderConfiguracionPage = async (req, res) => {
   try {
  
 // Obtén el usuario autenticado desde res.locals.userData
 const user = res.locals.userData;
 
-    // Renderiza la vista CtlConfiguracion.ejs con las configuraciones y detalles del usuario
+    // Obtén las configuraciones
+  
     res.render('CtlConfiguracion.ejs', { pageTitle: 'Configuraciones',user });
- 
+    console.log('user',user);
   } catch (error) {
     res.status(500).send(error.message);
   }
 };
-export const obtenerNombreLocal = async (req, res) => {
+
+export const renderHistorialPage = async (req, res) => {
   try {
-      // Obtén la configuración que incluye el nombre del local
-      const configuraciones = await ConfiguracionesModel.mostrarConfiguraciones();
-
-      // Extrae el nombre del local de la primera configuración (ajusta esto según tu lógica)
-      const nombreLocal = configuraciones.length > 0 ? configuraciones[0].NombreNegocio : '';
-
-      return nombreLocal;
+    res.render('HistorialConfiguraciones.ejs', { pageTitle: 'Historial Configuraciones ' });
   } catch (error) {
-      console.error('Error al obtener configuraciones:', error);
-      throw error; // Puedes manejar este error según tus necesidades
+    res.status(500).send(error.message);
   }
 };
 
 
 
 
-
+// En tu controlador (ConfiguracionesController.js), antes de enviar los datos al cliente:
 export const Configuraciones = async (req, res) => {
   try {
-    const config = await ConfiguracionesModel.mostrarConfiguraciones();
-    res.json(config);
+    const configuraciones = await ConfiguracionesModel.mostrarConfiguraciones();
+
+    // Convertir datos binarios a base64 antes de enviar al cliente
+    const configuracionesConBase64 = configuraciones.map(config => {
+      if (config.LogoLocal instanceof Buffer) {
+        const base64Data = config.LogoLocal.toString('base64');
+        return { ...config, LogoLocal: base64Data };
+      }
+      return config;
+    });
+
+    res.json(configuracionesConBase64);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+
+
+
+// En tu controlador (ConfiguracionesController.js), antes de enviar los datos al cliente:
 export const GetHistorialConfiguracione = async (req, res) => {
   try {
-    const pool = await getConnection();
-    const historial= await pool.request().query('SELECT H.PKHistorial, C.NombreNegocio AS NombreLocal, H.ColumnaModificada,  H.ValorAntiguo, H.ValorNuevo, H.FechaModificacion, H.UsuarioModificacion, H.TipoOperacion FROM HistorialConfiguraciones H JOIN  Configuraciones C ON H.FKConfiguraciones = C.PKConfiguraciones;');
-    res.json(historial);
+    const historial = await ConfiguracionesModel.mostrarhistorial();  
+  res.json(historial);
+  
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 
 export const saveConfiguracion = async (req, res) => {
   const { nombreNegocio, ruc, telefonos, correo, direccion, usuarioModificacion } = req.body;
 
-
   if (!nombreNegocio) {
-      return res.status(400).json({ msg: "Bad Request. Please provide a nombreNegocio" });
+    return res.status(400).json({ msg: "Bad Request. Please provide a nombreNegocio" });
   }
 
-  
-
   if (!req.file) {
-      return res.status(400).json({ msg: "No se proporcionó ninguna imagen" });
+    return res.status(400).json({ msg: "No se proporcionó ninguna imagen" });
   }
 
   try {
-      const logoLocalPath = req.file.path;
-      const logoLocalBase64 = encodeToBase64(logoLocalPath);
+    const logoLocalPath = req.file.path;
+    const logoLocalBinary = encodeToBase64(logoLocalPath);
 
-      const pool = await getConnection();
+    const pool = await getConnection();
 
-      const result = await pool
-          .request()
-          .input('nombreNegocio', sql.NVarChar, nombreNegocio)
-          .input('logoLocal', sql.NVarChar, logoLocalBase64)
-          .input('ruc', sql.NVarChar, ruc)
-          .input('telefonos', sql.NVarChar, telefonos)
-          .input('correo', sql.NVarChar, correo)
-          .input('direccion', sql.NVarChar, direccion)
-          .input('usuarioModificacion', sql.NVarChar, usuarioModificacion)
-          .execute('InsertarConfiguracionYHistorial');
+    const result = await pool
+      .request()
+      .input('nombreNegocio', sql.NVarChar, nombreNegocio)
+      .input('logoLocal', sql.VarBinary(sql.MAX), logoLocalBinary)  // Cambio a sql.VarBinary
+      .input('ruc', sql.NVarChar, ruc)
+      .input('telefonos', sql.NVarChar, telefonos)
+      .input('correo', sql.NVarChar, correo)
+      .input('direccion', sql.NVarChar, direccion)
+      .input('usuarioModificacion', sql.NVarChar, usuarioModificacion)
+      .execute('InsertarConfiguracionYHistorial');
 
-      console.log("Nuevo registro creado:", { nombreNegocio, ruc, telefonos, correo, direccion, usuarioModificacion });
+    console.log("Nuevo registro creado:", { nombreNegocio, ruc, telefonos, correo, direccion, usuarioModificacion });
 
-      res.json({ nombreNegocio, ruc, telefonos, correo, direccion, usuarioModificacion });
+    res.json({ nombreNegocio, ruc, telefonos, correo, direccion, usuarioModificacion });
   } catch (error) {
-      res.status(500).send(error.message);
+    res.status(500).send(error.message);
   }
 };
 
-export const UpdateConfiguracion = async (req, res) => {
+export const updateConfiguracion = async (req, res) => {
+  const {
+    
+    nombreNegocio,
+    ruc,
+    telefonos,
+    correo,
+    direccion,
+    usuarioModificacion,
+  } = req.body;
+  const { id } = req.params;
+  if (!id) {
+    return res.status(400).json({ msg: "Bad Request. Please provide PKConfiguraciones" });
+  }
+
   try {
-    const { id } = req.params;
-
-    if (!id) {
-      return res.status(400).json({ error: 'ID de configuración no proporcionado.' });
-    }
-
-    const { nombreNegocio, ruc, telefonos, correo, direccion, usuarioModificacion } = req.body;
-
-    if (!nombreNegocio) {
-      return res.status(400).json({ error: 'Bad Request. Proporcione un nombre de negocio.' });
-    }
-
-    let logoLocalBase64;
-
-    if (req.file) {
-      // Solo llama a encodeToBase64 si hay una nueva imagen
-      const logoLocalPath = req.file.path;
-      logoLocalBase64 = encodeToBase64(logoLocalPath);
-    }
-
-
     const pool = await getConnection();
+
+    let logoLocalBinary = null;
+    if (req.file) {
+      const logoLocalPath = req.file.path;
+      logoLocalBinary = encodeToBase64(logoLocalPath);
+    }
+
     const result = await pool
       .request()
-      .input('PKConfiguraciones', id)
+      .input('PKConfiguraciones', sql.Int, id)
       .input('NombreNegocio', sql.NVarChar, nombreNegocio || null)
-      .input('LogoLocal', sql.NVarChar, logoLocalBase64 || null)
+      .input('LogoLocal', sql.VarBinary(sql.MAX), logoLocalBinary || null)
       .input('RUC', sql.NVarChar, ruc || null)
       .input('Telefonos', sql.NVarChar, telefonos || null)
       .input('Correo', sql.NVarChar, correo || null)
@@ -134,22 +144,30 @@ export const UpdateConfiguracion = async (req, res) => {
       .input('UsuarioModificacion', sql.NVarChar, usuarioModificacion || null)
       .execute('ActualizarConfiguracion');
 
-    if (result.returnValue === 0) {
-      console.log("Registro actualizado:", { nombreNegocio, ruc, telefonos, correo, direccion, usuarioModificacion });
-      res.json({ nombreNegocio, ruc, telefonos, correo, direccion, usuarioModificacion });
-    } else {
-      res.status(500).json({ error: 'Error en el procedimiento almacenado.' });
-    }
-  } catch (error) {
-    console.error('Error al actualizar configuración:', error);
+    console.log("Registro actualizado:", {
+      nombreNegocio,
+      ruc,
+      telefonos,
+      correo,
+      direccion,
+      usuarioModificacion,
+    });
+    
 
-    if (error instanceof TypeError && error.message.includes('Cannot read properties')) {
-      res.status(400).json({ error: 'Error de tipo - Verifica que los datos enviados son correctos.' });
-    } else {
-      res.status(500).json({ error: 'Error interno del servidor.' });
-    }
+    res.json({
+      nombreNegocio,
+      ruc,
+      telefonos,
+      correo,
+      direccion,
+      usuarioModificacion,
+    });
+  } catch (error) {
+    res.status(500).send(error.message);
   }
 };
+
+
 
 
 export const DarDeBaja = async (req, res) => {

@@ -5,7 +5,7 @@
  * @param {string} Display - Propiedad a mostrar en las opciones.
  * @param {string} Value - Propiedad a usar como valor en las opciones.
  */
-export default function CreateDropDown(Dataset = [], Select, Display = "", Value = "") {
+export default function CreateDropDown(Dataset = [], Select, Display = "Nombre", Value = "Codigo") {
     try {
         // Validar parámetros
         if (!Array.isArray(Dataset) || !Dataset.length || !(Select instanceof HTMLElement)) {
@@ -25,7 +25,7 @@ export default function CreateDropDown(Dataset = [], Select, Display = "", Value
                 Options.innerText = Item[Display];
                 Options.value = Item[Value];
             } else {
-                console.error(`Las propiedades ${Display} y ${Value} no existen en el elemento ${Index} del Dataset.`);
+                console.error(`Las propiedades '${Display}' y '${Value}' no existen en el elemento ${Index} del Dataset. Elemento:`, Item);
                 return;
             }
 
@@ -35,3 +35,4 @@ export default function CreateDropDown(Dataset = [], Select, Display = "", Value
         console.error('Error en CreateDropDown:', error);
     }
 }
+

@@ -19,23 +19,28 @@ $(document).ready(async function () {
         // Obtener datos de categorías al cargar la página
         const priducto = await api.excuteGet('productos');
 
-        // DataTable initialization
-        if (priducto && priducto.length > 0) {
-            tabla = $('#Tabla').DataTable({
-                data: priducto,
-                columns: [
-                    { data: "Codigo" },
-                    { data: "Nombre" },
-                    { data: "Descripcion" },
-                    { data: "Categoria" },
-                    { data: "Estado" },
-                    { "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-info btn-sm btnEditar'>Editar</button><button class='btn btn-danger btn-sm btnBorrar'>Borrar</button></div></div>" }
-                ],
-                // Resto de las opciones DataTable
-            });
-        } else {
-            console.error('No hay datos de categorías disponibles.');
-        }
+            // MOSTRAR
+     tabla = $('#Tabla').DataTable({
+        data: priducto,
+        "scrollX": true,
+        "scrollCollapse": true,
+        "columns": 
+        [
+            { data: "Codigo" },
+            { data: "Nombre" },
+            { data: "Descripcion" },
+            { data: "Categoria" },
+            { data: "Estado" },
+            { "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-info btn-sm btnEditar'>Editar</button><button class='btn btn-danger btn-sm btnBorrar'>Borrar</button></div></div>" }
+        ],
+        responsive: true,
+        language: {
+            url: "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+        },
+    });
+
+console.log('data',priducto);
+ 
 
         // CREAR
         $("#btnCrear").click(function () {
@@ -53,15 +58,17 @@ $(document).ready(async function () {
             opcion = 'editar';
             fila = $(this).closest("tr");
             codigo = parseInt(fila.find('td:eq(0)').text());
+            console.log('codigo',codigo)
             nombre = fila.find('td:eq(1)').text();
             descripcion = fila.find('td:eq(2)').text();
             idCategoria = fila.find('td:eq(3)').text();
             estado = fila.find('td:eq(4)').text();
+            console.log('estado',estado);
             $("#id").val(codigo);
             $("#nombre").val(nombre);
             $("#descripcion").val(descripcion);
              // Usar el nombre del recurso para establecer la opción seleccionada
-   $("#idCategoria option:contains('" + idCategoria + "')").prop("selected", true);
+   $("#id_categoria option:contains('" + idCategoria + "')").prop("selected", true);
             $("#estado").val(estado);
             $(".modal-header").css("background-color", "#7303c0");
             $(".modal-header").css("color", "white");
@@ -72,9 +79,10 @@ $(document).ready(async function () {
        // Dar de Baja
 $(document).on("click", ".btnBorrar", async function () {
     fila = $(this).closest("tr");
-    estado = fila.find('td:eq(2)').text();
     codigo = parseInt(fila.find('td:eq(0)').text());
-
+    console.log('borrar codigo:',codigo);
+    estado = fila.find('td:eq(4)').text();
+    console.log('borrar estado:',estado);
     // Muestra un cuadro de diálogo de confirmación
     const confirmacion = await Swal.fire({
         title: '¿Estás seguro?',
@@ -90,12 +98,11 @@ $(document).on("click", ".btnBorrar", async function () {
     // Si el usuario confirma
     if (confirmacion.isConfirmed) {
         try {
-            await api.excutePut(`color/dardebaja/${codigo}`);
-
-            // Actualizar la tabla con las nuevas categorías
-            const nuevascolor= await api.excuteGet('color');
-            tabla.clear().rows.add(nuevascolor).draw();
-
+            await api.excutePut(`producto/dardebaja/${codigo}`);
+    // Actualizar la tabla con las nuevas productos
+    const nuevasproductos = await api.excuteGet('productos');
+    tabla.clear().rows.add(nuevasproductos).draw();
+          
             Swal.fire('¡Operación completada!', '', 'success');
         } catch (error) {
             console.error('Error al dar de baja:', error.message);
@@ -103,26 +110,31 @@ $(document).on("click", ".btnBorrar", async function () {
     }
 });
 
+
+
         // Submit para CREAR y EDITAR
         $('#form').submit(async function (e) {
             e.preventDefault();
 
             codigo = $.trim($('#id').val());
-            color = $.trim($('#color').val());
+            console.log('codigo',codigo);
+            nombre = $.trim($('#nombre').val());
+            descripcion = $("#descripcion").val();
+            idCategoria = $.trim($('#id_categoria').val());
             estado = $("#estado").val();
 
             try {
                 if (opcion === 'crear') {
-                    await api.excutePost('color',{color, estado });
+                    await api.excutePost('producto',{nombre,descripcion,idCategoria, estado });
                 } else if (opcion === 'editar') {
-                    await api.excutePut(`color/${codigo}`, {color, estado });
+                    await api.excutePut(`producto/${codigo}`, {nombre,descripcion,idCategoria, estado});
                 }
 
-                // Actualizar la tabla con las nuevas categorías
-                const nuevascolor = await api.excuteGet('color');
-                tabla.clear().rows.add(nuevascolor).draw();
-
                 $('#modalCRUD').modal('hide');
+                  // Actualizar la tabla con las nuevas productos
+                  const nuevasproductos = await api.excuteGet('productos');
+                  tabla.clear().rows.add(nuevasproductos).draw();
+               
             } catch (error) {
                 console.error('Error al guardar/editar:', error.message);
             }

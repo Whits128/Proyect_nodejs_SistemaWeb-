@@ -83,14 +83,3 @@ export const darDeBajaCategoria = async (req, res) => {
   }
 };
 
-export const activarCategoria = async (req, res) => {
-  const codigo = req.params.id;
-
-  try {
-    await categoriaModel.activarCategoria(codigo);
-    res.json({ message: 'Categoría activada exitosamente' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-};
