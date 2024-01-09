@@ -1,0 +1,150 @@
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css" integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK" crossorigin="anonymous">
+
+<!-- DataTables Bootstrap CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap5.min.css">
+
+<script  type="module" src="/js/ModulosJS/ModulosJSUsuarios.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/Formulario.css">
+    
+
+
+
+    <section class="Contenido-Main">
+
+        
+        <div id="vista1" class="vista">
+            <div class="container-fluid">
+                <!-- Botón para Activar Modal CRUD -->
+                <button id="btnCrear" class="btn btn-dark">Crear</button>
+        
+                <!-- Visualización de DataTables -->
+                <div class="row shadow-lg p-3 mb-5">
+                    <div class="col">
+                        <table id="Tabla" class="table table-striped table-bordered" style="width:100%">
+                            <!-- Encabezados de la Tabla -->
+                            <thead>
+                                <tr>
+                                    <th>CODIGO</th>
+                                    <th>NOMBRES</th>
+                                    <th>APELLIDOS</th>
+                                    <th>LOGIN.U</th>
+                                    <th>ROL</th>
+                                    <th>ESTADO</th>
+                                    <th>FECHA.R</th>
+                                    <th class="text-center">ACCIONES</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody> <!-- El Cuerpo de la Tabla se Poblará Dinámicamente -->
+                        </table>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+
+
+        <div id="vistaCUser2" class="vista">
+            <h2>Cambiar Contraseña</h2> <!-- Agrega el título aquí -->
+        
+            <form id="formCUser" class="form_pequeno">
+                <div class="input-container">
+                    <input placeholder="" type="text" class="input" id="User" readonly>
+                    <label for="User">Usuario</label>
+                </div>
+                <div class="input-container ">
+                    <input placeholder="" type="password" class="input" id="loginClave">
+                    <label for="loginClave">Contraseña</label>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" id="btnGuardar" class="btn btn-dark">Guardar</button>
+                </div>
+            </form>
+        </div>
+        
+        
+            <!-- Modal para Operaciones CRUD -->
+            <div id="modalCRUD" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="error-container"></div>
+    
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <!-- Encabezado del Modal -->
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel"></h5>
+                        </div>
+        
+                        <!-- Formulario en el Modal -->
+                        <form id="form">
+                            <!-- Cuerpo del Modal -->
+                            <div class="modal-body form">
+                                <!-- Campos del Formulario -->
+                                <input id="id" hidden>
+                                <div class="input-container">
+                                    <input placeholder="" type="text" class="input" id="nombres">
+                                    <label for="nombres">Nombres</label>
+                                </div>
+                                <div class="input-container">
+                                    <input placeholder="" type="text" class="input" id="apellidos">
+                                    <label for="apellidos">Apellidos</label>
+                                </div>
+                                <div class="input-container">
+                                    <input placeholder="" type="text" class="input" id="loginUsuario">
+                                    <label for="loginUsuario">Login Usuario</label>
+                                </div>
+                                <div class="input-container conteEliminarPass">
+                                    <input placeholder="" type="password" class="input" id="loginClave">
+                                    <label  for="loginClave">Contraseña</label>
+                                </div>
+                       
+                                <div class="input-container">               
+                                    <select class="input" id="Idrol" aria-label="select"> </select>
+                                        <label for="Idrol">Rol</label>
+                                    </div>
+                                <div class="input-container">
+                                    <select id="estado" class="input">
+                                        <option value="Activo">Activo</option>
+                                        <!-- Puedes agregar más opciones según tus necesidades -->
+                                    </select>
+                                    <label for="estado">Estado</label>
+                                </div>
+                            </div>
+        
+                            <!-- Pie del Modal con Botones de Cancelar y Guardar -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="btnGuardar" class="btn btn-dark">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+      
+        </div>
+    </section>
+<!-- jQuery -->
+<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+<!-- Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.min.js" integrity="sha384-5h4UG+6GOuV9qXh6HqOLwZMY4mnLPraeTrjT5v07o347pj6IkfuoASuGBhfDsp3d" crossorigin="anonymous"></script>
+
+<!-- DataTables jQuery Plugin -->
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<!-- DataTables Bootstrap Plugin -->
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    
+<!-- Moment.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>

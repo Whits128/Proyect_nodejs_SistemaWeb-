@@ -1,4 +1,4 @@
--- Crear la base de datos
+ -- Crear la base de datos
 CREATE DATABASE TiendaZapateria;
 GO
 
@@ -140,6 +140,7 @@ CREATE TABLE Empleados (
     Apellido VARCHAR(100),
     Direccion VARCHAR(200),
     Telefono VARCHAR(20),
+	 idUsuario INT FOREIGN KEY REFERENCES USUARIO(IdUsuario),
   Estado Nvarchar(50) DEFAULT 'Activo'
 );
 GO
@@ -203,6 +204,11 @@ CREATE TABLE Inventario (
      Estado Nvarchar(50) DEFAULT 'Activo'
 );
 GO
+
+
+
+
+
 
 
 
@@ -280,6 +286,19 @@ CREATE TABLE Detalle_Factura (
     Subtotal DECIMAL(10, 2),
     Descuento DECIMAL(10, 2),
 	  Estado Nvarchar(50) DEFAULT 'Activo'
+);
+GO
+
+-- Tabla HistorialPrecio
+CREATE TABLE HistorialPriciocompra (
+    PKHistorial INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    ID_Inventario INT FOREIGN KEY REFERENCES Inventario(ID_Inventario) NOT NULL,
+	ID_Proveedor INT FOREIGN KEY REFERENCES Proveedores(ID_Proveedor) NOT NULL,
+   PrecioAntiguo MONEY,
+    PrecioNuevo MONEY,
+    FechaModificacion DATETIME2 DEFAULT GETDATE() NOT NULL,
+    UsuarioModificacion NVARCHAR(50),
+    TipoOperacion NVARCHAR(20) DEFAULT 'UPDATE'
 );
 GO
 
@@ -415,13 +434,7 @@ VALUES
   ('Originals Superstar', 'Zapatillas casuales icónicas', 2, 'Activo'),
   ('Unstructured', 'Zapatos formales sin estructura', 3, 'Activo');
   go
-  -- Tabla Empleados
-INSERT INTO Empleados (Nombre, Apellido, Direccion, Telefono, Estado)
-VALUES
-  ('Juan', 'Pérez', 'Calle 123, Ciudad ABC', '123-456-7890', 'Activo'),
-  ('María', 'Gómez', 'Avenida XYZ, Ciudad DEF', '987-654-3210', 'Activo'),
-  ('Carlos', 'Martínez', 'Carrera 456, Ciudad GHI', '111-222-3333', 'Activo');
-  go
+ 
 -- Tabla ZapatosDanados
 INSERT INTO ZapatosDanados (ProductoZapatosID, DescripcionDanos, FechaDeteccion, AccionesTomadas, Estado)
 VALUES
@@ -599,203 +612,204 @@ END;
 
 GO
 
--- Crear un procedimiento almacenado para agregar un producto al inventario
-CREATE PROCEDURE AgregarProductoAlInventario
-    @ID_Bodega INT,
-    @ID_ProductoZapatos INT,
-    @ID_Marca INT,
-    @ID_Talla INT,
-    @ID_Colores INT,
-    @ID_MaterialZapatos INT,
-    @Estado NVARCHAR(50) = 'Activo'
-AS
-BEGIN
-    SET NOCOUNT ON;
 
-    INSERT INTO Inventario (
-        ID_BODEGA,
-        ID_ProductoZapatos,
-        ID_Marca,
-        ID_Talla,
-        ID_Colores,
-        ID_MaterialZapatos,
-        Estado
-    )
-    VALUES (
-        @ID_Bodega,
-        @ID_ProductoZapatos,
-        @ID_Marca,
-        @ID_Talla,
-        @ID_Colores,
-        @ID_MaterialZapatos,
-        @Estado
-    );
-END;
 
-GO
 
-CREATE PROCEDURE ActualizarInventario
-    @Codigo INT,
-    @ID_Bodega INT,
-    @ID_ProductoZapatos INT,
-    @ID_Marca INT,
-    @ID_Talla INT,
-    @ID_Colores INT,
-    @ID_MaterialZapatos INT,
-    @Estado NVARCHAR(255)
-AS
-BEGIN
-    UPDATE Inventario
-    SET
-        ID_Bodega = @ID_Bodega,
-        ID_ProductoZapatos = @ID_ProductoZapatos,
-        ID_Marca = @ID_Marca,
-        ID_Talla = @ID_Talla,
-        ID_Colores = @ID_Colores,
-        ID_MaterialZapatos = @ID_MaterialZapatos,
-        Estado = @Estado
-    WHERE ID_Inventario = @Codigo;
-END;
+--Tabla temporal para pasar los valores del historial compra
+
+			   -- Obtener los detalles de compra
+ CREATE TABLE ##DetallesCompraTemp
+(
+    ID_Inventario INT,
+    ID_Proveedor INT,
+    NuevoPrecio MONEY,
+    UsuarioModificacion NVARCHAR(50)
+);
 go
-
-
 CREATE PROCEDURE GestionarCompra
     @CodigoCompra NVARCHAR(100),
     @FechaCompra DATE,
     @EstadoCompra NVARCHAR(50),
-	 @ID_BODEGA INT,
-    @ID_ProductoZapatos INT,
-    @ID_Marca INT,
-    @ID_Talla INT,
-    @ID_Colores INT,
-    @ID_MaterialZapatos INT,
-    @Total DECIMAL(10, 2),
-	 @DetallesCompra XML
+	@Total  DECIMAL(10, 2),
+    @DetallesCompra XML
 AS
 BEGIN
     BEGIN TRY
         -- Declarar variables locales
         DECLARE @ID_Compra INT;
-		    DECLARE @ID_Inventario INT; -- Ahora lo declaramos aquí
+
         -- Iniciar una transacción
         BEGIN TRANSACTION;
+		       
+			   
+        -- Crear la tabla temporal si no existe
+        IF OBJECT_ID('tempdb..##DetallesCompraTemp') IS NULL
+        BEGIN
+            CREATE TABLE ##DetallesCompraTemp
+            (
+                ID_Inventario INT,
+                ID_Proveedor INT,
+                NuevoPrecio MONEY,
+                UsuarioModificacion NVARCHAR(50)
+            );
+        END;
 
-        -- Si el estado es 'Pendiente', realizar la inserción de la compra y detalles
+
+			   -- Si el estado es 'Pendiente', realizar la inserción de la compra y detalles
         IF @EstadoCompra = 'Pendiente'
         BEGIN
-       
-        -- Insertar la compra principal
-        INSERT INTO Compras (CodigoCompra, FechaCompra, Total, EstadoCompra)
-        VALUES (@CodigoCompra, @FechaCompra, @Total, @EstadoCompra);
 
-        -- Obtener el código de la compra recién insertada
+        -- Insertar la compra principal
+        INSERT INTO Compras (CodigoCompra, FechaCompra, EstadoCompra)
+        VALUES (@CodigoCompra, @FechaCompra, @EstadoCompra);
+
+        -- Obtener el ID de la compra recién insertada
         SET @ID_Compra = SCOPE_IDENTITY();
 
-        -- Insertar en Inventario
-        INSERT INTO Inventario (
-            ID_BODEGA,
-            ID_ProductoZapatos,
-            ID_Marca,
-            ID_Talla,
-            ID_Colores,
-            ID_MaterialZapatos
-         
-        )
-        VALUES (
-            @ID_BODEGA,
-            @ID_ProductoZapatos,
-            @ID_Marca,
-            @ID_Talla,
-            @ID_Colores,
-            @ID_MaterialZapatos
-        );
+    
+-- Procesar cada detalle de la compra
+INSERT INTO Inventario (
+    ID_BODEGA, 
+    ID_ProductoZapatos,
+    ID_Marca,
+    ID_Talla,
+    ID_Colores,
+    ID_MaterialZapatos
+)
+SELECT DISTINCT
+    D.Detalle.value('(ID_BODEGA)[1]', 'INT'), -- Utilizar la BODEGA del detalle de compra
+    D.Detalle.value('(ID_ProductoZapatos)[1]', 'INT'),
+    D.Detalle.value('(ID_Marca)[1]', 'INT'),
+    D.Detalle.value('(ID_Talla)[1]', 'INT'),
+    D.Detalle.value('(ID_Colores)[1]', 'INT'),
+    D.Detalle.value('(ID_MaterialZapatos)[1]', 'INT')
+FROM @DetallesCompra.nodes('/DetallesCompra/Detalle') AS D(Detalle)
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM Inventario I
+   WHERE I.ID_BODEGA = D.Detalle.value('(ID_BODEGA)[1]', 'INT')
+      AND I.ID_ProductoZapatos = D.Detalle.value('(ID_ProductoZapatos)[1]', 'INT')
+      AND I.ID_Marca = D.Detalle.value('(ID_Marca)[1]', 'INT')
+      AND I.ID_Talla = D.Detalle.value('(ID_Talla)[1]', 'INT')
+      AND I.ID_Colores = D.Detalle.value('(ID_Colores)[1]', 'INT')
+      AND I.ID_MaterialZapatos = D.Detalle.value('(ID_MaterialZapatos)[1]', 'INT')
+);
 
-        -- Obtener el ID_Inventario recién insertado
-        SET @ID_Inventario = SCOPE_IDENTITY();
+        -- Procesar cada detalle de la compra
+      -- Procesar cada detalle de la compra
+INSERT INTO DetalleCompra (
+    CodigoCompra,
+    ID_Inventario,
+    ID_Proveedor,
+    ID_BODEGA, -- Utilizar la BODEGA del inventario
+    ID_Empleado,
+    Cantidad,
+    PrecioCompra,
+    Descuento,
+    Total,
+    Subtotal,
+    IVA,
+    EstadoDetalleCompra
+)
+SELECT
+    @CodigoCompra,
+    I.ID_Inventario,
+    D.Detalle.value('(ID_Proveedor)[1]', 'INT'),
+    I.ID_BODEGA, -- Utilizar la BODEGA del inventario
+    D.Detalle.value('(ID_Empleado)[1]', 'INT'),
+    D.Detalle.value('(Cantidad)[1]', 'INT'),
+    D.Detalle.value('(PrecioCompra)[1]', 'DECIMAL(10,2)'),
+    D.Detalle.value('(Descuento)[1]', 'DECIMAL(10,2)'),
+    D.Detalle.value('(Total)[1]', 'DECIMAL(10,2)'),
+    D.Detalle.value('(Subtotal)[1]', 'DECIMAL(10,2)'),
+    D.Detalle.value('(IVA)[1]', 'DECIMAL(10,2)'),
+    'Activo'
+FROM @DetallesCompra.nodes('/DetallesCompra/Detalle') AS D(Detalle)
+INNER JOIN Inventario I ON
+    I.ID_ProductoZapatos = D.Detalle.value('(ID_ProductoZapatos)[1]', 'INT') AND
+    I.ID_Marca = D.Detalle.value('(ID_Marca)[1]', 'INT') AND
+    I.ID_Talla = D.Detalle.value('(ID_Talla)[1]', 'INT') AND
+    I.ID_Colores = D.Detalle.value('(ID_Colores)[1]', 'INT') AND
+    I.ID_MaterialZapatos = D.Detalle.value('(ID_MaterialZapatos)[1]', 'INT') AND
+	    I.ID_BODEGA = D.Detalle.value('(ID_BODEGA)[1]', 'INT')
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM DetalleCompra DC
+    WHERE DC.CodigoCompra = @CodigoCompra
+      AND DC.ID_Inventario = I.ID_Inventario
+);
 
-        -- Insertar detalles de la compra en DetalleCompra
-        INSERT INTO DetalleCompra (
-            CodigoCompra,
-            ID_Inventario,
-            ID_BODEGA,
-            ID_Proveedor,
-            ID_Empleado,
-            Cantidad,
-            PrecioCompra,
-            Descuento,
-            Total,
-            Subtotal,
-            IVA
-        )
-        SELECT
-            @CodigoCompra,
-            @ID_Inventario,
-            @ID_BODEGA,
-            Detalle.value('(ID_Proveedor)[1]', 'INT'),
-            Detalle.value('(ID_Empleado)[1]', 'INT'),
-            Detalle.value('(Cantidad)[1]', 'INT'),
-            Detalle.value('(PrecioCompra)[1]', 'DECIMAL(10,2)'),
-            Detalle.value('(Descuento)[1]', 'DECIMAL(10,2)'),
-            Detalle.value('(Total)[1]', 'DECIMAL(10,2)'),
-            Detalle.value('(Subtotal)[1]', 'DECIMAL(10,2)'),
-            Detalle.value('(IVA)[1]', 'DECIMAL(10,2)')
-        FROM @DetallesCompra.nodes('/DetallesCompra/Detalle') AS T(Detalle);
 
 
             -- Actualizar el total de la compra principal
             UPDATE Compras
             SET Total = @Total
             WHERE CodigoCompra = @CodigoCompra;
+
+		END;
+        -- Verificar el estado y realizar acciones adicionales si es 'Completada'
+        ELSE IF @EstadoCompra = 'Completada'
+        BEGIN
+            -- Obtener la fecha de la compra
+            SET @FechaCompra = (SELECT FechaCompra FROM Compras WHERE CodigoCompra = @CodigoCompra);
+
+            -- Insertar el movimiento en la tabla TblMovimientosBodegas
+            INSERT INTO TblMovimientosBodegas (
+                ID_Inventario,
+                PKEmpleado,
+                FechaMovimiento,
+                Descripcion,
+                Cantidad,
+                ID_BODEGA,
+                TipoMovimiento
+            )
+            SELECT
+                DC.ID_Inventario,
+                DC.ID_Empleado,
+                @FechaCompra,
+                'Compra Completada',
+                DC.Cantidad,
+                DC.ID_BODEGA,
+                'Entrada'
+            FROM DetalleCompra DC
+            WHERE DC.CodigoCompra = @CodigoCompra;
+
+            -- Actualizar el inventario basado en la compra completada
+            UPDATE Inv
+            SET 
+                UnidadesExistencias = UnidadesExistencias + DC.Cantidad,
+                FechaIngreso = COALESCE(FechaIngreso, @FechaCompra),
+                PrecioCompra = DC.PrecioCompra
+            FROM DetalleCompra DC
+            JOIN Inventario Inv ON DC.ID_Inventario = Inv.ID_Inventario
+            WHERE DC.CodigoCompra = @CodigoCompra;
+
+            -- Actualizar el estado de la compra
+            UPDATE Compras
+            SET EstadoCompra = @EstadoCompra
+            WHERE CodigoCompra = @CodigoCompra;  -- Utilizar el ID_Compra en lugar de CodigoCompra
+			  -- Actualizar el estado del detallecompra
+            UPDATE DetalleCompra
+            SET EstadoDetalleCompra = @EstadoCompra
+            WHERE CodigoCompra = @CodigoCompra;  -- Utilizar el ID_Compra en lugar de CodigoCompra
+
+            INSERT INTO ##DetallesCompraTemp (ID_Inventario, ID_Proveedor, NuevoPrecio, UsuarioModificacion)
+            SELECT
+                DC.ID_Inventario,
+                DC.ID_Proveedor,
+                DC.PrecioCompra,
+                E.Nombre
+            FROM DetalleCompra DC
+            JOIN Empleados E ON DC.ID_Empleado = E.ID_Empleado
+            WHERE DC.CodigoCompra = @CodigoCompra;
+
+            -- Llamar al procedimiento ActualizarHistorialPrecioCompraBulk
+            EXEC ActualizarHistorialPrecioCompra;
+
+
+
+
         END
-     -- Resto del procedimiento almacenado...
-
-ELSE IF @EstadoCompra = 'Completada'
-BEGIN
-    -- Obtener la fecha de la compra
-    SET @FechaCompra = (SELECT FechaCompra FROM Compras WHERE CodigoCompra = @CodigoCompra);
-
-    -- Obtener el ID de la compra recién insertada
-    SET @ID_Compra = (SELECT ID_Compra FROM Compras WHERE CodigoCompra = @CodigoCompra);
-
-    -- Insertar el movimiento en la tabla TblMovimientosBodegas
-    INSERT INTO TblMovimientosBodegas (
-        ID_Inventario,
-        PKEmpleado,
-        FechaMovimiento,
-        Descripcion,
-        Cantidad,
-        ID_BODEGA,
-        TipoMovimiento
-    )
-    SELECT
-        DC.ID_Inventario,
-        DC.ID_Empleado,
-        @FechaCompra, -- Utilizar la fecha de la compra
-        'Compra Completada',
-        DC.Cantidad,
-        DC.ID_BODEGA,
-        'Entrada'
-    FROM DetalleCompra DC
-    WHERE DC.CodigoCompra = @CodigoCompra;
-
-    -- Actualizar el inventario basado en la compra completada
-    UPDATE Inv
-    SET 
-        UnidadesExistencias = UnidadesExistencias + DC.Cantidad,
-        FechaIngreso = COALESCE(FechaIngreso, @FechaCompra),
-        PrecioCompra = DC.PrecioCompra
-    FROM DetalleCompra DC
-    JOIN Inventario Inv ON DC.ID_Inventario = Inv.ID_Inventario
-    WHERE DC.CodigoCompra = @CodigoCompra;
-
-    -- Actualizar el estado de la compra
-    UPDATE Compras
-    SET EstadoCompra = @EstadoCompra
-    WHERE ID_Compra = @ID_Compra;  -- Utilizar el ID_Compra en lugar de CodigoCompra
-END
-
--- Resto del procedimiento almacenado...
-
 
         -- Commit de la transacción
         COMMIT;
@@ -808,7 +822,11 @@ END
         -- También puedes propagar el error hacia arriba utilizando THROW para que la aplicación cliente lo maneje
         THROW;
     END CATCH;
+				-- Eliminar la tabla temporal al final del procedimiento
+IF OBJECT_ID('tempdb..##DetallesCompraTemp') IS NOT NULL
+    DROP TABLE ##DetallesCompraTemp;
 END;
+
 go
 CREATE PROCEDURE ObtenerDetallesCompraPorCodigo
     @CodigoCompra NVARCHAR(100)
@@ -817,35 +835,7 @@ BEGIN
     -- Verificar si la compra existe
     IF NOT EXISTS (SELECT 1 FROM Compras WHERE CodigoCompra = @CodigoCompra)
     BEGIN
-        -- Si no se encuentra la compra, retornar un conjunto de resultados vacío
-        SELECT
-            NULL AS CodigoCompra,
-            NULL AS FechaCompra,
-            NULL AS EstadoCompra,
-            NULL AS ID_Inventario,
-            NULL AS Cantidad,
-            NULL AS PrecioCompra,
-            NULL AS Descuento,
-            NULL AS Total,
-            NULL AS Subtotal,
-            NULL AS IVA,
-            NULL AS ID_ProductoZapatos,
-            NULL AS NombreProducto,
-            NULL AS ID_Marca,
-            NULL AS NombreMarca,
-            NULL AS ID_Talla,
-            NULL AS NombreTalla,
-            NULL AS ID_Colores,
-            NULL AS NombreColor,
-            NULL AS ID_MaterialZapatos,
-            NULL AS NombreMaterial,
-            NULL AS ID_BODEGA,
-            NULL AS NombreBodega,
-            NULL AS ID_Empleado,
-            NULL AS NombreEmpleado,
-            NULL AS ID_Proveedor,
-            NULL AS NombreProveedor
-        WHERE 1 = 0;  -- Garantiza que no se devuelva ningún resultado
+        -- Si no se encuentra la compra, terminar la ejecución
         RETURN;
     END
 
@@ -854,6 +844,7 @@ BEGIN
         C.CodigoCompra,
         C.FechaCompra,
         C.EstadoCompra,
+		C.Total as TotalGeneral,
         D.ID_Inventario,
         D.Cantidad,
         D.PrecioCompra,
@@ -861,8 +852,8 @@ BEGIN
         D.Total,
         D.Subtotal,
         D.IVA,
-        I.ID_ProductoZapatos,
-        P.Nombre AS NombreProducto,
+        I.ID_ProductoZapatos as Codigo,
+        P.Nombre AS Nombre,
         I.ID_Marca,
         M.Nombre AS NombreMarca,
         I.ID_Talla,
@@ -872,7 +863,7 @@ BEGIN
         I.ID_MaterialZapatos,
         Mat.Nombre AS NombreMaterial,
         I.ID_BODEGA,
-        B.NOMBRE AS NombreBodega,
+        B.Nombre AS NombreBodega,
         D.ID_Empleado,
         E.Nombre AS NombreEmpleado,
         D.ID_Proveedor,
@@ -890,68 +881,199 @@ BEGIN
     LEFT JOIN Proveedores Prov ON D.ID_Proveedor = Prov.ID_Proveedor
     WHERE C.CodigoCompra = @CodigoCompra;
 END;
+
 go
 CREATE PROCEDURE EditarCompraDetalleInventario
     @CodigoCompra NVARCHAR(100),
     @FechaCompra DATE,
     @EstadoCompra NVARCHAR(50),
-    @ID_BODEGA INT,
-    @ID_ProductoZapatos INT,
-    @ID_Marca INT,
-    @ID_Talla INT,
-    @ID_Colores INT,
-    @ID_MaterialZapatos INT,
     @Total DECIMAL(10, 2),
     @DetallesCompra XML
 AS
 BEGIN
     BEGIN TRY
+        -- Declarar variables locales
+        DECLARE @ID_Compra INT;
+		  DECLARE @NuevoTotal DECIMAL(10, 2);
         -- Iniciar una transacción
         BEGIN TRANSACTION;
 
-        -- Actualizar la tabla Compras
-        UPDATE Compras
-        SET
-            FechaCompra = @FechaCompra,
-            EstadoCompra = @EstadoCompra,
-            Total = @Total
-        WHERE CodigoCompra = @CodigoCompra;
 
-        -- Actualizar la tabla DetalleCompra
-        UPDATE DetalleCompra
-        SET
-            ID_BODEGA = @ID_BODEGA,
-            ID_Inventario = (SELECT TOP 1 ID_Inventario FROM Inventario WHERE ID_Inventario IN (SELECT ID_Inventario FROM DetalleCompra WHERE CodigoCompra = @CodigoCompra)),
-            -- Agregar más campos de actualización según sea necesario
-            Cantidad = Detalle.value('(Cantidad)[1]', 'INT'),
-            PrecioCompra = Detalle.value('(PrecioCompra)[1]', 'DECIMAL(10,2)'),
-            Descuento = Detalle.value('(Descuento)[1]', 'DECIMAL(10,2)'),
-            Total = Detalle.value('(Total)[1]', 'DECIMAL(10,2)'),
-            Subtotal = Detalle.value('(Subtotal)[1]', 'DECIMAL(10,2)'),
-            IVA = Detalle.value('(IVA)[1]', 'DECIMAL(10,2)'),
-            EstadoDetalleCompra = Detalle.value('(EstadoDetalleCompra)[1]', 'NVARCHAR(50)')
-        FROM @DetallesCompra.nodes('/DetallesCompra/Detalle') AS T(Detalle)
-        WHERE CodigoCompra = @CodigoCompra;
 
-        -- Actualizar la tabla Inventario
-        UPDATE Inventario
-        SET
-            ID_BODEGA = @ID_BODEGA,
-            ID_ProductoZapatos = @ID_ProductoZapatos,
-            ID_Marca = @ID_Marca,
-            ID_Talla = @ID_Talla,
-            ID_Colores = @ID_Colores,
-            ID_MaterialZapatos = @ID_MaterialZapatos
-        WHERE ID_Inventario IN (SELECT ID_Inventario FROM DetalleCompra WHERE CodigoCompra = @CodigoCompra);
+        -- Verificar si la compra existe
+        IF EXISTS (SELECT 1 FROM Compras WHERE CodigoCompra = @CodigoCompra)
+        BEGIN
+            -- Actualizar la compra principal
+            UPDATE Compras
+            SET
+                FechaCompra = @FechaCompra,
+                EstadoCompra = @EstadoCompra,
+                Total = @Total
+            WHERE CodigoCompra = @CodigoCompra;
 
-        -- Commit de la transacción
-        COMMIT;
+            -- Obtener el ID de la compra
+            SET @ID_Compra = (SELECT ID_Compra FROM Compras WHERE CodigoCompra = @CodigoCompra);
+INSERT INTO Inventario (
+    ID_BODEGA, 
+    ID_ProductoZapatos,
+    ID_Marca,
+    ID_Talla,
+    ID_Colores,
+    ID_MaterialZapatos
+)
+SELECT DISTINCT
+    D.Detalle.value('(ID_BODEGA)[1]', 'INT'), -- Utilizar la BODEGA del detalle de compra
+    D.Detalle.value('(ID_ProductoZapatos)[1]', 'INT'),
+    D.Detalle.value('(ID_Marca)[1]', 'INT'),
+    D.Detalle.value('(ID_Talla)[1]', 'INT'),
+    D.Detalle.value('(ID_Colores)[1]', 'INT'),
+    D.Detalle.value('(ID_MaterialZapatos)[1]', 'INT')
+FROM @DetallesCompra.nodes('/DetallesCompra/Detalle') AS D(Detalle)
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM Inventario I
+   WHERE I.ID_BODEGA = D.Detalle.value('(ID_BODEGA)[1]', 'INT')
+      AND I.ID_ProductoZapatos = D.Detalle.value('(ID_ProductoZapatos)[1]', 'INT')
+      AND I.ID_Marca = D.Detalle.value('(ID_Marca)[1]', 'INT')
+      AND I.ID_Talla = D.Detalle.value('(ID_Talla)[1]', 'INT')
+      AND I.ID_Colores = D.Detalle.value('(ID_Colores)[1]', 'INT')
+      AND I.ID_MaterialZapatos = D.Detalle.value('(ID_MaterialZapatos)[1]', 'INT')
+);
+
+
+             -- Procesar cada detalle de la compra
+        INSERT INTO DetalleCompra (
+            CodigoCompra,
+            ID_Inventario,
+            ID_Proveedor,
+            ID_BODEGA, -- Utilizar la BODEGA del inventario
+            ID_Empleado,
+            Cantidad,
+            PrecioCompra,
+            Descuento,
+            Total,
+            Subtotal,
+            IVA,
+            EstadoDetalleCompra
+        )
+        SELECT
+            @CodigoCompra,
+            I.ID_Inventario,
+            D.Detalle.value('(ID_Proveedor)[1]', 'INT'),
+            I.ID_BODEGA, -- Utilizar la BODEGA del inventario
+            D.Detalle.value('(ID_Empleado)[1]', 'INT'),
+            D.Detalle.value('(Cantidad)[1]', 'INT'),
+            D.Detalle.value('(PrecioCompra)[1]', 'DECIMAL(10,2)'),
+            D.Detalle.value('(Descuento)[1]', 'DECIMAL(10,2)'),
+            D.Detalle.value('(Total)[1]', 'DECIMAL(10,2)'),
+            D.Detalle.value('(Subtotal)[1]', 'DECIMAL(10,2)'),
+            D.Detalle.value('(IVA)[1]', 'DECIMAL(10,2)'),
+            'Activo'
+        FROM @DetallesCompra.nodes('/DetallesCompra/Detalle') AS D(Detalle)
+        INNER JOIN Inventario I ON
+            I.ID_ProductoZapatos = D.Detalle.value('(ID_ProductoZapatos)[1]', 'INT') AND
+            I.ID_Marca = D.Detalle.value('(ID_Marca)[1]', 'INT') AND
+            I.ID_Talla = D.Detalle.value('(ID_Talla)[1]', 'INT') AND
+            I.ID_Colores = D.Detalle.value('(ID_Colores)[1]', 'INT') AND
+            I.ID_MaterialZapatos = D.Detalle.value('(ID_MaterialZapatos)[1]', 'INT');
+
+			            -- Calcular el nuevo total de la compra
+            SET @NuevoTotal = COALESCE((
+                SELECT SUM(Total) 
+                FROM DetalleCompra 
+                WHERE CodigoCompra = @CodigoCompra
+            ), 0);
+
+            -- Actualizar el total en la tabla Compras
+            UPDATE Compras
+            SET
+                Total = @NuevoTotal
+            WHERE ID_Compra = @ID_Compra;
+
+
+         
+            -- Commit de la transacción
+            COMMIT;
+        END
+        ELSE
+        BEGIN
+            -- La compra no existe, manejar el error o devolver un código de error
+            THROW 51000, 'La compra no existe.', 1;
+        END;
     END TRY
     BEGIN CATCH
         -- Rollback en caso de error
         ROLLBACK;
 
-        -- Manejar el error
+        -- Manejar el error (puedes registrar el error en una tabla de registro de errores, por ejemplo)
+        -- También puedes propagar el error hacia arriba utilizando THROW para que la aplicación cliente lo maneje
         THROW;
     END CATCH;
+END;
+
+
+go
+
+---Procedure de historico PrecioCompra
+CREATE PROCEDURE ActualizarHistorialPrecioCompra
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Declarar un cursor para recorrer los registros de la tabla temporal
+    DECLARE cursorDetalles CURSOR FOR
+        SELECT ID_Inventario, ID_Proveedor, NuevoPrecio, UsuarioModificacion
+        FROM ##DetallesCompraTemp;
+
+    OPEN cursorDetalles;
+
+    DECLARE @ID_Inventario INT;
+    DECLARE @ID_Proveedor INT;
+    DECLARE @NuevoPrecio MONEY;
+    DECLARE @UsuarioModificacion NVARCHAR(50);
+
+    FETCH NEXT FROM cursorDetalles INTO @ID_Inventario, @ID_Proveedor, @NuevoPrecio, @UsuarioModificacion;
+
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+        -- Mostrar los valores para diagnosticar
+        PRINT 'ID_Inventario: ' + CAST(@ID_Inventario AS NVARCHAR(10));
+        PRINT 'ID_Proveedor: ' + CAST(@ID_Proveedor AS NVARCHAR(10));
+        PRINT 'NuevoPrecio: ' + CAST(@NuevoPrecio AS NVARCHAR(50));
+        PRINT 'UsuarioModificacion: ' + @UsuarioModificacion;
+
+        -- Obtener el precio antiguo
+        DECLARE @PrecioAntiguo MONEY;
+
+        SELECT TOP 1 @PrecioAntiguo = PrecioNuevo
+        FROM HistorialPriciocompra
+        WHERE ID_Inventario = @ID_Inventario
+            AND ID_Proveedor = @ID_Proveedor
+        ORDER BY FechaModificacion DESC;
+
+        -- Verificar si el precio cambió
+        IF @PrecioAntiguo IS NULL OR @PrecioAntiguo != @NuevoPrecio
+        BEGIN
+            -- Insertar o actualizar el historial
+            MERGE INTO HistorialPriciocompra AS Target
+            USING (VALUES (@ID_Inventario, @ID_Proveedor)) AS Source(ID_Inventario, ID_Proveedor)
+            ON Target.ID_Inventario = Source.ID_Inventario
+                AND Target.ID_Proveedor = Source.ID_Proveedor
+            WHEN MATCHED AND Target.PrecioNuevo != @NuevoPrecio THEN
+                UPDATE SET
+                    PrecioAntiguo = @PrecioAntiguo,
+                    PrecioNuevo = @NuevoPrecio,
+                    FechaModificacion = GETDATE(),
+                    UsuarioModificacion = @UsuarioModificacion,
+                    TipoOperacion = 'UPDATE'
+            WHEN NOT MATCHED THEN
+                INSERT (ID_Inventario, ID_Proveedor, PrecioAntiguo, PrecioNuevo, FechaModificacion, UsuarioModificacion, TipoOperacion)
+                VALUES (@ID_Inventario, @ID_Proveedor, @PrecioAntiguo, @NuevoPrecio, GETDATE(), @UsuarioModificacion, 'INSERT');
+        END
+
+        FETCH NEXT FROM cursorDetalles INTO @ID_Inventario, @ID_Proveedor, @NuevoPrecio, @UsuarioModificacion;
+    END
+
+    CLOSE cursorDetalles;
+    DEALLOCATE cursorDetalles;
 END;
