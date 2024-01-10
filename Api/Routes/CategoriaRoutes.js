@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Agrupar rutas bajo el prefijo '/api/categorias'
 
-router.get('/api/categorias/page', authMiddleware.isAuthenticated,authMiddleware.checkAccess, categoriaController.renderCategoriasPage);
+router.get('/api/categorias/page', authMiddleware.isAuthenticated, categoriaController.renderCategoriasPage);
 router.get('/api/categorias', categoriaController.GetCategorias);
 router.post('/api/categorias', categoriaController.guardarCategoria);
 router.put('/api/categorias/:id', categoriaController.updateCategoria);

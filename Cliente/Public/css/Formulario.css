@@ -1,6 +1,74 @@
 /*Importamos variables globales*/
 @import '/css/VariablesGlobales.css'; 
 
+/*css de la vista  Usuarios*/
+/* Estilo para el título de la lista */
+h4 {
+    color: #333; /* Color del texto */
+    font-family: 'Arial', sans-serif; /* Tipo de fuente */
+}
+
+#listaSeciones {
+    display: none;
+    max-height: 380px;
+    overflow-y: auto;
+}
+#listaDinamicaContainer {
+    position: relative;
+}
+
+#listaDinamicaContainer .d-flex {
+    position: sticky;
+    top: 0;
+    background-color: #204141; /* Puedes ajustar el color de fondo según tus preferencias */
+    z-index: 1000; /* Ajusta el índice z según sea necesario */
+    padding: 0; /* Ajusta el relleno según tus preferencias */
+    border-bottom: 1px solid #ddd; /* Añade un borde inferior para separar del contenido de la lista */
+}
+/* Estilo para la lista */
+#listaDinamica {
+   
+    width: 100%; /* Ancho automático según el contenido */
+}
+
+/* Estilo para el contenedor interno */
+#listaSeciones .col-md-6 {
+    background-color: #f8f9fa; /* Color de fondo */
+    padding: 5px; /* Ajusta el relleno según tus preferencias */
+    width: 100%; /* Ancho automático según el contenido */
+}
+
+/* Estilo para el botón cerrarLista */
+#cerrarLista {
+    background-color: crimson;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+
+/* Estilo para los elementos de la lista */
+.list-group-item {
+    background-color: #f8f9fa; /* Color de fondo */
+    border: 1px solid #dee2e6; /* Borde */
+    margin-bottom: 5px; /* Espaciado inferior entre elementos */
+    padding: 10px; /* Relleno interior */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    color: var(--color-10);
+}
+
+/* Estilo para los elementos fuertes dentro de la lista */
+.list-group-item strong {
+    color: #007bff; /* Color del texto para elementos fuertes */
+}
+
+/* Estilo para el texto dentro de la lista */
+.list-group-item p {
+    margin: 0; /* Elimina el margen predeterminado */
+}
+
+/*fin del css de la vista usuario */
+/* Repite este patrón para cada columna ajustando el ancho según sea necesario */
 
 /* Estilos generales para el formulario */
 .modal-dialog {
@@ -76,6 +144,30 @@
     padding-top: 30px;
 }
 
+.form_pequeno {
+    display: flex;
+    flex-direction: column; /* Cambia la dirección para organizar los elementos en columna */
+    flex-wrap: wrap;
+    gap: 10px;
+}
+#vistaCUser2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    width: 500px;
+    margin: auto;
+    border-radius: 10px; /* Ajusta el valor según sea necesario para redondear los bordes */
+}
+
+
+#vistaCUser2 h2{
+    color: var(--color-10);
+    font-family: var(--font-family);
+}
+
 .input-container {
     position: relative;
     margin-bottom: 20px;
@@ -86,23 +178,16 @@
 .input-container select {
     width: 100%;
     padding: 10px;
-   font-family: var(--font-family);
+    font-family: var(--font-family);
     background-color: var(--color-3);
     border: 1px solid var(--color-1);
     color: var(--color-11);
     border-radius: 5px;
     resize: vertical;
     transition: border-color var(--color-3), box-shadow 0.2s;
+}
 
-}
-.input-container input[type="date"] + label {
-    top: -16px !important;
-    font-size: 16px !important;
-    border-radius: 10px !important;
-    color: var(--color-2) !important;
-    background-color: var(--color-8) !important;
-    padding: 0 5px !important;
-}
+.input-container input[type="date"] + label,
 .input-container input[type="file"] + label {
     top: -16px !important;
     font-size: 16px !important;
@@ -111,7 +196,6 @@
     background-color: var(--color-8) !important;
     padding: 0 5px !important;
 }
-
 
 .input-container label {
     position: absolute;
@@ -122,7 +206,6 @@
     justify-content: center;
     pointer-events: none;
     transition: 0.2s;
-    
     transform-origin: left;
     padding: 0 5px;
     z-index: 1;
@@ -133,18 +216,15 @@
 .input-container input:valid + label,
 .input-container select:valid + label,
 .input-container textarea:focus + label,
-.input-container textarea:valid + label {
+.input-container textarea:valid + label,
+.input-container input:read-only + label {
     top: -16px;
-   font-family: var(--font-family);
+    font-family: var(--font-family);
     font-size: 16px;
     border-radius: 10px;
     color: var(--color-2);
     background-color: var(--color-8);
     padding: 0 5px;
-}
-div.dataTables_wrapper div.dataTables_length select {
-     width: 50px; 
-    display: inline-block;
 }
 
 /* Estilo especial para el select cuando tiene el foco */

@@ -27,11 +27,13 @@ export const isAuthenticated = async (req, res, next) => {
               const detallesUsuario = await UsuarioModel.obtenerNombreUsuarioYRol(result.recordset[0].LoginUsuario);
     
               res.locals.userData = {
-                Nombres: detallesUsuario.Nombres || 'Usuario no autenticado',
+                Nombres: detallesUsuario.NombresUsuario || 'Usuario no autenticado',
                 Apellidos: detallesUsuario.Apellidos || 'Apellidos por defecto',
                 NombreRol: detallesUsuario.NombreRol || 'Rol por defecto',
                 IdRol: detallesUsuario.IdRol || 'Id rol por defecto',
                 IdUsuario: detallesUsuario.IdUsuario || 'Id IdUsuario por defecto',
+                ID_Empleado:  detallesUsuario.ID_Empleado || 'Id Empleado por defecto',
+                NombreEmpleado:  detallesUsuario.NombreEmpleado || 'NombreEmpleado por defecto',
               };
               req.user = res.locals.userData; // Asegúrate de establecer req.user correctamente
  console.log('req.user ',req.user );

@@ -1,3 +1,4 @@
+
 import * as DatosDebajaModel from '../models/DatosDebaja';
 
 export const renderDatosDebajaPage = async (req, res) => {

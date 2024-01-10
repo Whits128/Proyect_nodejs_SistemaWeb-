@@ -5,7 +5,7 @@ import { EntityClass } from "../EntityClass.js";
 import CreateDropDown from "../DropDownComponent.js"
 
 const api = new EntityClass();
-
+ 
 $(document).ready(async function () {
     let tabla;
 

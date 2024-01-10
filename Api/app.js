@@ -21,6 +21,7 @@ import ConfiguracionAccesoRoutes from './Routes/ConfiguracionAccesoRoutes';
 import DatosDebajaRoutes from './Routes/DatosDebajaRoutes';
 import InventarioRoute from './Routes/InventarioRoute';
 import CompraRoutes from './Routes/CompraRoutes';
+import UsuariosRoute from './Routes/UsuariosRoute';
 import configuracionesMiddleware from './Middleware/Middlewareparaconfiguraciones'; // Ajusta la ruta según tu estructura
 
 import morgan from 'morgan';
@@ -80,4 +81,5 @@ app.use(ProductoZapatosRutas);
 app.use(DatosDebajaRoutes);
 app.use(InventarioRoute);
 app.use(CompraRoutes);
+app.use(UsuariosRoute);
 export default app;

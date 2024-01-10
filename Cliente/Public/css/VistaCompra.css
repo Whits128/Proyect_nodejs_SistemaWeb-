@@ -48,30 +48,8 @@ box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Estilos de la tabla */
-/* Estilos generales para DataTables */
-.dataTables_wrapper {
-    margin: 20px 0;
-}
 
-/* Estilos de la barra de búsqueda */
-.dataTables_filter input {
-    width: 200px; /* Ajusta el ancho según sea necesario */
-}
 
-/* Estilos de la paginación */
-.dataTables_paginate {
-    margin-top: 10px; /* Ajusta el margen superior según sea necesario */
-}
-
-/* Estilos de la información de la tabla */
-.dataTables_info {
-    margin-top: 10px; /* Ajusta el margen superior según sea necesario */
-}
-
-/* Estilos de la tabla DataTables */
-.table.dataTable {
-    width: 100%;
-}
 
 /* Estilos de las celdas de la tabla DataTables */
 .table.dataTable th,
@@ -80,23 +58,7 @@ box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Estilos del encabezado de la tabla DataTables */
-.table.dataTable thead th {
-    background-color: var(--color-10);
-    color: #fff;
-}
 
-/* Estilos de la paginación activa */
-.dataTables_paginate .paginate_button.current {
-    background-color: #007bff; /* Color de fondo de la página activa */
-    color: #fff; /* Color del texto de la página activa */
-}
-/* Tooltip para celdas con clase text-tooltip */
-.table td.text-tooltip {
-    max-width: 150px; /* Ajusta según sea necesario para el ancho deseado */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
 
 
 
@@ -141,12 +103,11 @@ box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     .BotonesForm {
         display: flex;
         justify-content: center;
-        align-items: center;
-  
+     
     }
   
     .Botones {
-        padding: 10px 20px;
+        margin-bottom: 20px;
         font-size: 16px;
         background-color: #4CAF50; /* Color de fondo verde, puedes cambiarlo según tus preferencias */
         color: white;
@@ -179,10 +140,6 @@ box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-left: 0 !important; /* Puedes ajustar este valor según tus necesidades */
 }
 
-.fijo {
-   
-    background-color: #742020  !important ; /* Puedes cambiar este valor al color que desees */
-}
 
 
 
@@ -197,76 +154,92 @@ box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         flex-wrap: wrap; /* Permite que los elementos se envuelvan si no caben en una sola fila */
         gap: 10px; /* Espacio entre elementos */
     }
-
-.input-container {
-    position: relative;
-    margin-bottom: 20px;
-}
-
-.input-container input,
-.input-container textarea,
-.input-container select {
-    width: 100%;
-    padding: 10px;
-   font-family: var(--font-family);
-    background-color: var(--color-3);
-    border: 1px solid var(--color-1);
-    color: var(--color-11);
-    border-radius: 5px;
-    resize: vertical;
-    transition: border-color var(--color-3), box-shadow 0.2s;
-
-}
-.input-container input[type="date"] + label {
-    top: -16px !important;
-    font-size: 16px !important;
-    border-radius: 10px !important;
-    color: var(--color-2) !important;
-    background-color: var(--color-8) !important;
-    padding: 0 5px !important;
-}
-.input-container input[type="file"] + label {
-    top: -16px !important;
-    font-size: 16px !important;
-    border-radius: 10px !important;
-    color: var(--color-2) !important;
-    background-color: var(--color-8) !important;
-    padding: 0 5px !important;
-}
-
-
-.input-container label {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    display: flex;
-    color: var(--color-10);
-    justify-content: center;
-    pointer-events: none;
-    transition: 0.2s;
+    .form_pequeno {
+        display: flex;
+        flex-direction: column; /* Cambia la dirección para organizar los elementos en columna */
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .form_grande {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        padding-top: 30px;
+    }
     
-    transform-origin: left;
-    padding: 0 5px;
-    z-index: 1;
-}
-
-.input-container input:focus + label,
-.input-container select:focus + label,
-.input-container input:valid + label,
-.input-container select:valid + label,
-.input-container textarea:focus + label,
-.input-container textarea:valid + label {
-    top: -16px;
-   font-family: var(--font-family);
-    font-size: 16px;
-    border-radius: 10px;
-    color: var(--color-2);
-    background-color: var(--color-8);
-    padding: 0 5px;
-}
-
-
-/* Estilo especial para el select cuando tiene el foco */
-select:focus + label {
-    top: -16px;
-}
+    /* Otros estilos para los elementos del formulario */
+    
+    .input-container {
+        position: relative;
+        margin-bottom: 20px;
+    }
+    
+    .input-container input,
+    .input-container textarea,
+    .input-container select {
+        width: 100%;
+        padding: 10px;
+        font-family: var(--font-family);
+        background-color: var(--color-3);
+        border: 1px solid var(--color-1);
+        color: var(--color-11);
+        border-radius: 5px;
+        resize: vertical;
+        transition: border-color var(--color-3), box-shadow 0.2s;
+    }
+    
+    .input-container input[type="date"] + label,
+    .input-container input[type="file"] + label {
+        top: -16px !important;
+        font-size: 16px !important;
+        border-radius: 10px !important;
+        color: var(--color-2) !important;
+        background-color: var(--color-8) !important;
+        padding: 0 5px !important;
+    }
+    
+    .input-container label {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        color: var(--color-10);
+        justify-content: center;
+        pointer-events: none;
+        transition: 0.2s;
+        transform-origin: left;
+        padding: 0 5px;
+        z-index: 1;
+    }
+    
+    .input-container input:focus + label,
+    .input-container select:focus + label,
+    .input-container input:valid + label,
+    .input-container select:valid + label,
+    .input-container textarea:focus + label,
+    .input-container textarea:valid + label,
+    .input-container input:read-only + label {
+        top: -16px;
+        font-family: var(--font-family);
+        font-size: 16px;
+        border-radius: 10px;
+        color: var(--color-2);
+        background-color: var(--color-8);
+        padding: 0 5px;
+    }
+    
+    /* Estilo especial para el select cuando tiene el foco */
+    select:focus + label {
+        top: -16px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+     }
+     
+     th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+     }
+     

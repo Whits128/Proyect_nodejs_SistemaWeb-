@@ -34,16 +34,20 @@ export const editarCompraEnDB = async (params) => {
 
     const detallesXml = `<DetallesCompra>${params.DetallesCompra.map(detalle => {
       return `<Detalle>
-                <ID_Inventario>${detalle.ID_Inventario}</ID_Inventario>
-                <ID_Proveedor>${detalle.ID_Proveedor}</ID_Proveedor>
-                <ID_BODEGA>${detalle.ID_BODEGA}</ID_BODEGA>
-                <ID_Empleado>${detalle.ID_Empleado}</ID_Empleado>
-                <Cantidad>${detalle.Cantidad}</Cantidad>
-                <PrecioCompra>${detalle.PrecioCompra}</PrecioCompra>
-                <Descuento>${detalle.Descuento}</Descuento>
-                <Subtotal>${detalle.Subtotal}</Subtotal>
-                <IVA>${detalle.IVA}</IVA>
-                <Total>${detalle.Total}</Total>
+      <ID_ProductoZapatos>${detalle.ID_ProductoZapatos}</ID_ProductoZapatos>
+      <ID_Marca>${detalle.ID_Marca}</ID_Marca>
+      <ID_Talla>${detalle.ID_Talla}</ID_Talla>
+      <ID_Colores>${detalle.ID_Colores}</ID_Colores>
+      <ID_MaterialZapatos>${detalle.ID_MaterialZapatos}</ID_MaterialZapatos>
+      <ID_BODEGA>${detalle.ID_BODEGA}</ID_BODEGA>
+      <ID_Proveedor>${detalle.ID_Proveedor}</ID_Proveedor>
+      <ID_Empleado>${detalle.ID_Empleado}</ID_Empleado>
+      <Cantidad>${detalle.Cantidad}</Cantidad>
+      <PrecioCompra>${detalle.PrecioCompra}</PrecioCompra>
+      <Descuento>${detalle.Descuento}</Descuento>
+      <Subtotal>${detalle.Subtotal}</Subtotal>
+      <IVA>${detalle.IVA}</IVA>
+      <Total>${detalle.Total}</Total>
               </Detalle>`;
     }).join('')}</DetallesCompra>`;
 
@@ -54,17 +58,11 @@ export const editarCompraEnDB = async (params) => {
 
     const pool = await getConnection();
     const result = await pool.request()
-      .input('CodigoCompra', sql.NVarChar(100), params.CodigoCompra)
-      .input('FechaCompra', sql.Date, params.FechaCompra)
-      .input('EstadoCompra', sql.NVarChar(50), params.EstadoCompra)
-      .input('ID_BODEGA', sql.Int, params.ID_BODEGA)
-      .input('ID_ProductoZapatos', sql.Int, params.ID_ProductoZapatos)
-      .input('ID_Marca', sql.Int, params.ID_Marca)
-      .input('ID_Talla', sql.Int, params.ID_Talla)
-      .input('ID_Colores', sql.Int, params.ID_Colores)
-      .input('ID_MaterialZapatos', sql.Int, params.ID_MaterialZapatos)
-      .input('Total', sql.Decimal(10, 2), params.Total)
-      .input('DetallesCompra', sql.Xml, detallesXml)
+    .input('CodigoCompra', sql.NVarChar(100), params.CodigoCompra)
+    .input('FechaCompra', sql.Date, params.FechaCompra)
+    .input('EstadoCompra', sql.NVarChar(50), params.EstadoCompra)
+    .input('Total', sql.Decimal(10, 2), params.Total)
+    .input('DetallesCompra', sql.Xml, detallesXml)
       .execute('EditarCompraDetalleInventario');
 
     return result;
@@ -82,43 +80,53 @@ export const guardarCompra = async (params) => {
     if (!params.CodigoCompra || !params.FechaCompra || !params.Total || !params.DetallesCompra || !params.DetallesCompra.length) {
       throw new Error('Datos de compra incompletos o incorrectos.');
     }
-
     const detallesXml = `<DetallesCompra>${params.DetallesCompra.map(detalle => {
-      return `<Detalle>
-                <ID_Inventario>${detalle.ID_Inventario}</ID_Inventario>
-                <ID_Proveedor>${detalle.ID_Proveedor}</ID_Proveedor>
-                <ID_BODEGA>${detalle.ID_BODEGA}</ID_BODEGA>
-                <ID_Empleado>${detalle.ID_Empleado}</ID_Empleado>
-                <Cantidad>${detalle.Cantidad}</Cantidad>
-                <PrecioCompra>${detalle.PrecioCompra}</PrecioCompra>
-                <Descuento>${detalle.Descuento}</Descuento>
-                <Subtotal>${detalle.Subtotal}</Subtotal>
-                <IVA>${detalle.IVA}</IVA>
-                <Total>${detalle.Total}</Total>
-              </Detalle>`;
+      return `
+        <Detalle>
+          <ID_ProductoZapatos>${detalle.ID_ProductoZapatos}</ID_ProductoZapatos>
+          <ID_Marca>${detalle.ID_Marca}</ID_Marca>
+          <ID_Talla>${detalle.ID_Talla}</ID_Talla>
+          <ID_Colores>${detalle.ID_Colores}</ID_Colores>
+          <ID_MaterialZapatos>${detalle.ID_MaterialZapatos}</ID_MaterialZapatos>
+          <ID_BODEGA>${detalle.ID_BODEGA}</ID_BODEGA>
+          <ID_Proveedor>${detalle.ID_Proveedor}</ID_Proveedor>
+          <ID_Empleado>${detalle.ID_Empleado}</ID_Empleado>
+          <Cantidad>${detalle.Cantidad}</Cantidad>
+          <PrecioCompra>${detalle.PrecioCompra}</PrecioCompra>
+          <Descuento>${detalle.Descuento}</Descuento>
+          <Subtotal>${detalle.Subtotal}</Subtotal>
+          <IVA>${detalle.IVA}</IVA>
+          <Total>${detalle.Total}</Total>
+        </Detalle>`;
     }).join('')}</DetallesCompra>`;
-
- // Imprimir los datos antes de la ejecución
- console.log('Datos que se enviarán al servidor:', params);
- // Imprimir el XML
- console.log('XML que se enviará al servidor:', detallesXml);
+    
+    
+    // Imprimir los datos antes de la ejecución
+    console.log('Datos que se enviarán al servidor:', params);
+    // Imprimir el XML
+    console.log('XML que se enviará al servidor:', detallesXml);
 
     const pool = await getConnection();
     const result = await pool.request()
       .input('CodigoCompra', sql.NVarChar(100), params.CodigoCompra)
       .input('FechaCompra', sql.Date, params.FechaCompra)
       .input('EstadoCompra', sql.NVarChar(50), params.EstadoCompra)
-      .input('ID_BODEGA', sql.Int, params.ID_BODEGA)
-      .input('ID_ProductoZapatos', sql.Int, params.ID_ProductoZapatos)
-      .input('ID_Marca', sql.Int, params.ID_Marca)
-      .input('ID_Talla', sql.Int, params.ID_Talla)
-      .input('ID_Colores', sql.Int, params.ID_Colores)
-      .input('ID_MaterialZapatos', sql.Int, params.ID_MaterialZapatos)
       .input('Total', sql.Decimal(10, 2), params.Total)
       .input('DetallesCompra', sql.Xml, detallesXml)
       .execute('GestionarCompra');
+ 
+   // Obtener el código de compra recién insertado
+   const codigoCompraInsertado = params.CodigoCompra;
 
-    return result;
+   // Retornar el objeto con el código de compra
+   return {
+     codigoCompra: codigoCompraInsertado,
+     resultado: result,
+     datosEnviados: params,
+   };
+
+
+
   } catch (error) {
     console.error(`Error al ejecutar guardarCompra: ${error.message}`);
     throw error;
@@ -131,14 +139,8 @@ export const completarCompraEnDB = async (codigoCompra) => {
     const result = await pool.request()
       .input('CodigoCompra', sql.NVarChar(100), codigoCompra)
       .input('FechaCompra', sql.Date, null)
+      .input('Total', sql.Decimal(10, 2), null)
       .input('EstadoCompra', sql.NVarChar(50),  'Completada')
-      .input('ID_BODEGA', sql.Int,null)
-      .input('ID_ProductoZapatos', sql.Int,null)
-      .input('ID_Marca', sql.Int, null)
-      .input('ID_Talla', sql.Int, null)
-      .input('ID_Colores', sql.Int,null)
-      .input('ID_MaterialZapatos', sql.Int, null)
-      .input('Total', sql.Decimal(10, 2),null)
       .input('DetallesCompra', sql.Xml, null)
       .execute('GestionarCompra');
 

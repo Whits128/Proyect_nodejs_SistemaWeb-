@@ -3,13 +3,43 @@
 GET http://localhost:3000/api/categorias
 
 ###
-POST   http://localhost:3000/api/categorias
+POST   http://localhost:3000/api/compra
 Content-Type: application/json
- 
+
 {
-  "nombre": "1",
-  "estado": "Activo"
+   "CodigoCompra": "PruevaPosman1",
+  "FechaCompra": "2023-01-01",
+  "EstadoCompra": "Pendiente",
+  "Total": 150.00,
+  "DetallesCompra": [
+    {
+      "ID_Inventario": 4,
+      "ID_Proveedor": 1,
+      "ID_BODEGA": 1,
+      "ID_Empleado": 1,
+      "Cantidad": 5,
+      "PrecioCompra": 25.00,
+      "Descuento": 0,
+      "Total": 120.00,
+        "Subtotal": 120.00,
+  "IVA": 30.00
+    },
+    {
+    
+      "ID_Inventario": 5,
+      "ID_Proveedor": 1,
+      "ID_BODEGA": 2,
+      "ID_Empleado": 1,
+      "Cantidad": 3,
+      "PrecioCompra": 15.00,
+      "Descuento":0,
+      "Total": 50.00,
+        "Subtotal": 120.00,
+  "IVA": 30.00
+    }
+  ]
 }
+
 
 
 ###
@@ -71,17 +101,31 @@ GET http://localhost:3000/registerUser
 Authorization: Bearer <Admin>
 
 ####
-POST http://localhost:3000/api/register
+POST http://localhost:3000/api/usuario
 Content-Type: application/json
 
 {
   "Nombres": "Omar",
   "Apellidos": "Navas",
   "LoginUsuario": "User",
-  "LoginClave": "12345",
+ "Contrasena": "12345",
   "IdRol": 1,
- "Estado":"Activo"
+ "Estado":"Activo",
+ "UsuarioModificacion" : "Omar"
 }
+
+###
+
+PUT  http://localhost:3000/api/usuario/cambiar-contrasena/5555
+Content-Type: application/json
+
+{
+  "Contrasena": "7811",
+  "UsuarioModificacion": "5"
+}
+###
+
+GET http://localhost:3000/api/usuarios/historial/5555
 
 
 ###
@@ -105,21 +149,16 @@ Content-Type: application/json
 
 
 ###
-PUT  http://localhost:3000/Producto/1
+GET  http://localhost:3000/api/compra/obtenerporcodigo/N-24k6454l45
 Content-Type: application/json
 
-{
-  "nombre": "s",
-  "descripcion":"hola",
-  "estado": "true",
-  "id_categoria":1
-}
+
 
 
 
 
 ###
-GET http://localhost:3000/api/Inicio/Pagina
+GET http://localhost:3000/api/compra
 
 ####
 PUT http://localhost:3000/api/rol/1

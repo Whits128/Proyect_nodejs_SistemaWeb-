@@ -57,6 +57,42 @@ class EntityClass {
     }
   }
 
+  // Modifica tu función excuteGetPdf
+  async  excuteGetPdf(path = "") {
+    try {
+        const response = await fetch(this.baseUrl + path, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error en la solicitud GET: ${response.status} - ${response.statusText}`);
+        }
+
+        const pdfBlob = await response.blob();
+
+        // Crear una URL de objeto para el Blob del PDF
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        // Abrir el PDF en una nueva ventana emergente
+        const newWindow = window.open(pdfUrl, "_blank");
+
+        if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+            // La ventana emergente podría haber sido bloqueada por el navegador
+            throw new Error("La ventana emergente fue bloqueada por el navegador.");
+        }
+
+        return pdfBlob;
+    } catch (error) {
+        console.error("Error en excuteGetPdf:", error.message);
+        throw error;
+    }
+}
+
+
+
   async excutePut(path = "", body = {}) {
     try {
       const response = await fetch(this.baseUrl + path, {

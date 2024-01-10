@@ -57,18 +57,80 @@
                     <label for="User">Usuario</label>
                 </div>
                 <div class="input-container ">
-                    <input placeholder="" type="password" class="input" id="loginClave">
-                    <label for="loginClave">Contraseña</label>
+                    <input placeholder="" type="password" class="input" id="loginClaveC">
+                    <label for="loginClaveC">Contraseña</label>
                 </div>
 
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" id="btnGuardar" class="btn btn-dark">Guardar</button>
+                    <button type="button" id="btnconcelarC" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" id="btnGuardarContrasena" class="btn btn-dark">Guardar</button>
                 </div>
             </form>
         </div>
         
+
+        <div id="vistaCUser3" class="vista">
+              <!-- Inputs -->
+              <div class="row">
+        
+                <!-- Botón -->
+          
+                <div class="col  justify-content-end">
+                    <button id="btnMostrarLista" type="button" class="btn btn-primary me-2">Mostrar Lista</button>
+                    <button  id="btnIrVista1"  class="btn btn-primary ms-2">Ir a la Vista 1</button>
+                </div>
+                
+              
+
+           </div>
+           <!--Aqui mostraremos la lista dinamica -->
+           <div id="listaSeciones" class="row justify-content-center">
+            <div class="col-md-6 mx-auto" id="listaDinamicaContainer">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="text-center">Título de la Lista</h4>
+                    <button id="cerrarLista" class="btn btn-outline-secondary">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <ul id="listaDinamica" class="list-group">
+                    <!-- Elementos de la lista se agregarán dinámicamente aquí -->
+                </ul>
+            </div>
+        </div>
+        
+        
+        
+        
+              
+            <!-- Visualización de DataTables -->
+            <div  id="ocultarTablaInfoUser"  class="row shadow-lg p-3 mb-5">
+                <div class="col">
+                    <!-- Tabla de Historial de Usuario -->
+                    <table id="Tabla_InfoUser" class="table table-striped table-bordered" style="width:100%">
+                        <!-- Encabezados de la Tabla -->
+                        <thead>
+                            <tr>
+                                <th> Codigo</th>
+                                <th>Login.U</th>
+                                <th>Columna.M</th>
+                                <th >Valor.A</th>
+                                <th>Valor.N</th>
+                                <th>Fecha.M</th>
+                                <th>Usuario.M</th>
+                                <th>Tipo.O</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody> <!-- El Cuerpo de la Tabla se Poblará Dinámicamente -->
+                    </table>
+                </div>
+            </div>
+        
+          
+        </div>
+        
+        
+
         
             <!-- Modal para Operaciones CRUD -->
             <div id="modalCRUD" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -108,6 +170,13 @@
                                     <select class="input" id="Idrol" aria-label="select"> </select>
                                         <label for="Idrol">Rol</label>
                                     </div>
+
+                                    <% if (user) { %>
+                                        <div class="input-container">
+                                          <input placeholder=""  type="text" id="usuarioModificacion" class="input"  value="<%= user.Nombres %>" required readonly >
+                                          <label for="usuarioModificacion">Usuario Modificacion</label>
+                                        </div>
+                                      <% } %>
                                 <div class="input-container">
                                     <select id="estado" class="input">
                                         <option value="Activo">Activo</option>
@@ -115,6 +184,8 @@
                                     </select>
                                     <label for="estado">Estado</label>
                                 </div>
+
+
                             </div>
         
                             <!-- Pie del Modal con Botones de Cancelar y Guardar -->

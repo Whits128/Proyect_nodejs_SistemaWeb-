@@ -4,12 +4,20 @@ export const mostrarInventario  = async () => {
       const pool = await getConnection();
       const result = await pool
         .request()
-        .query(`SELECT I.ID_Inventario,
+        .query(`SELECT
+        I.ID_Inventario,
+        I.PrecioCompra,
+        B.ID_BODEGA,
         B.NOMBRE AS NombreBodega,
-        P.Nombre AS NombreProducto,
+        P.ID_ProductoZapatos AS Codigo,
+        P.Nombre AS Nombre,
+        M.ID_Marca,
         M.Nombre AS NombreMarca,
+        T.ID_Talla,
         T.NumeroTalla,
+        C.ID_Colores,
         C.Color,
+        Mat.ID_MaterialZapatos,
         Mat.Nombre AS NombreMaterial,
         I.Estado
     FROM
@@ -25,7 +33,9 @@ export const mostrarInventario  = async () => {
     JOIN
         Colores C ON I.ID_Colores = C.ID_Colores
     JOIN
-        MaterialesZapatos Mat ON I.ID_MaterialZapatos = Mat.ID_MaterialZapatos;`);
+        MaterialesZapatos Mat ON I.ID_MaterialZapatos = Mat.ID_MaterialZapatos
+    WHERE
+        I.UnidadesExistencias > 0;`);
       return result.recordset;
     } catch (error) {
       throw error;

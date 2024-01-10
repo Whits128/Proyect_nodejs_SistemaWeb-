@@ -30,6 +30,18 @@ CREATE TABLE USUARIO (
 );
 GO
 
+
+CREATE TABLE HistorialUsuario (
+    PKHistorialUsuari INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+   IdUsuario INT FOREIGN KEY REFERENCES USUARIO(IdUsuario),
+    ColumnaModificada NVARCHAR(50), -- Nueva columna para indicar la columna modificada
+    ValorAntiguo NVARCHAR(MAX),
+    ValorNuevo NVARCHAR(MAX),
+    FechaModificacion DATETIME2 DEFAULT GETDATE() NOT NULL,
+    UsuarioModificacion NVARCHAR(50),
+    TipoOperacion NVARCHAR(20)
+);
+
 GO
 -- Tabla de Recursos (páginas o funcionalidades)
 CREATE TABLE Recursos (
@@ -615,16 +627,6 @@ GO
 
 
 
---Tabla temporal para pasar los valores del historial compra
-
-			   -- Obtener los detalles de compra
- CREATE TABLE ##DetallesCompraTemp
-(
-    ID_Inventario INT,
-    ID_Proveedor INT,
-    NuevoPrecio MONEY,
-    UsuarioModificacion NVARCHAR(50)
-);
 go
 CREATE PROCEDURE GestionarCompra
     @CodigoCompra NVARCHAR(100),
@@ -1076,4 +1078,161 @@ BEGIN
 
     CLOSE cursorDetalles;
     DEALLOCATE cursorDetalles;
+END;
+
+
+go 
+
+CREATE VIEW VistaHistorialUsuario AS
+SELECT
+    H.PKHistorialUsuari,
+    U.LoginUsuario ,
+    H.ColumnaModificada,
+    H.ValorAntiguo,
+    H.ValorNuevo,
+    H.FechaModificacion,
+    H.UsuarioModificacion,
+    H.TipoOperacion,
+    U.NumSesiones,
+    U.FechaInicioSesion,
+    U.FechaFinSesion
+FROM
+    HistorialUsuario H
+JOIN
+    USUARIO U ON H.IdUsuario = U.IdUsuario;
+
+	-- Procedimiento para inserción de usuario
+CREATE PROCEDURE InsertarUsuario (
+    @Nombres VARCHAR(100),
+    @Apellidos VARCHAR(100),
+    @LoginUsuario VARCHAR(50),
+    @LoginClave VARCHAR(100),
+    @IdRol INT,
+    @Estado NVARCHAR(50),
+    @UsuarioModificacion NVARCHAR(50)
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @UsuarioID INT;
+
+    -- Nueva inserción
+    INSERT INTO USUARIO (Nombres, Apellidos, LoginUsuario, LoginClave, IdRol, Estado)
+    VALUES (@Nombres, @Apellidos, @LoginUsuario, @LoginClave, @IdRol, @Estado);
+
+    -- Obtener el ID del usuario recién insertado
+    SET @UsuarioID = SCOPE_IDENTITY(); -- Obtener el ID generado
+
+    -- Insertar en el historial para datos de cadena
+  -- Insertar en el historial para datos de cadena
+INSERT INTO HistorialUsuario (IdUsuario, ColumnaModificada, ValorAntiguo, ValorNuevo, UsuarioModificacion, TipoOperacion)
+VALUES 
+    (@UsuarioID, 'Nombre', NULL, @Nombres, @UsuarioModificacion, 'INSERT'),
+    (@UsuarioID, 'Apellido', NULL, @Apellidos, @UsuarioModificacion, 'INSERT'),
+    (@UsuarioID, 'LoginUsuario', NULL, CONVERT(VARCHAR(100), @LoginUsuario), @UsuarioModificacion, 'INSERT'),
+    (@UsuarioID, 'LoginClave', NULL, @LoginClave, @UsuarioModificacion, 'INSERT'), -- Incluir la contraseña cifrada
+    (@UsuarioID, 'IdRol', NULL, CONVERT(VARCHAR(10), @IdRol), @UsuarioModificacion, 'INSERT'),
+    (@UsuarioID, 'Estado', NULL, 'Activo', @UsuarioModificacion, 'INSERT');
+END;
+
+go
+
+
+
+-- Procedimiento para actualización de usuario
+CREATE PROCEDURE ActualizarUsuario (
+    @UsuarioID INT,
+    @Nombres VARCHAR(100),
+    @Apellidos VARCHAR(100),
+    @LoginUsuario VARCHAR(50),
+    @IdRol INT,
+    @UsuarioModificacion NVARCHAR(50)
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+	  DECLARE @TipoOperacion NVARCHAR(20) = 'UPDATE';
+    -- Obtener los valores antiguos antes de la actualización
+    DECLARE @OldNombres VARCHAR(100);
+    DECLARE @OldApellidos VARCHAR(100);
+    DECLARE @OldLoginUsuario VARCHAR(50);
+    DECLARE @OldIdRol INT;
+
+
+    SELECT
+        @OldNombres = Nombres,
+        @OldApellidos = Apellidos,
+        @OldLoginUsuario = LoginUsuario,
+        @OldIdRol = IdRol
+    FROM USUARIO
+    WHERE IdUsuario = @UsuarioID;
+
+    -- Actualización
+
+	 UPDATE USUARIO
+    SET
+        Nombres = ISNULL(@Nombres, Nombres),
+        Apellidos = ISNULL(@Apellidos, Apellidos),
+        LoginUsuario = ISNULL(@LoginUsuario, LoginUsuario),
+        IdRol = ISNULL(@IdRol, IdRol)
+    WHERE IdUsuario = @UsuarioID;
+
+	-- Registrar cambios en la tabla HistorialConfiguraciones
+-- Registrar cambios en la tabla HistorialConfiguraciones
+IF @Nombres != ISNULL(@OldNombres, '') OR @OldNombres IS NULL
+BEGIN
+    INSERT INTO HistorialUsuario(IdUsuario, ColumnaModificada, ValorAntiguo, ValorNuevo, FechaModificacion, UsuarioModificacion, TipoOperacion)
+    VALUES (@UsuarioID, 'Nombre', @OldNombres, @Nombres, GETDATE(), @UsuarioModificacion, @TipoOperacion);
+END
+
+IF @Apellidos != ISNULL(@OldApellidos, '') OR @OldApellidos IS NULL
+BEGIN
+    INSERT INTO HistorialUsuario(IdUsuario, ColumnaModificada, ValorAntiguo, ValorNuevo, FechaModificacion, UsuarioModificacion, TipoOperacion)
+    VALUES (@UsuarioID, 'Apellido', @OldApellidos, @Apellidos, GETDATE(), @UsuarioModificacion, @TipoOperacion);
+END
+
+IF @LoginUsuario != ISNULL(@OldLoginUsuario, '') OR @OldLoginUsuario IS NULL
+BEGIN
+    INSERT INTO HistorialUsuario(IdUsuario, ColumnaModificada, ValorAntiguo, ValorNuevo, FechaModificacion, UsuarioModificacion, TipoOperacion)
+    VALUES (@UsuarioID, 'LoginUsuario', @OldLoginUsuario, @LoginUsuario, GETDATE(), @UsuarioModificacion, @TipoOperacion);
+END
+
+IF @IdRol != ISNULL(@OldIdRol, -1) OR @OldIdRol IS NULL
+BEGIN
+    INSERT INTO HistorialUsuario(IdUsuario, ColumnaModificada, ValorAntiguo, ValorNuevo, FechaModificacion, UsuarioModificacion, TipoOperacion)
+    VALUES (@UsuarioID, 'ROl', CONVERT(VARCHAR(10), @OldIdRol), CONVERT(VARCHAR(10), @IdRol), GETDATE(), @UsuarioModificacion, @TipoOperacion);
+END
+
+END;
+GO
+
+CREATE PROCEDURE ActualizarContrasena (
+    @UsuarioID INT,
+    @LoginClave VARCHAR(100), -- Agregado para la nueva contraseña
+    @UsuarioModificacion NVARCHAR(50)
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+	  DECLARE @TipoOperacion NVARCHAR(20) = 'UPDATE';
+    -- Obtener los valores antiguos antes de la actualización
+   
+    DECLARE @OldLoginClave VARCHAR(100); -- Agregado para la contraseña antigua
+
+    SELECT @OldLoginClave = LoginClave
+    FROM USUARIO
+    WHERE IdUsuario = @UsuarioID;
+
+    -- Actualización
+    UPDATE USUARIO
+    SET
+        LoginClave = ISNULL(@LoginClave, LoginClave) -- Agregado para la nueva contraseña
+    WHERE IdUsuario = @UsuarioID;
+
+    IF @LoginClave IS NOT NULL AND @LoginClave != @OldLoginClave
+    BEGIN
+        -- Registrar cambio de contraseña en el historial
+        INSERT INTO HistorialUsuario(IdUsuario, ColumnaModificada, ValorAntiguo, ValorNuevo, FechaModificacion, UsuarioModificacion, TipoOperacion)
+        VALUES (@UsuarioID, 'LoginClave', @OldLoginClave, @LoginClave, GETDATE(), @UsuarioModificacion, @TipoOperacion);
+    END
 END;
