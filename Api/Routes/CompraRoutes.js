@@ -12,7 +12,7 @@ router.get('/api/compra/', ComprasController.GetCompras);
 // Reemplaza "/api/compra/detallecompra/:codigoCompra" con la ruta real en tu aplicación
 router.get("/api/compra/generarfactura/:id", ComprasController.generarFactura);
 
-router.get('/api/compra/page',authMiddleware.isAuthenticated, ComprasController.renderComprasPage);
+router.get('/api/compra/page',authMiddleware.isAuthenticated,authMiddleware.checkAccess, ComprasController.renderComprasPage);
 router.post('/api/compra', ComprasController.crearCompra);
 router.post('/api/compra/crear-y-completar', ComprasController.crearYCompletarCompra);
 router.put('/api/compra/editar/:id', ComprasController.editarCompra);

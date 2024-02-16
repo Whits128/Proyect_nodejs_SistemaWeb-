@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 
-router.get('/api/DatosDebaja/page', authMiddleware.isAuthenticated, DatosDebajaController.renderDatosDebajaPage);
+router.get('/api/DatosDebaja/page', authMiddleware.isAuthenticated,authMiddleware.checkAccess, DatosDebajaController.renderDatosDebajaPage);
 router.post('/api/categorias/activar', DatosDebajaController.activarCategoria);
 router.post('/api/bodega/activar', DatosDebajaController.activarBodega);
 

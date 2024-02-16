@@ -10,36 +10,109 @@ $(document).ready(async function () {
     try {
         // Obtener datos de materialesZapatos al cargar la página
         const MaterialZapato = await api.excuteGet('materialesZapatos');
+    //obtener las acciones para validarla en los botones necesarios 
 
+    var allowedActions = $("#Tabla").data("allowed-actions");
+     
         // DataTable initialization
-        if (MaterialZapato && MaterialZapato.length > 0) {
             tabla = $('#Tabla').DataTable({
                 data: MaterialZapato,
-                "scrollX": true, // Habilita el scroll horizontal
-                "scrollCollapse": true, // Colapso de scroll si no es necesario
-                                 
+                "pageLength": 5,
+                "lengthMenu": [5, 10, 20, 100], // Opciones de cantidad de elementos por página
+                "order": [[1, "asc"]],
+                "autoWidth": true,         
                 columns: [
                     { "data": "Codigo" },
-                    {"data": "Nombre", className: "custom-column2"},
-                        {"data": "Descripcion"},
+                    {"data": "Nombre"},
+                        {"data": "Descripcion",   render: function (data, type, row) {
+                            if (data.length > 15) {
+                                return `${data.substr(0, 15)} <i class="fas fa-eye ver-mas-icon" title="${data}"></i>`;
+                            } else {
+                                return data;
+                            }
+                        }},
                         {"data": "TipoMaterial"},
                         {"data": "TipodeCostura" ,className: "custom-column2"},
                         {"data": "TipoSuela",className: "custom-column2"},
                         {"data": "Fabricante"},
-                        {"data": "Observaciones"},
+                        {"data": "Observaciones",
+                        render: function (data, type, row) {
+                            if (data.length > 15) {
+                                return `${data.substr(0, 15)} <i class="fas fa-eye ver-mas-icon" title="${data}"></i>`;
+                            } else {
+                                return data;
+                            }
+                        }},
                          {"data":"Estado"},
-                    { "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-info btn-sm btnEditar'>Editar</button><button class='btn btn-danger btn-sm btnBorrar'>Borrar</button></div></div>" }
-                // Ocultar columnas
+                         {
+                            "render": function (data, type, row) {
+                                // Verificar si la acción de editar está permitida
+                                const editarPermitido = allowedActions.some(accion => accion.Accion === 'Editar');
+                                
+                                // Verificar si la acción de eliminar está permitida
+                                const eliminarPermitido = allowedActions.some(accion => accion.Accion === 'Eliminar');
+                            
+                                // Crear el HTML para los botones según las validaciones
+                                let opcionesHTML = `
+                                    <div class="text-center">
+                                        <div class="dropdown">
+                                            <button id="btnOpciones" class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-cogs"></i>
+                                                <span class="tooltip_opcion">Opciones</span>
+                                            </button>
+                                            <div id="dropdown-menu_optiones" class="dropdown-menu" aria-labelledby="dropdownMenuButton">`;
+                            
+                                // Agregar el botón de editar si está permitido
+                                if (editarPermitido) {
+                                    opcionesHTML += `
+                                        <a class="dropdown-item btnEditar" href="#">
+                                            <i class="fas fa-edit"></i> Editar <!-- Icono para la opción de edición -->
+                                        </a>`;
+                                }
+                            
+                                // Agregar el botón de eliminar si está permitido
+                                if (eliminarPermitido) {
+                                    opcionesHTML += `
+                                        <a class="dropdown-item btnBorrar" href="#">
+                                            <i class="fas fa-trash-alt"></i> Borrar <!-- Icono para la opción de borrado -->
+                                        </a>`;
+                                }
+                            
+                                // Cerrar las etiquetas HTML
+                                opcionesHTML += `
+                                            </div>
+                                        </div>
+                                    </div>`;
+                            
+                                // Retornar el HTML generado para los botones de opciones
+                                return opcionesHTML;
+                            }
+                            
+                        }                // Ocultar columnas
     
                 ],
-                // Resto de las opciones DataTable
-                // Ocultar columnas
+                columnDefs: [
+                    {
+                        targets: [0, 8],
+                        visible: false,
+                    },
+                ],
+                responsive: true,
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+            },
      
             });
-        } else {
-            console.error('No hay datos de categorías disponibles.');
-        }
-        tabla.columns([7,2]).visible(false);
+       
+            $('#Tabla').on('mouseenter', '.ver-mas-icon', function () {
+                $(this).tooltip({
+                    title: $(this).attr('title'), // Usar el atributo title como contenido del tooltip
+                    placement: 'top',
+                    trigger: 'hover',
+                    container: 'body',
+                    html: true
+                });
+            });
         // CREAR
         $("#btnCrear").click(function () {
             opcion = 'crear';
@@ -55,15 +128,18 @@ $(document).ready(async function () {
         $(document).on("click", ".btnEditar", function () {
             opcion = 'editar';
             fila = $(this).closest("tr");
-            codigo = parseInt(fila.find('td:eq(0)').text());
-            nombre = fila.find('td:eq(1)').text();
-                    descripcion =fila.find('td:eq(2)').text();
-                    tipoMaterial =fila.find('td:eq(3)').text();
-                    tipodeCostura =fila.find('td:eq(4)').text();
-                    tipoSuela = fila.find('td:eq(5)').text();
-                    fabricante =fila.find('td:eq(6)').text();
-                    observaciones =fila.find('td:eq(7)').text();
-                    estado = fila.find('td:eq(8)').text();
+            var data = tabla.row(fila).data(); // Obtener los datos asociados a la fila
+  
+                 codigo = data.Codigo;
+                nombre = data.Nombre;
+                  descripcion =data.Descripcion;
+                    tipoMaterial =data.TipoMaterial;
+                    tipodeCostura =data.TipodeCostura;
+                    tipoSuela = data.TipoSuela;
+                    fabricante =data.Fabricante;
+                    observaciones =data.Observaciones;
+                    estado = data.Estado;
+
                     $("#id").val(codigo);
             $('#nombre').val(nombre);
             $('#descripcion').val(descripcion);
@@ -82,8 +158,9 @@ $(document).ready(async function () {
        // Dar de Baja
 $(document).on("click", ".btnBorrar", async function () {
     fila = $(this).closest("tr");
-    estado = fila.find('td:eq(8)').text();
-    codigo = parseInt(fila.find('td:eq(0)').text());
+    var data = tabla.row(fila).data();
+    codigo = data.Codigo;      
+    estado = data.Estado;
 
     // Muestra un cuadro de diálogo de confirmación
     const confirmacion = await Swal.fire({
@@ -116,7 +193,14 @@ $(document).on("click", ".btnBorrar", async function () {
         // Submit para CREAR y EDITAR
         $('#form').submit(async function (e) {
             e.preventDefault();
-
+            toastr.options = {
+                closeButton: true,
+                timeOut: 2500,
+                hideDuration: 300,
+                progressBar: true,
+                closeEasing: 'swing',
+                preventDuplicates: true
+            };
             codigo = $.trim($('#id').val());
             nombre = $.trim($('#nombre').val());
             descripcion =$.trim($('#descripcion').val());
@@ -126,14 +210,35 @@ $(document).on("click", ".btnBorrar", async function () {
             fabricante=$.trim($('#fabricante').val());
             observaciones=$.trim($('#observaciones').val());
             estado = $("#estado").val() ;  
+       
+
 
             try {
+                if (!nombre || !descripcion || !tipoMaterial || !tipodeCostura || !tipoSuela || !fabricante || !observaciones) {
+                    toastr.error('Por favor complete todos los campos.');
+                    return;
+                }
+                       // Validar que el nombre solo contenga letras
+                       const regexLetrasConEspacios = /^[A-Za-z\s]+$/;
+                       if (!nombre.match(regexLetrasConEspacios)) {
+                           toastr.error('El nombre solo puede contener letras y espacios.');
+                           return;
+                       }
+                       
+                    // Validar duplicados para cada campo
+        if (MaterialZapato.some(material => material.Nombre.toLowerCase() === nombre.toLowerCase())) {
+            toastr.error('El nombre de material de zapatos especificado ya está en uso.');
+            return;
+        }
                 if (opcion === 'crear') {
                     await api.excutePost('materialesZapatos',{nombre, descripcion, tipoMaterial, tipodeCostura, tipoSuela, fabricante, observaciones, estado });
+                    toastr.success('Se ha guardado correctamente.');
+
+                
                 } else if (opcion === 'editar') {
-                    console.log({ nombre, descripcion, tipoMaterial, tipodeCostura, tipoSuela, fabricante, observaciones, estado });
                     await api.excutePut(`materialesZapatos/${codigo}`, {nombre, descripcion, tipoMaterial, tipodeCostura, tipoSuela, fabricante, observaciones, estado });
-                    
+
+
                 }
 
                 // Actualizar la tabla con las nuevas categorías

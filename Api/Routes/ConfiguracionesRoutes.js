@@ -42,8 +42,8 @@ const handleMulterErrors = (req, res, next) => {
 };
 
 // Rutas
-router.get("/api/historial/page", authMiddleware.isAuthenticated, ConfiguracionesController.renderHistorialPage);
-router.get("/api/configuracion/page", authMiddleware.isAuthenticated, ConfiguracionesController.renderConfiguracionPage);
+router.get("/api/historial/page", authMiddleware.isAuthenticated,authMiddleware.checkAccess, ConfiguracionesController.renderHistorialPage);
+router.get("/api/configuracion/page", authMiddleware.isAuthenticated,authMiddleware.checkAccess, ConfiguracionesController.renderConfiguracionPage);
 router.get("/api/historial", ConfiguracionesController.GetHistorialConfiguracione);
 router.get("/api/configuraciones", ConfiguracionesController.Configuraciones);
 

@@ -2,33 +2,49 @@ import { getConnection, sql } from '../models/connection';
 import bcrypt from 'bcryptjs';
 import config from '../../Config/config';
 import jwt from 'jsonwebtoken';
-import * as UsuarioModel from '../models/ConsultaUsuario';
+import { createToken,verifyToken} from '../Middleware/MiddlewareJWT';
+
+
 export const registerUser = async (req, res) => {
-    try {
-      const { Nombres, Apellidos, IdRol, LoginUsuario, LoginClave, Estado } = req.body;
-      const hashedPassword = await bcrypt.hash(LoginClave, 10);
-      const pool = await getConnection();
-  
-      await pool
-        .request()
-        .input('Nombres', sql.VarChar, Nombres)
-        .input('Apellidos', sql.VarChar, Apellidos)
-        .input('LoginUsuario', sql.VarChar, LoginUsuario)
-        .input('LoginClave', sql.VarChar, hashedPassword)
-        .input('IdRol', sql.Int, IdRol)
-        .input('Estado', sql.VarChar, Estado)
-        .query(
-          'INSERT INTO USUARIO (Nombres, Apellidos, LoginUsuario, LoginClave, IdRol, Estado) VALUES (@Nombres, @Apellidos, @LoginUsuario, @LoginClave, @IdRol, @Estado)'
-        );
-  
-      pool.close();
-  
-      res.status(200).json({ message: 'Usuario registrado con éxito' });
-    } catch (error) {
-      console.error('Error en el registro de usuario:', error);
-      res.status(500).json({ error: 'Error en el servidor' });
-    }
-  };
+  try {
+    const { Nombres, Apellidos, IdRol, LoginUsuario, LoginClave, Estado } = req.body;
+    const hashedPassword = await bcrypt.hash(LoginClave, 10);
+    const pool = await getConnection();
+
+    await pool
+      .request()
+      .input('Nombres', sql.VarChar, Nombres)
+      .input('Apellidos', sql.VarChar, Apellidos)
+      .input('LoginUsuario', sql.VarChar, LoginUsuario)
+      .input('LoginClave', sql.VarChar, hashedPassword)
+      .input('IdRol', sql.Int, IdRol)
+      .input('Estado', sql.VarChar, Estado)
+      .query(
+        'INSERT INTO USUARIO (Nombres, Apellidos, LoginUsuario, LoginClave, IdRol, Estado) VALUES (@Nombres, @Apellidos, @LoginUsuario, @LoginClave, @IdRol, @Estado)'
+      );
+
+    // Después de registrar el usuario, obtenemos su información
+    const user = {
+      loginUser: LoginUsuario,
+      IdRol: IdRol, // Ajusta esto según tu estructura de base de datos
+      
+      // Otros campos del usuario que desees incluir en el token
+    };
+
+    // Creamos el token usando el middleware
+    const token = await createToken(user);
+
+   
+    // Cerramos la conexión al pool de SQL
+    pool.close();
+
+    // Enviamos el token como respuesta
+    res.send({user,token});
+  } catch (error) {
+    console.error('Error en el registro de usuario:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+};
   
   //seccion de logeo
   export const Login = async (req, res) => {
@@ -71,10 +87,13 @@ export const registerUser = async (req, res) => {
           });
         } else {
           const id = result.recordset[0].IdUsuario;
-          
-          // Firmar el token sin expiresIn para que no tenga fecha de caducidad
-          const token = jwt.sign({ id: id }, config.JWT_SECRET);
-  
+  const loginUser  = result.recordset[0].LoginUsuario;
+  const idrol  = result.recordset[0].IdRol;
+          // Crear un token con la información del usuario
+          const token = await createToken({id:id, user:loginUser,rol:idrol  /* Otros datos del usuario si es necesario */ });
+    
+        
+          // Configuración de la cookie JWT
           const cookieOptions = {
             expires: new Date(Date.now() + config.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000),
             path: "/"
@@ -92,7 +111,7 @@ export const registerUser = async (req, res) => {
               WHERE IdUsuario = @idUsuario
             `);
   
-          return res.redirect('/Inicio'); // Redirect to '/Inicios' on successful login
+          return res.redirect('/Inicio'); // Redireccionar a '/Inicio' en caso de inicio de sesión exitoso
         }
       } catch (error) {
         console.error('Error en la consulta SQL:', error);

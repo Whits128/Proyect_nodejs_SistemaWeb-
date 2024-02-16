@@ -1,0 +1,92 @@
+<link rel="stylesheet" type="text/css" href="/css/DataTable.css">
+<link rel="stylesheet" type="text/css" href="/css/Formulario.css">
+
+<section class="content" >
+
+    <div class="row shadow-lg p-3 mb-5">
+        <form id="formvaloress" class="form_grande">
+            <!-- Campos del formulario -->
+     
+       
+    
+         <div class="input-container">
+            <% if (codigo) { %>
+                <!-- Input para mostrar el código de venta seleccionado -->
+                <input type="text" id="idCodigoVenta"  value="<%=codigo%>" readonly >
+                <label for="idCodigoVenta" class="label" >codigo Venta</label>
+                <div class="underline"></div>
+            <% } %>
+        </div>
+        
+    <div class="input-container">
+        <input type="date" id="fechaventa" required>
+        <label for="fechaventa" class="label">Fecha de Venta</label>
+        <div class="underline"></div>
+      </div>
+    
+    
+    <div class="input-container">
+        <% if (user) { %>
+          <input id="idEmpleado" value="<%= user.ID_Empleado %>" hidden>
+          <input type="text" id="empleado" readonly value="<%= user.NombreEmpleado %>">
+          <label for="empleado" class="label" >Empleado</label>
+          <div class="underline"></div>
+        <% } %>
+      </div>
+    
+        <!-- Botón para efectuar la devolución -->
+        <button type="button" class="btn btn-primary" id="btnEfectuarDevolucion">Efectuar Devolución</button>
+                      </form>
+    
+    
+    
+    
+    </div>
+    
+    
+    
+    <div class="col mt-2  "  >
+        <div class="contenedor_Table">
+                <table id="TablaDetalleDevolucion" class="table table-striped table-bordered " style="width: 100%;"  >
+                <thead>
+                    <tr>
+                        <th>ID_Inventario</th>
+                        <th>Nombre</th>
+                        <th>CantidadDevuelta</th>
+                        <th>Motivo</th>
+                        <th class="text-center">ACCIONES</th>                      
+                    </tr>
+                </thead>
+                <tbody>
+                    <% detalelventa.forEach((detalle) => { %>
+                        <tr>
+                            <td><%= detalle.ID_Inventario %></td>
+                            <td><%= detalle.Nombre %></td>
+                            <td>
+                                <!-- Input para la cantidad -->
+                                <input type="number" name="cantidad[]" value="<%= detalle.CantidadDevuelta %>">
+                            </td>
+                            <td>
+                                <!-- Input para el motivo -->
+                                <input type="text" name="motivo[]" value="<%= detalle.Motivo %>">
+                            </td>
+                            <td>
+                                <!-- Botón para eliminar la fila con ícono y estilo -->
+                                <button type="button" class="btn btn-danger btnEliminarFila" data-id="<%= detalle.ID_Inventario %>">
+                                    <i class="fas fa-trash-alt"></i> <!-- Ícono de basura de Font Awesome -->
+                                </button>
+                            </td>
+                            <!-- Otros campos según sea necesario -->
+                        </tr>
+                    <% }); %>
+                </tbody>
+                
+                
+                </table> 
+        
+            </div>
+    </div>  
+</section>
+
+
+<script type="module" src="/js/ModulosJS/ModeloJSDevolucionVenta.js"></script>

@@ -1,45 +1,25 @@
-<!-- jQuery -->
-<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-
-<!-- Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-
-<!-- Bootstrap JS -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.min.js" integrity="sha384-5h4UG+6GOuV9qXh6HqOLwZMY4mnLPraeTrjT5v07o347pj6IkfuoASuGBhfDsp3d" crossorigin="anonymous"></script>
-
-<!-- DataTables jQuery Plugin -->
-<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-
-<!-- DataTables Bootstrap Plugin -->
-<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap5.min.js"></script>
-
-<!-- SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-<!-- DataTables CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
-
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css" integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK" crossorigin="anonymous">
-
-<!-- DataTables Bootstrap CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap5.min.css">
 
 <script type="module" src="/js/ModulosJS/ModuloJsConfiguracion.js"></script>
 
-
-<script  type="module" src="/js/ModulosJS/ModuloJsConfiguracion.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/Formulario.css">
-    <link rel="stylesheet" type="text/css" href="/css/Configuracion.css">
-    <section class="Contenido-Main" id="dynamic-content">
-       <div class="Contenedor_Mostrar">
     
-        
-    <div class="container-fluid">
-        <button id="btnCrear" class="btn btn-dark ">Crear</button>
-  <div class="row shadow-lg p-3 mb-5">
-    <div class="col">
-        <table id="Tabla" class="table table-striped table-bordered" style="width:100%">
+    <section class="content">
+ 
+        <div class="row center mb-3 botones_Cart"  >
+            <% if (allowedActions.some(accion => accion.Accion === 'Crear')) { %>
+                <button id="btnCrear" class="btn btn-dark Boton_crearPrincipal" >Crear</button>
+            <% } %>
+            <button id="btnVerHistorial" class="btn btn-dark Boton_crearPrincipal" style="width: 150px;">Ver Historial</button>
+
+        </div>
+
+        <!--div para mostrar imagen de la tabbla-->
+        <div id="imagenZoomContainer" style="display: none;">
+            <img id="imagenZoom" src="" alt="Logo" class="zoom-image">
+        </div>
+          <div class="row  p-3">
+           
+    <div class="table-container">
+        <table id="Tabla" class="custom-table" data-allowed-actions='<%- JSON.stringify(allowedActions) %>'>
         <thead>
             <tr>
                 <th>#</th>
@@ -59,7 +39,7 @@
         </table> 
     </div>
 </div>
-</div>
+
  
   
 
@@ -77,36 +57,43 @@
                     <div class="modal-body form">                
                             <input id="id" hidden>
                             <div class="input-container ">
-                                <input placeholder="" type="text" class="input" id="nombreNegocio" required>
-                                <label  for="nombreNegocio">Nombre Negocio</label>
+                                <input placeholder="" type="text" id="nombreNegocio" >
+                                <label  for="nombreNegocio" class="label">Nombre Negocio</label>
+                                <div class="underline"></div>
                             </div>
         
                             <div class="input-container">
                                 <input type="file" class="image" name="logoLocal" id="logoLocal" accept="image/*" >
-                                <label for="logoLocal">Seleccionar Logo Local</label>
+                                <label for="logoLocal" class="label">Seleccionar Logo Local</label>
+                                <div class="underline"></div>
                             </div>
                     
                             <div class="input-container">
-                                <input placeholder="" type="text" class="input" id="ruc" required>
-                                <label for="ruc">RUC</label>
-                            </div>
+                                <input  type="text"  id="ruc"  >
+                                <label for="ruc" class="label">RUC</label>
+                                <div class="underline"></div>
+                                </div>
                           
                             <div class="input-container">
-                                <input placeholder="" type="text" class="input" id="telefonos"  required>
-                                <label for="telefonos">Telefonos</label>
+                                <input placeholder="" type="text"  id="telefonos"  >
+                                <label for="telefonos" class="label">Telefonos</label>
+                                <div class="underline"></div>
                             </div>
                             <div class="input-container">
-                                <input placeholder="" type="text" class="input" id="correo"  required>
-                                <label for="correo">Correo</label>
+                                <input placeholder="" type="text" id="correo"  >
+                                <label for="correo" class="label">Correo</label>
+                                <div class="underline"></div>
                             </div>
                             <div class="input-container">
-                                <input placeholder="" type="text" class="input" id="direccion"  required>
-                                <label for="direccion">Direccion</label>
+                                <input placeholder="" type="text"  id="direccion"  >
+                                <label for="direccion" class="label">Direccion</label>
+                                <div class="underline"></div>
                             </div>
                             <% if (user) { %>
                                 <div class="input-container">
-                                  <input placeholder=""  type="text" id="usuarioModificacion" class="input"  value="<%= user.Nombres %>" required readonly >
-                                  <label for="usuarioModificacion">Usuario Modificacion</label>
+                                  <input type="text" id="usuarioModificacion"  value="<%= user.Nombres %>"  readonly >
+                                  <label for="usuarioModificacion" class="label">Usuario Modificacion</label>
+                                  <div class="underline"></div>
                                 </div>
                               <% } %>
                               
@@ -126,6 +113,6 @@
     </div>  
 
 
-</div>
+
     </section> 
 

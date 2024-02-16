@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Agrupar rutas bajo el prefijo '/api/categorias'
 router.get('/api/Proveedor', ProveedoresController.GetProveedores);
-router.get('/api/Proveedor/page',authMiddleware.isAuthenticated, ProveedoresController.renderProveedorPage);
+router.get('/api/Proveedor/page',authMiddleware.isAuthenticated,authMiddleware.checkAccess, ProveedoresController.renderProveedorPage);
 router.post('/api/Proveedor', ProveedoresController.guardarProveedores);
 router.put('/api/Proveedor/:id', ProveedoresController.updateProveedores);
 router.put('/api/Proveedor/dardebaja/:id', ProveedoresController.darDeBajaProveedores);

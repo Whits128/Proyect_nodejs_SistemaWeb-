@@ -1,20 +1,15 @@
 
-<!-- DataTables CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
-
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css" integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK" crossorigin="anonymous">
-
-<!-- DataTables Bootstrap CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap5.min.css">
-
 <script  type="module" src="/js/ModulosJS/ModulosJSUsuarios.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/Formulario.css">
-    
+
+   <style>
+   .vista {
+    display: none;
+  }
+   </style> 
 
 
 
-    <section class="Contenido-Main">
+    <section class="content">
 
         
         <div id="vista1" class="vista">
@@ -53,12 +48,14 @@
         
             <form id="formCUser" class="form_pequeno">
                 <div class="input-container">
-                    <input placeholder="" type="text" class="input" id="User" readonly>
-                    <label for="User">Usuario</label>
+                    <input  type="text"  id="User" readonly>
+                    <label for="Userh" class="label">Usuario</label>
+                    <div class="underline"></div>
                 </div>
                 <div class="input-container ">
-                    <input placeholder="" type="password" class="input" id="loginClaveC">
-                    <label for="loginClaveC">Contraseña</label>
+                    <input placeholder="" type="password" id="loginClaveC">
+                    <label for="loginClaveC" class="label">Contraseña</label>
+                    <div class="underline"></div>
                 </div>
 
 
@@ -150,39 +147,46 @@
                                 <!-- Campos del Formulario -->
                                 <input id="id" hidden>
                                 <div class="input-container">
-                                    <input placeholder="" type="text" class="input" id="nombres">
-                                    <label for="nombres">Nombres</label>
+                                    <input placeholder="" type="text"  id="nombres">
+                                    <label for="nombres" class="label">Nombres</label>
+                                    <div class="underline"></div>
                                 </div>
                                 <div class="input-container">
-                                    <input placeholder="" type="text" class="input" id="apellidos">
-                                    <label for="apellidos">Apellidos</label>
+                                    <input placeholder="" type="text" id="apellidos">
+                                    <label for="apellidos" class="label">Apellidos</label>
+                                    <div class="underline"></div>
                                 </div>
                                 <div class="input-container">
-                                    <input placeholder="" type="text" class="input" id="loginUsuario">
-                                    <label for="loginUsuario">Login Usuario</label>
+                                    <input placeholder="" type="text"  id="loginUsuario">
+                                    <label for="loginUsuario" class="label">Login Usuario</label>
+                                    <div class="underline"></div>
                                 </div>
                                 <div class="input-container conteEliminarPass">
-                                    <input placeholder="" type="password" class="input" id="loginClave">
-                                    <label  for="loginClave">Contraseña</label>
+                                    <input placeholder="" type="password" id="loginClave">
+                                    <label  for="loginClave" class="label">Contraseña</label>
+                                    <div class="underline"></div>
                                 </div>
                        
                                 <div class="input-container">               
-                                    <select class="input" id="Idrol" aria-label="select"> </select>
-                                        <label for="Idrol">Rol</label>
+                                    <select  id="Idrol" aria-label="select"> </select>
+                                        <label for="Idrol" class="label">Rol</label>
+                                        <div class="underline"></div>
                                     </div>
 
                                     <% if (user) { %>
                                         <div class="input-container">
-                                          <input placeholder=""  type="text" id="usuarioModificacion" class="input"  value="<%= user.Nombres %>" required readonly >
-                                          <label for="usuarioModificacion">Usuario Modificacion</label>
+                                          <input   id="usuarioModificacion"  value="<%= user.Nombres %>"  readonly >
+                                          <label for="usuarioModificacion" class="label">Usuario Modificacion</label>
+                                          <div class="underline"></div>
                                         </div>
                                       <% } %>
                                 <div class="input-container">
-                                    <select id="estado" class="input">
+                                    <select id="estado" >
                                         <option value="Activo">Activo</option>
                                         <!-- Puedes agregar más opciones según tus necesidades -->
                                     </select>
-                                    <label for="estado">Estado</label>
+                                    <label for="estado" class="label">Estado</label>
+                                    <div class="underline"></div>
                                 </div>
 
 
@@ -199,23 +203,3 @@
       
         </div>
     </section>
-<!-- jQuery -->
-<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-
-<!-- Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-
-<!-- Bootstrap JS -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.min.js" integrity="sha384-5h4UG+6GOuV9qXh6HqOLwZMY4mnLPraeTrjT5v07o347pj6IkfuoASuGBhfDsp3d" crossorigin="anonymous"></script>
-
-<!-- DataTables jQuery Plugin -->
-<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-
-<!-- DataTables Bootstrap Plugin -->
-<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap5.min.js"></script>
-
-<!-- SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    
-<!-- Moment.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>

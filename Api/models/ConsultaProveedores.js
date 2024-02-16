@@ -30,11 +30,11 @@ export const mostrarProveedores = async () => {
 export const guardarProveedor = async (nombre, direccion, telefono, ruc, emailProveedor, estado) => {
   try {
     const schema = Joi.object({
-      nombre: Joi.string().pattern(/^[a-zA-Z]+$/).required().messages({
+      nombre: Joi.string().pattern(/^[a-zA-Z\s]+$/).required().messages({
         'any.required': 'El nombre es obligatorio.',
         'string.empty': 'El nombre no puede estar vacío.',
-        'string.pattern.base': 'El nombre debe contener solo letras.',
-      }),
+        'string.pattern.base': 'El nombre debe contener solo letras y espacios.',
+    }),
       direccion: Joi.string().required().messages({
         'any.required': 'La dirección es obligatoria.',
         'string.empty': 'La dirección no puede estar vacía.',

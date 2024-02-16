@@ -43,20 +43,69 @@ CREATE TABLE HistorialUsuario (
 );
 
 GO
+-- Tabla de Acciones (botones o funcionalidades específicas)
+CREATE TABLE Acciones (
+    IdAccion INT PRIMARY KEY IDENTITY(1,1),
+    NombreAccion NVARCHAR(100) UNIQUE NOT NULL,
+	Estado NVARCHAR(50) DEFAULT 'Activo'
+);
+go
+INSERT INTO Acciones (NombreAccion)
+VALUES 
+  ('Imprimir'),
+  ('Crear'),
+  ('Editar'),
+  ('Eliminar'),
+  ('Ver');
+go
 -- Tabla de Recursos (páginas o funcionalidades)
 CREATE TABLE Recursos (
     IdRecurso INT PRIMARY KEY IDENTITY(1,1),
-    NombreRecurso NVARCHAR(100) UNIQUE NOT NULL
+    NombreRecurso NVARCHAR(100) NOT NULL,
+	Ruta NVARCHAR(255) UNIQUE NOT NULL,
+	Estado NVARCHAR(50) DEFAULT 'Activo'
 );
 GO
--- Tabla de Configuración de Acceso
+-- Insertar datos en la tabla Recursos
+INSERT INTO Recursos (NombreRecurso, Ruta)
+VALUES 
+('Proveedor ', '/api/Proveedor/page'),
+('Configuracion ', '/api/configuracion/page'),
+('configuracion Acceso', '/api/configuracionAcceso/page'),
+  ('Productos', '/api/producto/page'),
+  ('Ventas', '/api/venta/page'),
+  ('Bodega', '/api/bodega/page'),
+  ('Categoria', '/api/categorias/page'),
+  ('Color', '/api/color/page'),
+  ('Compra', '/api/compra/page'),
+  ('Historial Configuraciones', '/api/historial/page'),
+  ('Datos Debaja', '/api/DatosDebaja/page'),
+   ('Empleado', '/api/empleado/page'),
+   ('Inicio', '/Inicio'),
+   ('Inventario', '/api/inventario/page'),
+    ('Marca', '/api/marcas/page'),
+    ('Promocion', '/api/promociones/page'),
+    ('Rol', '/api/rol/page'),
+	 ('Tallas', '/api/talla/page'),
+	 ('Usuarios', '/api/usuarios/page'),
+	 ('Devolucion', '/api/venta/devolucion/page'),
+	  ('Registrar Devolucion', '/api/venta/devolucion/registrar/page'),
+	  	  ('Material Zapatos ', '/api/materialesZapatos/page');
+-- Tabla de Relación entre Acciones y Recursos
 CREATE TABLE ConfiguracionAcceso (
     IdConfiguracion INT PRIMARY KEY IDENTITY(1,1),
-    Ruta NVARCHAR(255) UNIQUE NOT NULL,
-    IdRecurso INT FOREIGN KEY REFERENCES Recursos(IdRecurso),
-    IdRol INT FOREIGN KEY REFERENCES Roles(IdRol)
+    IdRecurso INT,
+    IdAccion INT,
+	IdRol INT,
+    FOREIGN KEY (IdRol) REFERENCES Roles(IdRol),
+    FOREIGN KEY (IdRecurso) REFERENCES Recursos(IdRecurso),
+    FOREIGN KEY (IdAccion) REFERENCES Acciones(IdAccion),
+	Estado NVARCHAR(50) DEFAULT 'Activo'
 );
 GO
+-- Insertar datos en la tabla RecursoAccion
+-- Insertar datos en la tabla RecursoAccion
+
 
 -- Tabla Configuraciones
 CREATE TABLE Configuraciones (
@@ -73,6 +122,8 @@ CREATE TABLE Configuraciones (
     TipoOperacion NVARCHAR(20) DEFAULT 'INSERT' -- Puede ser 'INSERT', 'UPDATE', 'DELETE', etc.
 );
 GO
+
+
 
 -- Tabla HistorialConfiguraciones
 CREATE TABLE HistorialConfiguraciones (
@@ -168,28 +219,6 @@ CREATE TABLE ZapatosDanados (
     CONSTRAINT FK_ProductoZapatos_ZapatoDanado FOREIGN KEY (ProductoZapatosID) REFERENCES Productos_Zapatos(ID_ProductoZapatos),
 );
 
-
-
-
--- Tabla Promociones
-CREATE TABLE Promociones (
-    ID_Promocion INT PRIMARY KEY IDENTITY(1,1),
-    Nombre VARCHAR(100) UNIQUE NOT NULL,
-    Descripcion VARCHAR(200),
-    FechaInicio DATE,
-    FechaFin DATE,
-    Estado Nvarchar(50) DEFAULT 'Activo',
-);
-
-
-GO
-
--- Tabla PRODUCTOS_PROMOCIONES
-CREATE TABLE PRODUCTOS_PROMOCIONES (
-    ID_PRODUCTOS_PROMOCIONES INT PRIMARY KEY IDENTITY(1,1),
-    ID_ProductoZapatos INT FOREIGN KEY REFERENCES Productos_Zapatos(ID_ProductoZapatos),
-    ID_Promocion INT FOREIGN KEY REFERENCES Promociones(ID_Promocion)
-);-- Tabla Inventario
 go
 -- Tabla BODEGA
 CREATE TABLE BODEGA (
@@ -215,13 +244,30 @@ CREATE TABLE Inventario (
     ExistenciasMinimas INT DEFAULT 0  NOT NULL,
      Estado Nvarchar(50) DEFAULT 'Activo'
 );
+
 GO
 
+-- Tabla Promociones
+CREATE TABLE Promociones (
+    ID_Promocion INT PRIMARY KEY IDENTITY(1,1),
+    Nombre VARCHAR(100) UNIQUE NOT NULL,
+    Descripcion VARCHAR(200),
+    FechaInicio DATE,
+    FechaFin DATE,
+    Estado Nvarchar(50) DEFAULT 'Activo',
+    DescuentoPorcentaje DECIMAL(5, 2) DEFAULT 0, -- Porcentaje de descuento para la promoción
+    DescuentoMonto MONEY DEFAULT 0, -- Monto de descuento para la promoción
+    Justificacion NVARCHAR(200), -- Justificación para la promoción
+);
 
+GO
 
-
-
-
+-- Tabla para gestionar la asociación entre Promociones e Inventario
+CREATE TABLE PromocionInventario (
+    ID_Promocion INT FOREIGN KEY REFERENCES Promociones(ID_Promocion),
+    ID_Inventario INT FOREIGN KEY REFERENCES Inventario(ID_Inventario),
+    PRIMARY KEY (ID_Promocion, ID_Inventario)
+);
 
 
 
@@ -238,20 +284,25 @@ CREATE TABLE TblMovimientosBodegas (
    Estado Nvarchar(50) DEFAULT 'Activo'
 );
 GO
+
 -- Tabla Ventas
 CREATE TABLE Ventas (
     ID_Venta INT PRIMARY KEY IDENTITY(1,1),
-	CodigoVenta nvarchar(max) NOT NULL,
+	CodigoVenta  NVARCHAR(100) UNIQUE NOT NULL, -- Agregar UNIQUE aquí NOT NULL,
+	 Subtotal DECIMAL(10, 2),
+    IVA DECIMAL(10, 2),
     Total DECIMAL(10, 2),
     Fecha DATE,
   Estado Nvarchar(50) DEFAULT 'Activo'
 );
 GO
 
+SELECT ID_Venta as Codigo, CodigoVenta, Fecha, Total, Estado FROM Ventas
+
 -- Tabla DetalleVenta
 CREATE TABLE DetalleVenta (
     ID_DetalleVenta INT PRIMARY KEY IDENTITY(1,1),
-	ID_Venta INT FOREIGN KEY REFERENCES Ventas(ID_Venta) NOT NULL,
+	CodigoVenta NVARCHAR(100) FOREIGN KEY REFERENCES Ventas (CodigoVenta) NOT NULL,
     ID_Inventario INT FOREIGN KEY REFERENCES Inventario(ID_Inventario) NOT NULL,
     ID_Promocion INT FOREIGN KEY REFERENCES Promociones(ID_Promocion) NULL,
     ID_Empleado INT FOREIGN KEY REFERENCES Empleados(ID_Empleado) NOT NULL,
@@ -264,8 +315,47 @@ CREATE TABLE DetalleVenta (
     Fecha DATE NOT NULL,
   Estado Nvarchar(50) DEFAULT 'Activo'
 );
-GO 
+go
 
+
+
+-- Tabla para gestionar el historial de precios
+CREATE TABLE HistorialPrecioVenta  (
+    ID_Inventario INT FOREIGN KEY REFERENCES Inventario(ID_Inventario),
+    PrecioAntiguo MONEY,
+    PrecioNuevo MONEY,
+    FechaInicio DATE,
+    FechaFin DATE, 
+	UsuarioModificacion NVARCHAR(50),
+    Justificacion NVARCHAR(200), -- Nueva columna para justificar el cambio de precio
+    PRIMARY KEY (ID_Inventario, FechaInicio)
+);
+
+
+GO
+-- Tabla Devoluciones
+CREATE TABLE DevolucionesVentas (
+    ID_Devolucion INT PRIMARY KEY IDENTITY(1,1),
+  	CodigoVenta NVARCHAR(100) FOREIGN KEY REFERENCES Ventas (CodigoVenta) NOT NULL,
+    ID_Inventario INT FOREIGN KEY REFERENCES Inventario(ID_Inventario) NOT NULL,
+    ID_Empleado INT FOREIGN KEY REFERENCES Empleados(ID_Empleado),
+    CantidadDevuelta INT NOT NULL,
+    Motivo VARCHAR(200),
+    Fecha DATE NOT NULL,
+    EstadoDevolucion NVARCHAR(50) DEFAULT 'Activo' -- Nuevo campo para el estado de la devolución
+);
+
+GO
+CREATE TABLE NotasCredito (
+    ID_NotaCredito INT PRIMARY KEY IDENTITY(1,1),
+    CodigoNotaCredito NVARCHAR(100),
+    ID_Devolucion INT FOREIGN KEY REFERENCES DevolucionesVentas(ID_Devolucion) NOT NULL,
+    Monto DECIMAL(10, 2) NOT NULL,
+    Fecha DATE NOT NULL,
+    EstadoNotaCredito NVARCHAR(50) DEFAULT 'Activa'
+);
+
+GO
 
 -- Tabla Proveedores
 CREATE TABLE Proveedores (
@@ -356,39 +446,6 @@ CREATE TABLE Devoluciones (
 GO
 
 
- -- Llenar la tabla de Recursos con datos de ejemplo
-INSERT INTO Recursos (NombreRecurso)
-VALUES
-       ('Gestión de Roles'),
-       ('Asignar Permisos a Roles'),
-       ('Gestión de Usuarios'),
-       ('Restablecer Contraseña'),
-	   ('Gestión de Recursos'),
-       ('Asignar Recursos a Roles'),
-       ('Configuración del Negocio'),
-       ('Historial de Configuraciones'),
-	      ('Gestión de Marcas'),
-       ('Gestión de Colores'),
-       ('Gestión de Categorías'),
-       ('Gestión de Tallas'),
-	     ('Gestión de Materiales'),
-       ('Gestión de Empleados'),
-	   ('Gestión de  Zapatos Dañados'),
-       ('Registro de Zapatos Dañados'),
-         ('Gestión de Promociones'),
-       ('Asociar Productos a Promociones'),
-	    ('Gestión de Bodegas'),
-	   ('Registro de Movimientos de Bodegas'),
-       ('Gestión de Inventario'),
-	    ('Registro de Ventas'),
-	    ('Detalle de Ventas'),
-		('Gestión de Devoluciones'),
-		('Gestión de Proveedores'),
-		('Registro de Compras'),
-		('Detalle de Compras'),
-		('Registro de Facturas'),
-		('Detalle de Facturas');
-	 go
 	   -- Insertar datos en la tabla "Roles"
 INSERT INTO Roles (NombreRol)
 VALUES
@@ -397,6 +454,11 @@ VALUES
     ('Moderador'),
     ('Invitado');
 go 
+INSERT INTO ConfiguracionAcceso (IdRecurso, IdAccion,IdRol)
+VALUES
+  (1, 2,1); -- IdRecurso y IdAccion para 'Usuarios' y 'Crear'
+  
+GO
 	   -- Tabla Marcas
 INSERT INTO Marcas (Nombre, DetalleMarca, Estado)
 VALUES
@@ -461,12 +523,15 @@ VALUES
   ('Liquidación Invierno', 'Productos de invierno a precios reducidos', '2023-12-01', '2024-02-28', 'Activo'),
   ('Descuento Especial', 'Solo por hoy, descuento del 30%', '2023-05-01', '2023-05-01', 'Activo');
   go
--- Tabla PRODUCTOS_PROMOCIONES
-INSERT INTO PRODUCTOS_PROMOCIONES (ID_ProductoZapatos, ID_Promocion)
-VALUES
-  (1, 1),
-  (2, 2),
-  (3, 3);
+  -- Promoción con descuento por porcentaje
+ 
+INSERT INTO Promociones (Nombre, Descripcion, FechaInicio, FechaFin, DescuentoPorcentaje, Justificacion)
+VALUES ('PromoDescuentoPorcentaje', 'Descuento del 15%', '2024-01-15', '2024-01-30', 15.0, 'Oferta especial');
+go
+-- Promoción con descuento monto
+INSERT INTO Promociones (Nombre, Descripcion, FechaInicio, FechaFin, DescuentoMonto, Justificacion)
+VALUES ('PromoDescuentoMonto', 'Descuento de $50', '2024-02-01', '2024-02-15', 50.0, 'Oferta especial');
+
   go
 -- Tabla BODEGA
 INSERT INTO BODEGA (NOMBRE, UBICACION, Estado)
@@ -1100,7 +1165,7 @@ FROM
     HistorialUsuario H
 JOIN
     USUARIO U ON H.IdUsuario = U.IdUsuario;
-
+	go
 	-- Procedimiento para inserción de usuario
 CREATE PROCEDURE InsertarUsuario (
     @Nombres VARCHAR(100),
@@ -1236,3 +1301,559 @@ BEGIN
         VALUES (@UsuarioID, 'LoginClave', @OldLoginClave, @LoginClave, GETDATE(), @UsuarioModificacion, @TipoOperacion);
     END
 END;
+go 
+
+CREATE PROCEDURE InsertarPromocionInventario
+    @ID_Promocion INT,
+    @ID_Inventario INT
+AS
+BEGIN
+    BEGIN TRY
+        -- Verificar si la promoción e inventario existen
+        IF NOT EXISTS (SELECT 1 FROM Promociones WHERE ID_Promocion = @ID_Promocion)
+        BEGIN
+            THROW 50000, 'La promoción especificada no existe.', 1;
+            RETURN;
+        END
+
+        IF NOT EXISTS (SELECT 1 FROM Inventario WHERE ID_Inventario = @ID_Inventario)
+        BEGIN
+            THROW 50000, 'El inventario especificado no existe.', 1;
+            RETURN;
+        END
+
+        -- Verificar si ya existe una relación para evitar duplicados
+        IF EXISTS (SELECT 1 FROM PromocionInventario WHERE ID_Promocion = @ID_Promocion AND ID_Inventario = @ID_Inventario)
+        BEGIN
+            THROW 50000, 'La relación entre la promoción e inventario ya existe.', 1;
+            RETURN;
+        END
+
+        -- Insertar la relación en PromocionInventario
+        INSERT INTO PromocionInventario (ID_Promocion, ID_Inventario)
+        VALUES (@ID_Promocion, @ID_Inventario);
+      
+    END TRY
+    BEGIN CATCH
+        -- Manejar errores
+        PRINT 'Error: ' + ERROR_MESSAGE();
+    END CATCH;
+END;
+
+go
+-- Procedimiento almacenado para aplicar promociones al Inventario
+CREATE PROCEDURE AplicarPromocionesAlInventario
+AS
+BEGIN
+    BEGIN TRY
+        -- Actualizar Descuento y PrecioVenta basado en las promociones activas
+        UPDATE I
+        SET
+            I.Descuento = 
+                CASE 
+                    WHEN P.DescuentoPorcentaje > 0 THEN P.DescuentoPorcentaje
+                    ELSE I.Descuento -- Mantener el valor actual si no hay descuento porcentaje en la promoción
+                END,
+            I.PrecioVenta = 
+                CASE 
+                    WHEN P.DescuentoMonto > 0 THEN I.PrecioVenta - P.DescuentoMonto
+                    ELSE I.PrecioVenta -- Mantener el valor actual si no hay descuento monto en la promoción
+                END
+        FROM
+            Inventario I
+        INNER JOIN
+            PromocionInventario PI ON I.ID_Inventario = PI.ID_Inventario
+        INNER JOIN
+            Promociones P ON PI.ID_Promocion = P.ID_Promocion
+        WHERE
+            P.Estado = 'Activo' AND
+            (
+                (P.DescuentoPorcentaje > 0 AND I.PrecioVenta >= (I.PrecioVenta * (P.DescuentoPorcentaje / 100))) OR
+                (P.DescuentoMonto > 0 AND I.PrecioVenta >= P.DescuentoMonto)
+            ); -- Solo aplicar promociones activas y verificar que no se genere un valor negativo
+
+        -- Insertar en el historial de precios solo si hay cambios
+        INSERT INTO HistorialPrecioVenta (ID_Inventario, PrecioAntiguo, PrecioNuevo, FechaInicio, FechaFin, UsuarioModificacion, Justificacion)
+        SELECT 
+            I.ID_Inventario, 
+            I.PrecioVenta, 
+            I.PrecioVenta - P.DescuentoMonto, -- PrecioNuevo después de aplicar la promoción
+            P.FechaInicio, 
+            P.FechaFin,
+            'UsuarioEjemplo', -- Reemplaza esto con el usuario real si lo tienes
+            P.Justificacion
+        FROM
+            Inventario I
+        INNER JOIN
+            PromocionInventario PI ON I.ID_Inventario = PI.ID_Inventario
+        INNER JOIN
+            Promociones P ON PI.ID_Promocion = P.ID_Promocion
+        WHERE
+            P.Estado = 'Activo' AND
+            (
+                (P.DescuentoPorcentaje > 0 AND I.PrecioVenta >= (I.PrecioVenta * (P.DescuentoPorcentaje / 100))) OR
+                (P.DescuentoMonto > 0 AND I.PrecioVenta >= P.DescuentoMonto)
+            ) AND
+            NOT EXISTS (
+                SELECT 1
+                FROM HistorialPrecioVenta HPV
+                WHERE HPV.ID_Inventario = I.ID_Inventario
+                    AND HPV.FechaInicio = P.FechaInicio
+            );
+
+        PRINT 'Promociones aplicadas al Inventario correctamente.';
+    END TRY
+    BEGIN CATCH
+        -- Manejar errores
+        PRINT 'Error: ' + ERROR_MESSAGE();
+    END CATCH;
+END;
+
+go
+CREATE PROCEDURE InsertarPromocionInventarioYAplicar
+    @ID_Promocion INT,
+    @ID_Inventario INT
+AS
+BEGIN
+    BEGIN TRY
+        -- Insertar la relación en PromocionInventario
+        EXEC InsertarPromocionInventario @ID_Promocion, @ID_Inventario;
+
+        -- Verificar si la inserción fue exitosa antes de aplicar las promociones
+        IF @@ROWCOUNT > 0
+        BEGIN
+            -- Aplicar promociones al Inventario después de insertar la relación
+            EXEC AplicarPromocionesAlInventario;
+        END
+        ELSE
+        BEGIN
+            PRINT 'Error: La inserción en PromocionInventario no fue exitosa.';
+        END
+    END TRY
+    BEGIN CATCH
+        -- Manejar errores
+        PRINT 'Error: ' + ERROR_MESSAGE();
+    END CATCH;
+END;
+go 
+CREATE VIEW VistaHistorialUsuario AS
+SELECT
+    H.PKHistorialUsuari,
+    U.LoginUsuario ,
+    H.ColumnaModificada,
+    H.ValorAntiguo,
+    H.ValorNuevo,
+    H.FechaModificacion,
+    H.UsuarioModificacion,
+    H.TipoOperacion,
+    U.NumSesiones,
+    U.FechaInicioSesion,
+    U.FechaFinSesion
+FROM
+    HistorialUsuario H
+JOIN
+    USUARIO U ON H.IdUsuario = U.IdUsuario;
+	/*  Insert into   Empleados (Nombre,Apellido,Direccion,Telefono,idUsuario,Estado) values ('omar', 'Navas', 'ni se','4444',1, 'Activo') */
+	  go 
+	  CREATE PROCEDURE ProcesoDevolucionVenta
+    @CodigoVenta NVARCHAR(100),
+    @DetalleDevolucion XML,
+    @ID_Empleado INT,
+    @Fecha DATE
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Verificar si la venta existe
+        IF NOT EXISTS (SELECT 1 FROM Ventas WHERE CodigoVenta = @CodigoVenta)
+        BEGIN
+            THROW 50000, 'La venta especificada no existe.', 1;
+            RETURN;
+        END
+
+        -- Tabla temporal para almacenar los detalles de la devolución
+        DECLARE @Devoluciones TABLE
+        (
+            ID_Inventario INT,
+            CantidadDevuelta INT,
+            Motivo VARCHAR(200)
+        );
+
+        -- Variables para el cursor
+        DECLARE @ID_Inventario INT;
+        DECLARE @CantidadDevuelta INT;
+        DECLARE @Motivo VARCHAR(200);
+        DECLARE @MontoTotalDevuelto DECIMAL(10, 2) = 0;
+        DECLARE @CodigoNotaCredito NVARCHAR(100);
+        DECLARE @ID_Devolucion INT;
+
+        -- Insertar los detalles de devolución en la tabla temporal
+        INSERT INTO @Devoluciones (ID_Inventario, CantidadDevuelta, Motivo)
+        SELECT
+            D.Detalle.value('(ID_Inventario)[1]', 'INT'),
+            D.Detalle.value('(CantidadDevuelta)[1]', 'INT'),
+            D.Detalle.value('(Motivo)[1]', 'VARCHAR(200)')
+        FROM @DetalleDevolucion.nodes('/DetalleDevolucion/Detalle') AS D(Detalle);
+
+        -- Iterar sobre las devoluciones y procesar cada una
+        DECLARE DevolucionesCursor CURSOR FOR
+        SELECT ID_Inventario, CantidadDevuelta, Motivo
+        FROM @Devoluciones;
+
+        OPEN DevolucionesCursor;
+        FETCH NEXT FROM DevolucionesCursor INTO @ID_Inventario, @CantidadDevuelta, @Motivo;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            -- Obtener información del detalle de la venta
+            DECLARE @MontoDevuelto DECIMAL(10, 2);
+
+SELECT @MontoDevuelto = ((PrecioVenta - Descuento) + (PrecioVenta - Descuento) * 0.15) * @CantidadDevuelta
+FROM DetalleVenta
+WHERE CodigoVenta = @CodigoVenta AND ID_Inventario = @ID_Inventario;
+
+
+            -- Restar la cantidad devuelta al detalle de la venta original
+            UPDATE DetalleVenta
+            SET Cantidad = Cantidad - @CantidadDevuelta
+            WHERE CodigoVenta = @CodigoVenta AND ID_Inventario = @ID_Inventario;
+
+
+
+     
+
+            -- Insertar la devolución en la tabla DevolucionesVentas
+            INSERT INTO DevolucionesVentas (CodigoVenta, ID_Inventario, ID_Empleado, CantidadDevuelta, Motivo, Fecha)
+            VALUES (@CodigoVenta, @ID_Inventario, @ID_Empleado, @CantidadDevuelta, @Motivo, @Fecha);
+			-- Declarar una variable para almacenar la suma del Total
+DECLARE @SumaTotalDetalleVenta DECIMAL(10, 2);
+			      -- Calcular los nuevos valores para Total, IVA y Subtotal
+       -- Verificar si la cantidad devuelta es 0 y si el ID del inventario coincide
+IF (SELECT Cantidad FROM DetalleVenta WHERE CodigoVenta = @CodigoVenta AND ID_Inventario = @ID_Inventario) = 0
+BEGIN
+    -- Bloque de código si la cantidad devuelta es 0
+    UPDATE Ventas
+    SET Estado = 'Devolución',
+        Total = 0
+    WHERE CodigoVenta = @CodigoVenta;
+
+    -- Opcional: Desactivar el detalle de la venta afectada
+    UPDATE DetalleVenta
+    SET Total = 0,
+        Subtotal = 0,
+        IVA = 0,
+        Estado = 'Devolución'
+    WHERE CodigoVenta = @CodigoVenta AND ID_Inventario = @ID_Inventario;
+END
+ELSE
+BEGIN
+-- Calcular la suma del Total para el CodigoVenta específico
+SELECT @SumaTotalDetalleVenta = SUM(Total)
+FROM DetalleVenta
+WHERE CodigoVenta = @CodigoVenta;
+
+-- Actualizar el campo Total en la tabla Ventas con la suma calculada
+UPDATE Ventas
+SET Total = @SumaTotalDetalleVenta
+WHERE CodigoVenta = @CodigoVenta;
+    -- Bloque de código si la cantidad devuelta no es 0
+    UPDATE DetalleVenta
+    SET
+        Total = PrecioVenta * Cantidad,
+        Subtotal = Total - Descuento,
+        IVA = Subtotal * 0.15  -- Ajustar el cálculo del IVA al 15%
+    WHERE CodigoVenta = @CodigoVenta AND ID_Inventario = @ID_Inventario;
+END
+
+            -- Obtener el ID de la devolución recién insertada
+            SET @ID_Devolucion = SCOPE_IDENTITY();
+
+            -- Actualizar las existencias en Inventario (reponer las unidades devueltas)
+            UPDATE Inventario
+            SET UnidadesExistencias = UnidadesExistencias + @CantidadDevuelta
+            WHERE ID_Inventario = @ID_Inventario;
+
+            SET @MontoTotalDevuelto = @MontoTotalDevuelto + @MontoDevuelto;
+
+            FETCH NEXT FROM DevolucionesCursor INTO @ID_Inventario, @CantidadDevuelta, @Motivo;
+        END;
+
+        CLOSE DevolucionesCursor;
+        DEALLOCATE DevolucionesCursor;
+
+        -- Actualizar el estado de la venta a 'Devolución'
+        UPDATE Ventas
+        SET Estado = 'Devolución'
+        WHERE CodigoVenta = @CodigoVenta;
+
+        -- Crear la nota de crédito
+        SET @CodigoNotaCredito = 'NC_' + CONVERT(NVARCHAR(50), NEWID());
+
+-- Agrega estas líneas para redondear el monto:
+DECLARE @MontoRedondeado DECIMAL(10, 2);
+SET @MontoRedondeado = CASE
+    WHEN (@MontoTotalDevuelto * 100) % 2 = 0 THEN -- Si el decimal 5 sigue a una cifra par
+        ROUND(@MontoTotalDevuelto, 0) -- Redondea a la baja (0 decimales)
+    ELSE -- Si el decimal 5 sigue a una cifra impar
+        CEILING(@MontoTotalDevuelto) -- Redondea al alza
+END;
+        INSERT INTO NotasCredito (CodigoNotaCredito, ID_Devolucion, Monto, Fecha)
+        VALUES (@CodigoNotaCredito, @ID_Devolucion, @MontoRedondeado, @Fecha);
+
+        COMMIT TRANSACTION;
+        PRINT 'Devolución procesada correctamente con Nota de Crédito (' + @CodigoNotaCredito + ').';
+    END TRY
+    BEGIN CATCH
+        -- Manejar errores
+        ROLLBACK TRANSACTION;
+        DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT;
+        SELECT
+            @ErrorMessage = ERROR_MESSAGE(),
+            @ErrorSeverity = ERROR_SEVERITY(),
+            @ErrorState = ERROR_STATE();
+
+        PRINT 'Error: ' + @ErrorMessage;
+        PRINT 'Error Severity: ' + CAST(@ErrorSeverity AS NVARCHAR(10));
+        PRINT 'Error State: ' + CAST(@ErrorState AS NVARCHAR(10));
+        PRINT 'CodigoVenta: ' + ISNULL(@CodigoVenta, 'NULL');
+        PRINT 'DetalleDevolucion: ' + ISNULL(CONVERT(NVARCHAR(MAX), @DetalleDevolucion), 'NULL');
+        PRINT 'ID_Empleado: ' + ISNULL(CAST(@ID_Empleado AS NVARCHAR(10)), 'NULL');
+        PRINT 'Fecha: ' + ISNULL(CONVERT(NVARCHAR(10), @Fecha), 'NULL');
+    END CATCH;
+END;
+
+
+go 
+
+CREATE PROCEDURE GestionarVenta
+    @CodigoVenta NVARCHAR(100),
+    @FechaVenta DATE,
+    @EstadoVenta NVARCHAR(50),
+		@Subtotal DECIMAL(10, 2),
+	@IVA DECIMAL(10, 2),
+    @Total DECIMAL(10, 2),
+    @DetallesVenta XML,
+    @CodigoNotaCredito NVARCHAR(100) = NULL -- Nuevo parámetro para el código de la nota de crédito
+AS
+BEGIN
+    BEGIN TRY
+        -- Declarar variables locales
+        DECLARE @ID_Venta INT;
+
+        -- Iniciar una transacción
+        BEGIN TRANSACTION;
+
+        -- Si el estado es 'Completada' y se proporciona un código de nota de crédito
+        IF @EstadoVenta = 'Completada' AND @CodigoNotaCredito IS NOT NULL
+        BEGIN
+            -- Verificar si la nota de crédito está activa
+            IF NOT EXISTS (SELECT 1 FROM NotasCredito WHERE CodigoNotaCredito = @CodigoNotaCredito AND EstadoNotaCredito = 'Activa')
+            BEGIN
+                THROW 50000, 'La nota de crédito no está activa o no existe.', 1;
+                RETURN;
+            END
+
+            -- Insertar la venta principal
+            INSERT INTO Ventas (CodigoVenta, Fecha, Total,Subtotal ,IVA , Estado)
+            VALUES (@CodigoVenta, @FechaVenta, @Total,@Subtotal,@IVA, @EstadoVenta);
+
+            -- Obtener el ID de la venta recién insertada
+            SET @ID_Venta = SCOPE_IDENTITY();
+
+            -- Procesar cada detalle de la venta
+            INSERT INTO DetalleVenta (
+                CodigoVenta,
+                ID_Inventario,
+                ID_Empleado,
+                PrecioVenta,
+                Cantidad,
+                Descuento,
+                Total,
+                Subtotal,
+                IVA,
+                Fecha,
+                Estado
+            )
+            SELECT
+                @CodigoVenta,
+                D.Detalle.value('(ID_Inventario)[1]', 'INT'),
+                D.Detalle.value('(ID_Empleado)[1]', 'INT'),
+                D.Detalle.value('(PrecioVenta)[1]', 'MONEY'),
+                D.Detalle.value('(Cantidad)[1]', 'INT'),
+                D.Detalle.value('(Descuento)[1]', 'DECIMAL(10,2)'),
+                D.Detalle.value('(Total)[1]', 'DECIMAL(10,2)'),
+                D.Detalle.value('(Subtotal)[1]', 'DECIMAL(10,2)'),
+                D.Detalle.value('(IVA)[1]', 'DECIMAL(10,2)'),
+                D.Detalle.value('(Fecha)[1]', 'DATE'),
+                'Completada'
+            FROM @DetallesVenta.nodes('/DetallesVenta/Detalle') AS D(Detalle);
+
+            -- Actualizar el estado de la venta principal
+            UPDATE Ventas
+            SET Estado = 'Completada'
+            WHERE ID_Venta = @ID_Venta;
+
+            -- Actualizar el estado de los detalles de la venta
+            UPDATE DetalleVenta
+            SET Estado = 'Completada'
+            WHERE CodigoVenta = @CodigoVenta;
+			  -- Actualizar el estado de  DevolucionesVentas 
+			 UPDATE DevolucionesVentas
+    SET EstadoDevolucion = 'Procesada'
+    WHERE CodigoVenta = @CodigoVenta;
+            -- Actualizar las existencias en el inventario
+            UPDATE Inventario
+            SET UnidadesExistencias = UnidadesExistencias - D.Detalle.value('(Cantidad)[1]', 'INT')
+            FROM @DetallesVenta.nodes('/DetallesVenta/Detalle') AS D(Detalle)
+            WHERE Inventario.ID_Inventario = D.Detalle.value('(ID_Inventario)[1]', 'INT');
+
+            -- Actualizar el estado de la nota de crédito a 'Utilizada', por ejemplo
+            UPDATE NotasCredito
+            SET EstadoNotaCredito = 'Utilizada'
+            WHERE CodigoNotaCredito = @CodigoNotaCredito;
+        END
+        ELSE
+        BEGIN
+            -- Si no se proporciona un código de nota de crédito, realizar las acciones estándar sin considerar la nota de crédito
+            -- Insertar la venta principal
+            INSERT INTO Ventas (CodigoVenta, Fecha, Total,Subtotal ,IVA , Estado)
+            VALUES (@CodigoVenta, @FechaVenta, @Total,@Subtotal,@IVA, @EstadoVenta);
+            -- Obtener el ID de la venta recién insertada
+            SET @ID_Venta = SCOPE_IDENTITY();
+
+            -- Procesar cada detalle de la venta
+            INSERT INTO DetalleVenta (
+                CodigoVenta,
+                ID_Inventario,
+                ID_Empleado,
+                PrecioVenta,
+                Cantidad,
+                Descuento,
+                Total,
+                Subtotal,
+                IVA,
+                Fecha,
+                Estado
+            )
+            SELECT
+                @CodigoVenta,
+                D.Detalle.value('(ID_Inventario)[1]', 'INT'),
+                D.Detalle.value('(ID_Empleado)[1]', 'INT'),
+                D.Detalle.value('(PrecioVenta)[1]', 'MONEY'),
+                D.Detalle.value('(Cantidad)[1]', 'INT'),
+                D.Detalle.value('(Descuento)[1]', 'DECIMAL(10,2)'),
+                D.Detalle.value('(Total)[1]', 'DECIMAL(10,2)'),
+                D.Detalle.value('(Subtotal)[1]', 'DECIMAL(10,2)'),
+                D.Detalle.value('(IVA)[1]', 'DECIMAL(10,2)'),
+                D.Detalle.value('(Fecha)[1]', 'DATE'),
+                'Completada'
+            FROM @DetallesVenta.nodes('/DetallesVenta/Detalle') AS D(Detalle);
+
+            -- Actualizar el estado de la venta principal
+            UPDATE Ventas
+            SET Estado = 'Completada'
+            WHERE ID_Venta = @ID_Venta;
+
+            -- Actualizar el estado de los detalles de la venta
+            UPDATE DetalleVenta
+            SET Estado = 'Completada'
+            WHERE CodigoVenta = @CodigoVenta;
+
+            -- Actualizar las existencias en el inventario
+            UPDATE Inventario
+            SET UnidadesExistencias = UnidadesExistencias - D.Detalle.value('(Cantidad)[1]', 'INT')
+            FROM @DetallesVenta.nodes('/DetallesVenta/Detalle') AS D(Detalle)
+            WHERE Inventario.ID_Inventario = D.Detalle.value('(ID_Inventario)[1]', 'INT');
+        END
+
+        -- Commit de la transacción
+        COMMIT;
+    END TRY
+    BEGIN CATCH
+        -- Rollback en caso de error
+        ROLLBACK;
+
+        -- Manejar el error (puedes registrar el error en una tabla de registro de errores, por ejemplo)
+        -- También puedes propagar el error hacia arriba utilizando THROW para que la aplicación cliente lo maneje
+        THROW;
+    END CATCH;
+END;
+go
+CREATE VIEW VistaDevolucionesConNotaCredito AS
+SELECT
+    DV.ID_Devolucion,
+    DV.CodigoVenta,
+    E.Nombre AS NombreEmpleado,
+    DV.CantidadDevuelta,
+    DV.Motivo,
+    DV.Fecha,
+    DV.EstadoDevolucion,
+    NC.CodigoNotaCredito,
+    PZ.Nombre AS NombreProducto -- Cambiado a NombreProducto
+FROM DevolucionesVentas DV
+JOIN NotasCredito NC ON DV.ID_Devolucion = NC.ID_Devolucion
+JOIN Empleados E ON DV.ID_Empleado = E.ID_Empleado -- Agregado para obtener el nombre del empleado
+JOIN Inventario I ON DV.ID_Inventario = I.ID_Inventario -- Agregado para obtener el nombre del producto
+JOIN Productos_Zapatos PZ ON I.ID_ProductoZapatos = PZ.ID_ProductoZapatos; -- Agregado para obtener el nombre del producto
+go 
+CREATE VIEW VistaNotasCredito
+AS
+SELECT
+    ID_NotaCredito,
+    CodigoNotaCredito,
+    ID_Devolucion,
+    Monto,
+    Fecha,
+    EstadoNotaCredito
+FROM
+    NotasCredito;
+
+
+	go
+
+
+	CREATE PROCEDURE InsertarConfiguracionAcceso
+    @ConfiguracionesXML XML
+AS
+BEGIN
+    -- Verificar si el XML tiene el formato esperado
+    IF NOT EXISTS (SELECT 1 FROM @ConfiguracionesXML.nodes('/Configuraciones/Configuracion') AS XT(XC))
+    BEGIN
+	                THROW 50000, 'El formato del XML no es válido.', 1;
+                RETURN;
+       
+    END
+
+    -- Insertar configuraciones de acceso desde el XML
+    INSERT INTO ConfiguracionAcceso (IdRecurso, IdAccion, IdRol)
+    SELECT
+        XC.value('(IdRecurso)[1]', 'INT') AS IdRecurso,
+        XC.value('(IdAccion)[1]', 'INT') AS IdAccion,
+        XC.value('(IdRol)[1]', 'INT') AS IdRol
+    FROM @ConfiguracionesXML.nodes('/Configuraciones/Configuracion') AS XT(XC)
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM ConfiguracionAcceso
+        WHERE IdRecurso = XC.value('(IdRecurso)[1]', 'INT')
+          AND IdAccion = XC.value('(IdAccion)[1]', 'INT')
+          AND IdRol = XC.value('(IdRol)[1]', 'INT')
+    );
+
+    -- ¡Éxito!
+    PRINT 'Configuraciones de acceso insertadas correctamente.';
+END;
+go
+CREATE VIEW VistaConfiguracionAcceso AS
+SELECT
+    ca.IdConfiguracion,
+    r.NombreRol AS Rol,
+    a.NombreAccion AS Accion,
+    rec.NombreRecurso AS Recurso,
+    ca.Estado
+FROM ConfiguracionAcceso ca
+JOIN Roles r ON ca.IdRol = r.IdRol
+JOIN Acciones a ON ca.IdAccion = a.IdAccion
+JOIN Recursos rec ON ca.IdRecurso = rec.IdRecurso;
+
+

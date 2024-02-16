@@ -22,7 +22,10 @@ import DatosDebajaRoutes from './Routes/DatosDebajaRoutes';
 import InventarioRoute from './Routes/InventarioRoute';
 import CompraRoutes from './Routes/CompraRoutes';
 import UsuariosRoute from './Routes/UsuariosRoute';
+import VentasRoutes from './Routes/VentasRoutes';
 import configuracionesMiddleware from './Middleware/Middlewareparaconfiguraciones'; // Ajusta la ruta según tu estructura
+import * as  authMiddleware from './Middleware/authMiddleware'; // Ajusta la ruta según tu estructura
+
 
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
@@ -62,6 +65,7 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(expressEjsLayouts);
 app.use(configuracionesMiddleware);
+//app.use(authMiddleware.checkAccess);
 // Rutas
 app.use(CategoriaRoutes);
 app.use(MarcaRoutes);
@@ -82,4 +86,5 @@ app.use(DatosDebajaRoutes);
 app.use(InventarioRoute);
 app.use(CompraRoutes);
 app.use(UsuariosRoute);
+app.use(VentasRoutes);
 export default app;

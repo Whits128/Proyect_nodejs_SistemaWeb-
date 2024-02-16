@@ -5,5 +5,5 @@ import * as authMiddleware from '../Middleware/authMiddleware';
 
 const router = express.Router();
 
-router.get('/Inicio',authMiddleware.isAuthenticated, InicioController.GetInicio);
+router.get('/Inicio',authMiddleware.isAuthenticated,authMiddleware.checkAccess, InicioController.GetInicio);
 export default router;

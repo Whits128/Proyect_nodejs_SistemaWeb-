@@ -6,7 +6,7 @@ const router = express.Router();
 
 // Agrupar rutas bajo el prefijo '/api/categorias'
 router.get('/api/bodega', BodegaController.GetBodega);
-router.get('/api/bodega/page',authMiddleware.isAuthenticated, BodegaController.renderBodegaPage);
+router.get('/api/bodega/page',authMiddleware.isAuthenticated,authMiddleware.checkAccess, BodegaController.renderBodegaPage);
 router.post('/api/bodega', BodegaController.guardarBodega);
 router.put('/api/bodega/:id', BodegaController.updateBodega);
 router.put('/api/bodega/dardebaja/:id', BodegaController.darDeBajaBodega);

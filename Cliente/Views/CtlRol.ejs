@@ -1,26 +1,19 @@
 
-
-<!-- DataTables CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
-
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css" integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK" crossorigin="anonymous">
-
-<!-- DataTables Bootstrap CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap5.min.css">
-
 <script  type="module" src="/js/ModulosJS/ModuloJSRol.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/Formulario.css">
     
-    <section class="Contenido-Main" id="dynamic-content">
-       <div class="Contenedor_Mostrar">
+    <section class="content">
+
     
+  
+        <div class="row center mb-3 botones_Cart"  >
+            <% if (allowedActions.some(accion => accion.Accion === 'Crear')) { %>
+                <button id="btnCrear" class="btn btn-dark Boton_crearPrincipal" >Crear</button>
+            <% } %>
+        </div>      
         
-    <div class="container-fluid">
-        <button id="btnCrear" class="btn btn-dark ">Crear</button>
-        <div class="row shadow-lg p-3 mb-5">
-            <div class="col">
-                <table id="Tabla" class="table table-striped table-bordered" style="width:100%">
+        <div class="row  p-3">
+            <div class="table-container">
+                <table id="Tabla" class="custom-table" data-allowed-actions='<%- JSON.stringify(allowedActions) %>'>
                 <thead>
                     <tr>
                         <th>CODIGO</th>
@@ -36,27 +29,29 @@
                 </table> 
             </div>
         </div>
-    </div>
+
 
     <!--Modal para CRUD-->
     <div id="modalCRUD" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content" style="width: 500px;">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel"></h5>                
                 </div>
                 <form id="form">    
-                    <div class="modal-body form">                
+                    <div class="modal-body form_pequeno">                
                             <input id="id" hidden>
                             <div class="input-container ">
-                                <input placeholder="" type="text" class="input" id="nombre" >
-                                <label  for=" nombre">Nombre</label>
+                                <input placeholder="" type="text" id="nombre" >
+                                <label  for=" nombre" class="label">Nombre</label>
+                                <div class="underline"></div>
                             </div>
                             <div class="input-container">
-                                <select id="estado" class="input">
+                                <select id="estado" >
                                     <option value="Activo">Activo</option>
                                 </select>
-                                <label for="estado">Estado</label>
+                                <label for="estado" class="label">Estado</label>
+                                <div class="underline"></div>
                             </div>
                          
                             
@@ -71,24 +66,7 @@
     </div>  
 
 
-</div>
+
 
     </section> 
-   <!-- jQuery -->
-<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-
-<!-- Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-
-<!-- Bootstrap JS -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.min.js" integrity="sha384-5h4UG+6GOuV9qXh6HqOLwZMY4mnLPraeTrjT5v07o347pj6IkfuoASuGBhfDsp3d" crossorigin="anonymous"></script>
-
-<!-- DataTables jQuery Plugin -->
-<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-
-<!-- DataTables Bootstrap Plugin -->
-<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap5.min.js"></script>
-
-<!-- SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    
+  

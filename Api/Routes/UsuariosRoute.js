@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Agrupar rutas bajo el prefijo '/api/categorias'
 
-router.get('/api/usuarios/page', authMiddleware.isAuthenticated, UsuarioController.renderUsuarioPage);
+router.get('/api/usuarios/page', authMiddleware.isAuthenticated,authMiddleware.checkAccess, UsuarioController.renderUsuarioPage);
 router.get('/api/usuarios',  UsuarioController.GetUsuarios);
 router.get('/api/usuarios/historial/:id',  UsuarioController.MostrarHistorialLoginUsuario);
 router.post('/api/usuario', UsuarioController.RegistrarUsuario);

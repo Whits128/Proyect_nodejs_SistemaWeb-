@@ -1,149 +1,481 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tu Tienda de Zapatos - Sistema de Facturación</title>
-  <link rel="stylesheet" type="text/css" href="/css/Styles.css">
-  <script src="https://kit.fontawesome.com/2cb25f2c39.js"></script>
-  <!-- Aquí se enlaza el archivo CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdminLTE Style Sidebar</title>
+    <!-- Estilos de AdminLTE -->
+    
+    <!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+ <!-- searchPanes -->
+ <link rel="stylesheet" href="https://cdn.datatables.net/searchpanes/1.0.1/css/searchPanes.dataTables.min.css">
+ <!-- select -->
+ <link href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
+<!--toastr css-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css" integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <!-- Font Awesome (iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+<!-- DataTables Bootstrap CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap5.min.css">
+
+<link rel="stylesheet" type="text/css" href="/css/Formulario.css">
+<link rel="stylesheet" type="text/css" href="/css/DataTable.css">
+<link rel="stylesheet" type="text/css" href="/css/Modal.css">
+    <style>
+        @import '/css/VariablesGlobales.css'; 
+
+        /* Estilo personalizado para abrir desde la izquierda */
+    /* Establece la altura máxima y el scroll solo para aside y content-wrapper */
+    html, body {
+  margin: 0;
+  overflow: hidden;
+}
+    .main-sidebar {
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+
+.content-wrapper {
+  max-height: calc(100vh - 56px); /* Resta la altura de la barra de navegación */
+  overflow-y: auto;
+  background-color: #ffffff;
+}
+.navbar-white {
+background-color: var(--color-3) !important;
+
+}
+.nav-link{
+    color: var(--color-1) !important;
+}
+.dropdown-item{
+    color: var(--color-1) !important;
+}
+.dropdown-menu 
+{
+    background-color: var(--color-5) !important;
+}
+.dropdown-menu :hover{
+    color: var(--color-5) !important;
+}
+
+/* Estilo personalizado para abrir desde la izquierda */
+
+
+
+
+    </style>
 </head>
-<body>
-  <div class="ContenedorPadre-CSS-GRID">
-    <header>
-      <div class="logo-section">
-        <div class="Conteiner-logo">
-          <% if (DataLocal && DataLocal.LogoLocal) { %>
-            <img src="data:image/png;base64,<%= DataLocal.LogoLocal.toString('base64') %>" alt="Logo" class="logo-image">
-          <% } else { %>
-            <img src="/perfil.png" alt="Logo" class="logo-image">
-          <% } %>
-        </div>
-        
-        <div class="local-name">
-          <h1><%= DataLocal.NombreNegocio || 'Nombre del Local' %></h1>
+<body class="control-sidebar-slide-open">
+<!-- Navbar -->
+<nav  class="main-header  navbar navbar-expand navbar-white navbar-light">
+  <!-- Left navbar links -->
+  <ul class="navbar-nav">
+      <li class="nav-item">
+          <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+          <a href="/inicio" class="nav-link">Inicio</a>
+      </li>
+      <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Mas Opciones
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
+              <a class="dropdown-item" href="#">FAQ</a>
+              <a class="dropdown-item" href="#">Support</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Contact</a>
+          </div>
+      </li>
+  </ul>
 
-        </div>
-      </div>
-      <div class="container_notifications">
-        <div class="notifications-section">
-          <button class="button_notifications" onclick="toggleNotifications()">Notificaciones</button>
-          <div id="notification-dropdown" class="notification-dropdown">
-            <div class="notification-header"> <h2>Notificaciones</h2></div>
-            <ul id="notification-list">
-              <!-- Notificaciones se cargarán aquí -->
-            </ul>
+  <!-- Right navbar links -->
+  <ul class="navbar-nav ml-auto">
+    <!-- Sección de Notificaciones -->
+
+      <!-- Sección del Usuario -->
+      <li class="nav-item dropdown">
+          <a class="nav-link" data-toggle="dropdown" href="#">
+              <i class="far fa-user"></i>
+          </a>
+          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+              <span class="dropdown-header">User Section</span>
+              <div class="dropdown-divider"></div>
+           
+              <!-- Enlace para cerrar sesión (logout) -->
+              <a href="/logout" class="dropdown-item">
+                <i class="fas fa-sign-out-alt"></i> Salir
+              </a>
+              
+          </div>
+      </li>
+  </ul>
+</nav>
+
+<!-- /.navbar -->
+  <!-- /.navbar -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <!-- Logo -->
+    <a href="#" class="brand-link">
+      <% if (DataLocal && DataLocal.LogoLocal) { %>
+        <img src="data:image/png;base64,<%= DataLocal.LogoLocal.toString('base64') %>"  alt="AdminLTE Logo" class="img-circle elevation-2"  style="width: 60px; height: 60px; ">
+
+      <% } else { %>
+               <img src="https://adminlte.io/themes/v3/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+
+      <% } %>
+
+        <span class="brand-text font-weight-light"><%= DataLocal.NombreNegocio || 'Nombre del Local' %></span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+    
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+          <div class="image">
+            <% if (!userData) { userData = {} } %>
+            <img src="/perfil.png" class="img-circle elevation-2" alt="User Image" style="width: 50px; height: 50px; margin-top: 10px;">
+          </div>
+          <div class="info">
+            
+            <h1 href="#" class="d-block" id="user-name" style="margin-left: 15px;"><%= userData.Nombres || 'Usuario no autenticado' %></h1>
+            <a id="user-role" style="margin-left: 8px;"><%= userData.NombreRol || 'Rol no definido' %></a>
           </div>
         </div>
-      </div>
-      <div class="user-section" id="user-section">
-        <img src="/perfil.png" alt="Usuario">
-        <% if (typeof userData === 'undefined') { %>
-          <% userData = {} %>
-        <% } %>
-        <span class="user-name" id="user-name"><%= userData.Nombres || 'Usuario no autenticado' %></span>
-        <div id="user-menu" class="user-menu">
-          <ul>
-            <li><a href="#">Perfil</a></li>
-            <li><a href="#">Configuración</a></li>
-            <li><a href="/logout">Salir</a></li>
-          </ul>
-          <div class="arrow-up"></div>
-        </div>
-      </div>
-    </header>
-
-    <aside>
- <!-- Sección del perfil de usuario -->
-<div class="user-profile">
-  <div class="profile-card">
-    <div class="profile-card__img">
-      <img src="/perfil.png" alt="Avatar"> 
-    </div>
-    <div class="profile-card__info">
-      <% if (!userData) { userData = {} } %>
-      
-      <div class="profile-card__title">
-        <h1><%= userData.Nombres || 'Usuario no autenticado' %></h1>
-      </div>
-
-      <% console.log('userData object:', userData); %>
-
-      <div class="profile-card__subtitle">
-        <h3><%= userData.NombreRol || 'Rol no definido' %></h3>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-    
-
-      <!-- Sección del menú -->
-<!-- Contenido de la sección del menú -->
-<div class="menu-section">
-  <ul class="menu">
-    <li>
-      <a href="#"><i class="fas fa-archive"></i>&nbsp; Inventario <i class="fas fa-arrow-right"></i></a>
-      <div class="submenu-container">
-        <ul class="submenu">
-          <li><a href="/api/categorias/page"><i class="fas fa-certificate"></i> Categorías</a></li>
-          <li><a href="/api/movimientos-bodegas/page">Movimientos Bodegas</a></li>
-          <li><a href="/api/producto/page">Productos</a></li>
-          <li><a href="/api/bodega/page">Bodegas</a></li>
-          <li><a href="/api/marcas/page">Marcas</a></li>
-          <li><a href="/api/talla/page">Tallas</a></li>
-          <li><a href="/api/color/page">Color</a></li>
-          <li><a href="/api/materialesZapatos/page">Material Zapatos</a></li>
-        </ul>
-      </div>
-    </li>
-    
-    <li>
-      <a href="/Configuraciones">Configuraciones</a>
-      <div class="submenu-container">
-        <ul class="submenu">
-          <li><a href="/api/configuracionAcceso/page">configuracion Acceso</a></li>
-          <li><a href="/api/configuracion/page">Configuracion</a></li>
-          <li><a href="/api/historial/page">Ver historial</a></li>
-          <li><a href="/api/DatosDebaja/page">Ver Bajas</a></li>
+        
+        
+        <!-- Sidebar Menu -->
+     <!-- Sidebar Menu -->
+     <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+            <!-- Add icons to the links using the .nav-icon class
+                 with font-awesome or any other icon font library -->
+            <li class="nav-item menu-open">
+                
+                <% if (allowedRoutes && allowedRoutes.includes('Inicio')) { %>
+                    <a href="/Inicio" class="nav-link active">
+                        <i class=" nav-icon fas fa-home"></i>    
+                        <p>
+                             Inicio
+                        </p>
+                    </a>
+                   
+                <% } %>
+                
+            </li>
           
-        </ul>
-      </div>
-    </li>
+          <!--inicio menu inventario -->
+            <li class="nav-item">
+               
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-box"></i>
+                    <p>
+                        Inventario
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
 
-    <li>
-      <a href="#">Informes</a>
-      <div class="submenu-container">
-        <ul class="submenu">
-          <li><a href="/api/promociones/page">Promocioned</a></li>
-          <li><a href="/api/Proveedor/page">Proveedor</a></li>
-          <li><a href="/api/empleado/page">Empleado</a></li>
-        </ul>
-      </div>
+              
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <% if (allowedRoutes && allowedRoutes.includes('/api/inventario/page')) { %>
+                            <a href="/api/categorias/page" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Ver Inventario</p>
+                            </a>
+                        <% } %>
+                    </li>
+                    <li class="nav-item">
+                        <% if (allowedRoutes && allowedRoutes.includes('/api/categorias/page')) { %>
+                            <a href="/api/categorias/page" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Categorías</p>
+                            </a>
+                        <% } %>
+                    </li>
+                    <li class="nav-item">
+                        <% if (allowedRoutes && allowedRoutes.includes('/api/producto/page')) { %>
+                            <a href="/api/producto/page" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Productos</p>
+                            </a>
+                        <% } %>
+                    </li>
+                    <% if (allowedRoutes && allowedRoutes.includes('/api/marcas/page')) { %>
+                        <li class="nav-item">
+                          <a href="/api/marcas/page" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Marcas</p>
+                          </a>
+                        </li>
+                      <% } %>
+                      <% if (allowedRoutes && allowedRoutes.includes('/api/talla/page')) { %>
+                        <li class="nav-item">
+                          <a href="/api/talla/page" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Tallas</p>
+                          </a>
+                        </li>
+                      <% } %>
+                      
+                      <% if (allowedRoutes && allowedRoutes.includes('/api/color/page')) { %>
+                        <li class="nav-item">
+                          <a href="/api/color/page" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Color</p>
+                          </a>
+                        </li>
+                      <% } %>
+                      
+                      <% if (allowedRoutes && allowedRoutes.includes('/api/materialesZapatos/page')) { %>
+                        <li class="nav-item">
+                          <a href="/api/materialesZapatos/page" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Material Zapatos</p>
+                          </a>
+                        </li>
+                      <% } %>
+                      
+                </ul>
+            </li><!--fin menu incebtario -->
+
+          <!--Inicio menu compra -->
+<li class="nav-item">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-shopping-cart"></i>
+        <p>
+            Compra
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <% if (allowedRoutes && allowedRoutes.includes('/api/compra/page')) { %>
+            <a href="/api/compra/page" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Registrar Compra</p>
+            </a>
+            <% } %>
+        </li>
+        <li class="nav-item">
+            <% if (allowedRoutes && allowedRoutes.includes('/api/empleado/page')) { %>
+            <a href="/api/empleado/page" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Empleado</p>
+            </a>
+            <% } %>
+        </li>
+        <li class="nav-item">
+            <% if (allowedRoutes && allowedRoutes.includes('/api/Proveedor/page')) { %>
+            <a href="/api/Proveedor/page" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Proveedores</p>
+            </a>
+            <% } %>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Historial de Compras</p>
+            </a>
+        </li>
+    </ul>
+</li>
+<!--fin menu compra -->
+
+<!--inicio menu venta -->
+<li class="nav-item">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-cash-register"></i>
+        <p>
+            Venta
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+       <% if (allowedRoutes && allowedRoutes.includes('/api/venta/page')) { %>
+    <li class="nav-item">
+      <a href="/api/venta/page" class="nav-link">
+        <i class="far fa-circle nav-icon"></i>
+        <p>Registrar Venta</p>
+      </a>
+    </li>
+  <% } %>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Devolucion</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Facturas de Venta</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Clientes</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Historial de Ventas</p>
+            </a>
+        </li>
+    </ul>
+</li><!--fin menu venta -->
+<!--inicio menu reporte -->
+<li class="nav-item">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-chart-bar"></i>
+        <p>
+            Informe
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Informe de Ventas</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Informe de Compras</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Inventario General</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Informe Financiero</p>
+            </a>
+        </li>
+    </ul>
+</li>
+<!--fin menu reporte -->
+
+<li class="nav-item"><!--inicio menu configuracion -->
+
+  <a class="nav-link" href="#">
+      <i class="nav-icon fas fa-cogs"></i> 
+      <p>
+    Configuración
+        <i class="right fas fa-angle-left"></i>
+    </p>
+  </a>
+  <ul class="nav nav-treeview">
+      <li class="nav-item">
+        <% if (allowedRoutes && allowedRoutes.includes('/api/configuracion/page')) { %>
+          <a href="/api/configuracion/page" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Configuración General</p>
+          </a>
+          <% } %>
+      </li>
+      <li class="nav-item">
+        <% if (allowedRoutes && allowedRoutes.includes('/api/usuarios/page')) { %> 
+        <a href="/api/usuarios/page" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Configuración de Usuarios</p>
+          </a>
+          <% } %>
+      </li>
+      <li class="nav-item">
+        <% if (allowedRoutes && allowedRoutes.includes('/api/configuracionAcceso/page')) { %> 
+          <a href="/api/configuracionAcceso/page" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Configuración de Acceso</p>
+          </a>
+          <% } %>
+      </li>
+      <li class="nav-item">
+        <% if (allowedRoutes && allowedRoutes.includes('/api/DatosDebaja/page')) { %> 
+
+        <a href="/api/DatosDebaja/page" class="nav-link">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Dado de Baja</p>
+        </a>
+        <% } %>
     </li>
   </ul>
+</li><!--fin menu configuracion -->
+
+
+        </ul>
+    </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>
+<div class="content-wrapper">
+  <!-- Main content -->
+
+  <section class="content ">
+
+    <h1  id="page-title"><%= pageTitle %></h1> 
+      <!-- Tu contenido específico de la página va aquí -->
+      <%- body %>
+  </section>
+  <!-- /.content -->
 </div>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+ <!-- Agrega el enlace al CDN de Validator.js -->
+ <script src="https://unpkg.com/validator@latest/validator.min.js"></script>
+<!-- AdminLTE -->
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
-    </aside>
+<!-- Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 
-    <main class="Contenido-Main"  id="dynamic-content">
-      <div class="Contenedor_Mostrar">
-        <h1  id="page-title"><%= pageTitle %></h1> 
-      
-        <%-body%>
-      </div>
-     
-    </main>
-  </div>
-<script src="/js/index.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.min.js" integrity="sha384-5h4UG+6GOuV9qXh6HqOLwZMY4mnLPraeTrjT5v07o347pj6IkfuoASuGBhfDsp3d" crossorigin="anonymous"></script>
 
+<!-- DataTables jQuery Plugin -->
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<!-- DataTables Bootstrap Plugin -->
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- DataTables FixedColumns Plugin -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
+
+<!-- Moment.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+<!--toastr JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+   <!-- searchPanes   -->
+   <script src="https://cdn.datatables.net/searchpanes/1.0.1/js/dataTables.searchPanes.min.js"></script>
+   <!-- select -->
+   <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>  
+   
+<!--Scrip para la notificaciones de Devoluciones -->
+<!-- Tu script de notificación -->
+<!--<script src="/js/Notificacion.js"></script>-->
 </body>
-
-
-
 </html>

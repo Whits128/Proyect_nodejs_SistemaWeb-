@@ -1,26 +1,86 @@
 /* Importamos variables globales */
 @import '/css/VariablesGlobales.css';
-.Contenido-Main {
-  margin: 0;  /* Asegura que no haya márgenes que empujen hacia abajo */
-  padding: 0; /* Asegura que no haya relleno que empuje hacia abajo */
-}
-.vista {
-  margin: 0;
-  padding: 0;
-}
+
+
 
 /* Estilos comunes */
  h1, h2, h3, p, span {
   font-family: var(--font-family);
   color: var(--color-1);
 }
+.grid-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding-top: 30px;
+}
+.button {  
+  text-decoration: none;
+  line-height: 1;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 10px 10px 20px rgba(0,0,0,.05);
+  background-color: #fff;
+  color: #121212;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: inline-block;
+  margin: 10px; /* ajusta según sea necesario */
+  width: auto; /* ajusta según el contenido */
+  height: auto; /* ajusta según el contenido */
+}
+
+.button-decor {
+  position: absolute;
+  inset: 0;
+  background-color: var(--clr);
+  transform: translateX(-100%);
+  transition: transform .3s;
+  z-index: 0;
+}
+
+.button-content {
+  display: flex;
+  align-items: center;
+  font-weight: 800;
+  position: relative;
+  overflow: hidden;
+}
+
+.button__icon {
+  width: 48px; /* ajusta según sea necesario */
+  height: 40px; /* ajusta según sea necesario */
+  background-color: var(--clr);
+  display: grid;
+  place-items: center;
+}
+
+.button__text {
+  display: inline-block;
+  transition: color .2s;
+  padding: 2px 1.5rem 2px;
+  padding-left: .75rem;
+  overflow: hidden;
+  white-space: normal;
+  text-overflow: ellipsis;
+  max-width: 400px; /* ajusta según sea necesario */
+}
+
+.button:hover .button__text {
+  color: #fff;
+}
+
+.button:hover .button-decor {
+  transform: translate(0);
+}
 
 /* Contenedor principal */
 .card {
-
-  width: 350px;
+  width: 600px;
   min-height: 350px; /* Cambiado a min-height para que se expanda con el contenido */
-  max-height: 500px; /* Altura máxima con scroll */
+  max-height: 300px; /* Altura máxima con scroll */
   overflow-y: auto; /* Habilitar barra de desplazamiento vertical */
   background: #E8EAEA;
   border-radius: 15px;
@@ -28,6 +88,7 @@
   flex-direction: column;
   transition: all 0.3s; /* Agregado para una transición suave */
 }
+
 
 /* Header */
 .header {
@@ -80,7 +141,7 @@
   flex-grow: 1;
   height: 45px;
   border-radius: 5px;
-  background-color: var(--color-8);
+  background-color: var(--color-8); /* Ajusta el color según tu paleta */
 }
 
 /* Nombre del usuario */
@@ -88,15 +149,19 @@
   font-weight: 800;
 }
 
-/* Botón de seguir */
+/* Botón de Activar */
 .follow {
+  padding: 8px 16px;
+  background-color: var(--color-primary); /* Ajusta el color según tu paleta */
+  color: #fff;
   border: none;
-  border-radius: 25px;
-  background-color: #0f1113;
-  color: white;
-  padding: 8px 15px;
-  font-weight: 700;
-  margin-right: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.follow:hover {
+  background-color: var(--color-primary-dark); /* Ajusta el color según tu paleta */
 }
 
 /* Hover sobre el usuario */

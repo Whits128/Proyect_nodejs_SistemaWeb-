@@ -1,0 +1,317 @@
+
+<link rel="stylesheet" type="text/css" href="/css/VistaVenta.css">
+
+
+
+<section class="content" >
+   
+    
+    
+      <!-- Contenedor para la Lista de Compras -->
+      <div id="vista1" class="vista">
+   
+      
+        <div class="row center mb-3 botones_Cart"  >
+            <button id="btnRegistrarCompra" class="btn btn-success btn-margin" style="height: 50px;width: 300px; margin-top: 15px; margin-left: 10px;">Registrar Nueva Venta</button>
+        </div>
+        <div class="row  p-3 ">
+            <div class="table-container">
+                <table id="Tabla_Fact" class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Código </th>
+                        <th>Código de Venta</th>
+                        <th>Fecha de venta</th>
+                        <th>Total</th>
+                        <th>Estado</th>     
+                        <th class="text-center">ACCIONES</th>                      
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                </table> 
+            </div>
+        </div>
+   
+</div>     <!-- fin  Contenedor para la Lista de Compras-->
+
+
+  
+       <div id="vista2" class="vista">
+        <div class="ContenedorPadre-CSS-GRID-Venta" >
+            <!-- Contenido para el Registro de Compra -->
+            <div class="row seccion_IB botones_Cart" style="width: 880px;" >
+                <button id="btnInventarioSeleccionado" class="btn btn-success btn-block" style="width:10%; height: 50px; margin-left: 20px; margin-top: 10px;">
+                    <i class="fas fa-plus-circle"></i> 
+                </button>
+            
+                <!-- Botón para realizar la compra -->
+                <button id="btnRealizarVenta" class="btn btn-primary btn-block" style="width:20%; height: 50px; margin-left: 20px; margin-top: 10px;">
+                    <i class="fas fa-check"></i> Realizar Venta
+                </button>
+            
+                <!-- Botón para cancelar -->
+                <button id="btnCancelarVenta" class="btn btn-danger btn-block" style="width:20%; height: 50px; margin-left: 20px; margin-top: 10px;">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+            
+                <!-- Elementos para mostrar monto y valor -->
+                <div   style="width:20%; height: 50px; margin-left: 20px; margin-top: 10px;color: black;">
+                    <div id="monto"> Monto Nota Credito: </div>
+                </div>
+                <div  style="width:20%; height: 50px;  margin-top: 10px; color: black;">
+                    <div id="valorNotacredito">
+                    C$ 0
+                    </div>
+                </div>
+            </div>
+            
+           
+                       <div class=" mt-2 contenedor-hijo-1" >  
+                           <form class="form-calculo">
+                               <div class="form-header">
+                                 <div class="title-calculo">Calculos</div>
+                                 <div>
+                                   <span style="margin-right: 10px;">Total:</span>
+                                   <span class="price-calculo final" id="totalTotal"></span>
+                                 </div>
+                               </div>
+                           
+                               <div class="master-container">
+                                 <div class="card-calculo payment">
+                                   <div class="payment-details">
+                                     <div class="input-container">
+                                       <input type="text" id="codigoVenta" required>
+                                       <label for="codigoVenta" class="label">Código de Venta</label>
+                                       <div class="underline"></div>
+                                     </div>
+                           
+                                     <div class="input-container">
+                                       <input type="date" id="fechaventa" required>
+                                       <label for="fechaventa" class="label">Fecha de Venta</label>
+                                       <div class="underline"></div>
+                                     </div>
+                           
+                                     <div class="input-container">
+                                       <% if (user) { %>
+                                         <input id="idEmpleado" value="<%= user.ID_Empleado %>" hidden>
+                                         <input type="text" id="empleado" required value="<%= user.NombreEmpleado %>">
+                                         <label for="empleado" class="label" >Empleado</label>
+                                         <div class="underline"></div>
+                                       <% } %>
+                                     </div>
+                           
+                                   
+                                   </div>
+                                 </div>
+                           
+                                 <div class="card-calculo note-code">
+                                   <label class="title">Nota Credito</label>
+                                   <input type="text" placeholder="Nota Credito" id="Nota_credito" class="input_field">
+                                 </div>
+                               </div>
+                           
+                               <div class="card checkout">
+                                   <label class="title">Calculos</label>
+                                   <div class="details">
+                                     <span>Subtotal:</span>
+                                     <span id="Subtotal_Calculo">0.0 C$</span>
+                                     <span>IGV(15%):</span>
+                                     <span id="Iva_Calculo">0.0 C$</span>
+                                     <span >Total:</span>
+                                     <span id="totalTotal_Calculo">0.0 C$</span>
+                                   </div>
+                                 </div>
+                               
+                             </form>
+                       
+           
+           
+                       </div>
+              
+                       <div class="row  p-3   carrito"  >
+    
+                            <div class="table-container">
+                                   <table id="Tabladetalle"class="custom-table" >
+                                   <thead>
+                                       <tr>
+                                           <th>condigo_Inventario</th>
+                                           <th>condigo</th>
+                                           <th>Producto</th>
+                                           <th>cantidad </th>
+                                           <th>P.Venta</th> 
+                                           <th>Descuento</th> 
+                                           <th>Subtotal</th>
+                                           <th>Iva</th>
+                                           <th >Total</th>
+                                           <th class="text-center">ACCIONES</th>                      
+                                       </tr>
+                                   </thead>
+                                   <tbody>
+                                   </tbody>
+                                   </table> 
+                           
+                               </div>
+                           </div>
+                       </div>   
+    </div>
+        
+ 
+
+        
+  
+
+
+
+
+
+<!-- =============================================================================================================================
+MODAL LISTADO DE Inventario 
+===============================================================================================================================-->
+<div class="modal fade" id="mdlListadoInventario" tabindex="-1">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-gray py-1">
+                <h5 class="modal-title">Listado de Inventario</h5>
+                <button type="button" class="btn btn-danger text-white border-0 fs-5" id="btncerrarmodalInventario">
+                    <i class="far fa-times-circle"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                
+                <div class="contenedor_Table">
+                    <!-- LISTADO DE inventario -->
+                    <table id="tbl_Inventario" class="table table-striped table-bordered" >
+                        <thead>
+                            <tr>
+                        <th>#</th>
+                        <th>BODEGA</th>
+                        <th>ID_producto</th>
+                        <th>Producto</th>
+                        <th>Marca</th>
+                        <th>Talla</th>
+                        <th>Colores</th>
+                        <th>Ma.Zapatos</th>
+                        <th>P.Venta</th>
+                        <th>U.Existencia</th>
+                        <th>Estado</th>          
+                        <th class="text-center">ACCIONES</th>   
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Table body content goes here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /. End -->
+
+
+
+
+<!-- =============================================================================================================================
+MODAL DetalleVenta
+===============================================================================================================================-->
+<div class="modal fade" id="mdlDetallecompra"  tabindex="-1">
+
+    <div class="modal-dialog modal-xl" role="document">
+
+        <!-- contenido del modal -->
+        <div class="modal-content">
+
+            <!-- cabecera del modal -->
+            <div class="modal-header bg-gray py-1">
+
+                <h5 class="modal-title">Detalle del producto</h5>
+
+                <button type="button" class="btn btn-danger text-white border-0 fs-5"  id="btnDetallecompra">
+                    <i class="far fa-times-circle"></i>
+                </button>
+
+            </div>
+
+            <!-- cuerpo del modal -->
+            <div class="modal-body">
+
+                <div class="row">
+
+                    <div class="col-12">
+                        <!--LISTADO DE PRODUCTOS -->
+                        <form id="formvaloress" class="form_pequeno">
+                            <!-- Campos del formulario -->
+                        
+                         <!---Seccion de selecion Marca imput -->
+                        
+                         <div class="input-container ">
+                            <input id="idMarcapro" hidden>
+                            <!-- Input para mostrar la marca seleccionado -->
+                            <input type="text"  id="marcapro" class="input"   >
+                            <label for="Marcar" class="label">Marca</label>
+                            <div class="underline"></div>
+                        </div>
+                            <!--end Seccion de selecion Marca imput-->
+                            
+                      <!---Seccion de selecion Color imput -->
+                    
+                      <div class="input-container ">
+                        <input id="idColorpro" hidden>
+                        <!-- Input para mostrar la Color seleccionado -->
+                        <input type="text"  id="colorpro" class="input"   >
+                        <label for="colorpro" class="label">Color:</label>
+                        <div class="underline"></div>
+                    </div>
+                        <!--end Seccion de selecion Color imput-->
+                        
+                  <!---Seccion de selecion Talla imput -->
+                    
+                  <div class="input-container ">
+                    <input id="idTallapro" hidden>
+                    <!-- Input para mostrar la Talla seleccionado -->
+                    <input type="text"  id="tallapro" class="input"   >
+                    <label for="tallapro" class="label">TaLLa:</label>
+                    <div class="underline"></div>
+                </div>
+                    <!--end Seccion de selecion Talla imput-->
+                
+                  <!---Seccion de selecion Material imput -->
+                
+
+
+                  <div class="input-container ">
+                    <input id="idMaterialpro" hidden>
+                    <!-- Input para mostrar la Material seleccionado -->
+                    <input type="text"  id="materialpro" class="input"   >
+                    <label for="materialpro" class="label">Material:</label>
+                    <div class="underline"></div>
+                </div>
+                    <!--end Seccion de selecion Material imput-->
+
+
+
+                
+                
+                         <!--end Seccion Iva imput -->
+                                      </form>
+                    </div>
+
+                 </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- /. End -->   
+ </section> 
+
+<!-- Otros scripts... -->
+<script type="module" src="/js/ModulosJS/ModuloJSVentas.js"></script>

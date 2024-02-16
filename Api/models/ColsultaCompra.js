@@ -5,7 +5,21 @@ export const mostrarCompra = async () => {
     const pool = await getConnection();
     const result = await pool
       .request()
-      .query('SELECT ID_Compra as Codigo, CodigoCompra, FechaCompra, Total, EstadoCompra FROM Compras');
+      .query(`SELECT 
+      C.ID_Compra AS Codigo,
+      C.CodigoCompra,
+      C.FechaCompra,
+      C.Total AS TotalCompra,
+      C.EstadoCompra,
+      C.Total,
+      P.Nombre AS NombreProveedor
+  
+  FROM 
+      Compras C
+  JOIN 
+      DetalleCompra DC ON C.CodigoCompra = DC.CodigoCompra
+  JOIN 
+      Proveedores P ON DC.ID_Proveedor = P.ID_Proveedor;`);
     return result.recordset;
   } catch (error) {
     throw new Error(`Error al obtener las compras: ${error.message}`);

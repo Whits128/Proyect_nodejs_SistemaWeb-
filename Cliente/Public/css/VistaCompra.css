@@ -1,62 +1,90 @@
 /*Importamos variables globales*/
 @import '/css/VariablesGlobales.css'; 
 
-
-
-
-
-
-
-
+#formvalores {
+    display: flex !important;
+    flex-direction: row !important; /* Organiza los elementos en fila */
+    flex-wrap: wrap !important; /* Permite que los elementos se envuelvan si no caben en una sola fila */
+    gap: 60px !important; /* Espacio entre elementos */
+    margin-top:10px !important;
+   align-items: center !important;
+}
+#Tabladetalle tbody td span {
+    color: #333 !important; /* Color del texto */
+    font-weight: bold; /* Establece el texto en negrita */
+  }
+  
+  #Tabladetalle tbody td input{
+    color: #333 !important; /* Color del texto */
+    font-weight: bold; /* Establece el texto en negrita */
+  }
+   
+/*css para los bonones mayormento los de crear en las vistas*/
+.Boton_Select{
+width: 80px;
+height: 50px; 
+margin-top:15px;
+margin-left: 10px;
+}
+.Boton_Select_models{
+    display: flex;
+    align-items: center;
+    font-family: inherit;
+    font-weight: 100;
+    font-size: 6px;
+    padding: 0.7em 1.4em 0.7em 1.1em;
+    color: white;
+    background: #ad5389;
+    background: linear-gradient(0deg, rgba(20,167,62,1) 0%, rgba(102,247,113,1) 100%);
+    border: none;
+    box-shadow: 0 0.7em 1.5em -0.5em #14a73e98;
+    letter-spacing: 0.05em;
+    border-radius: 20em;
+    width: 130px;
+    margin-top: 2px;
+}
+.Boton_Select_models svg {
+    margin-right: 6px;
+  }
+.Boton_Select_models span{
+    display: flex;
+ justify-content: center;
+ align-items: center;
+ color: #fff;
+ font-weight: 200;
+}
+.Boton_Select_models :hover {
+    box-shadow: 0 0.5em 1.5em -0.5em #14a73e98;
+  }
 
 
 
 .vista {
     display: none;
 }
-/* Estilos generales para el formulario */
-/* Estilos del modal */
-div.dataTables_wrapper div.dataTables_length select {
-    width: 50px; 
-    display: inline-block;
-}
-.modal-dialog {
-    /* Cambia el tamaño del modal según tus necesidades */
-    max-width: 60%; /* Puedes ajustar el valor según sea necesario */
-}
-.modal-content
-{
-    height: 50%;
-}
 
-/* Estilos del encabezado del modal */
-.modal-header {
-    background-color: var(--color-8);
-    color:  var(--color-1);
-    padding: 10px;
+
+
+
+/* Estilos de modales */
+
+
+#modalCRUDP .modal-content {
+    width: 600px;
+}
+#modalCRUDM .modal-content {
+    width: 560px;
+}
+#modalCRUDT .modal-content {
+    width: 560px;
+}
+#modalCRUDC  .modal-content {
+    width: 560px;
 }
 
-
-
-/* Estilos del cuerpo del modal */
-.contenedor_Table{
-
-height: 60%;
-border-radius: 8px;
-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px; /* Espaciado interno del contenedor padre */
+#modalCRUDB .modal-content {
+    width: 560px;
 }
-
-/* Estilos de la tabla */
-
-
-
-/* Estilos de las celdas de la tabla DataTables */
-.table.dataTable th,
-.table.dataTable td {
-    text-align: center; /* Alinea el texto al centro según sea necesario */
-}
-
 /* Estilos del encabezado de la tabla DataTables */
 
 
@@ -86,47 +114,27 @@ box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     justify-content: center; /* Distribuye los hijos en ambos extremos del contenedor padre */
+    align-items: center;
     width: 100%; /* Ancho del contenedor padre, puedes ajustarlo según tus necesidades */
     gap: 10px; /* Espacio entre elementos */
     border: 1px solid #ccc; /* Borde para visualizar el contenedor */
     padding: 20px; /* Espaciado interno del contenedor padre */
+    background-color: var(--color-2);
   }
 
    /* Estilos para los contenedores hijos */
    .contenedor-hijo {
+    
     flex: 1; /* Ocupa todo el espacio disponible en la dirección principal (horizontal en este caso) */
-    padding: 20px; /* Espaciado interno del contenedor hijo */
+    padding: 25px; /* Espaciado interno del contenedor hijo */
     border: 1px solid #ddd; /* Borde para visualizar los contenedores hijos */
+    background-color: var(--color-5);
   }
   /*Botones formulario*/
-    /* Estilos para los botones */
-    .BotonesForm {
-        display: flex;
-        justify-content: center;
-     
-    }
-  
-    .Botones {
-        margin-bottom: 20px;
-        font-size: 16px;
-        background-color: #4CAF50; /* Color de fondo verde, puedes cambiarlo según tus preferencias */
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
+   
+
     
-    .Botones:hover {
-        background-color: #45a049; /* Cambiar el color de fondo al pasar el ratón sobre el botón */
-    }
-    
-    #btnCancelar {
-        background-color: #f44336; /* Color de fondo rojo para el botón de cancelar, puedes cambiarlo según tus preferencias */
-    }
-      .black-text {
-        color: black !important;
-    }
+   
 
 /* Estilo personalizado para el tamaño de la alerta */
 .tamanio-alerta {
@@ -140,106 +148,59 @@ box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-left: 0 !important; /* Puedes ajustar este valor según tus necesidades */
 }
 
+.TituloHijos {
+    background-color: var(--color-2) !important;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    text-align: center; /* Alinea el texto al centro si es necesario */
+}
+.TituloHijos h2{
+    color: var(--color-4) !important;
+    font-size: 20px;
+}
 
 
+/* CSS para el formulario general */
+#formvalores .input-container {
+    position: relative;
+    margin: 1em 0;
+    max-width: 190px;
+   
+}
 
-.TituloHijos{
-        background-color: #f0f0f0;
-        padding: 10px;
-        margin-bottom: 10px;
-      }
-      .form {
-        display: flex;
-        flex-direction: row; /* Organiza los elementos en fila */
-        flex-wrap: wrap; /* Permite que los elementos se envuelvan si no caben en una sola fila */
-        gap: 10px; /* Espacio entre elementos */
-    }
-    .form_pequeno {
-        display: flex;
-        flex-direction: column; /* Cambia la dirección para organizar los elementos en columna */
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-    .form_grande {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-        padding-top: 30px;
-    }
-    
-    /* Otros estilos para los elementos del formulario */
-    
-    .input-container {
-        position: relative;
-        margin-bottom: 20px;
-    }
-    
-    .input-container input,
-    .input-container textarea,
-    .input-container select {
-        width: 100%;
-        padding: 10px;
-        font-family: var(--font-family);
-        background-color: var(--color-3);
-        border: 1px solid var(--color-1);
-        color: var(--color-11);
-        border-radius: 5px;
-        resize: vertical;
-        transition: border-color var(--color-3), box-shadow 0.2s;
-    }
-    
-    .input-container input[type="date"] + label,
-    .input-container input[type="file"] + label {
-        top: -16px !important;
-        font-size: 16px !important;
-        border-radius: 10px !important;
-        color: var(--color-2) !important;
-        background-color: var(--color-8) !important;
-        padding: 0 5px !important;
-    }
-    
-    .input-container label {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        display: flex;
-        color: var(--color-10);
-        justify-content: center;
-        pointer-events: none;
-        transition: 0.2s;
-        transform-origin: left;
-        padding: 0 5px;
-        z-index: 1;
-    }
-    
-    .input-container input:focus + label,
-    .input-container select:focus + label,
-    .input-container input:valid + label,
-    .input-container select:valid + label,
-    .input-container textarea:focus + label,
-    .input-container textarea:valid + label,
-    .input-container input:read-only + label {
-        top: -16px;
-        font-family: var(--font-family);
-        font-size: 16px;
-        border-radius: 10px;
-        color: var(--color-2);
-        background-color: var(--color-8);
-        padding: 0 5px;
-    }
-    
-    /* Estilo especial para el select cuando tiene el foco */
-    select:focus + label {
-        top: -16px;
-    }
-    table {
-        border-collapse: collapse;
-        width: 100%;
-     }
-     
-     th, td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
-     }
-     
+#formvalores .input-container label {
+    position: absolute;
+    top: -1em;
+    left: 0;
+    font-size: 100%;
+    background-color: var(--color-5);
+}
+
+#formvalores .input-container input[type="text"],
+#formvalores .input-container input[type="number"],
+#formvalores .input-container input[type="password"],
+#formvalores .input-container input[type="email"],
+#formvalores .input-container input[type="date"],
+#formvalores .input-container select,
+#formvalores .input-container textarea {
+    font-size: 100%;
+    padding: 1em;
+    outline: none;
+    border: 2px solid var(--color-2);
+    background-color: transparent;
+    border-radius: 20px;
+    width: 100%;
+    color: var(--color-1);
+}
+
+#formvalores .input-container input:focus,
+#formvalores .input-container input:valid,
+#formvalores .input-container select:focus,
+#formvalores .input-container select:valid,
+#formvalores .input-container textarea:focus,
+#formvalores .input-container textarea:valid {
+    background-color: var(--color-5);
+}

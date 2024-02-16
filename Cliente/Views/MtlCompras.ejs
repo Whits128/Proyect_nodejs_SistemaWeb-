@@ -1,15 +1,5 @@
-<!-- DataTables CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
-
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css" integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK" crossorigin="anonymous">
-
-<!-- DataTables Bootstrap CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap5.min.css">
 
 <link rel="stylesheet" type="text/css" href="/css/VistaCompra.css">
-
-<title>Tabla de Compras</title>
 <style>
     /* Estilos adicionales */
  
@@ -22,39 +12,32 @@
         margin-top: 30px;
     }
 
-    h2 {
-        color: #007bff;
-    }
-
-    .btn-margin {
-        margin-right: 10px;
-    }
+   
 
    
 </style>
 
 
-<section class="Contenido-Main" id="dynamic-content">
+<section  class="content">
    
     
     
       <!-- Contenedor para la Lista de Compras -->
       <div id="vista1" class="vista">
     <div class="container mt-5">
-        <h2 class="mb-4">Tabla de Compras</h2>
-        <div class="mb-3">
-            <button id="btnListaCompras" class="btn btn-primary btn-margin">Lista de Compras</button>
-            <button id="btnRegistrarCompra" class="btn btn-success btn-margin">Registrar Nueva Compra</button>
-            <button id="btnExportarExcel" class="btn btn-success btn-margin">Exportar a Excel</button>
-            <button id="btnExportarPDF" class="btn btn-danger btn-margin">Exportar a PDF</button>
+        <div  class="row center mb-3 botones_Cart"  >
+    
+            <button id="btnRegistrarCompra"  class=" btn btn-success btn-margin" style="width: 300px; height: 60px; margin-top: 10px; margin-left: 5px;">Registrar Nueva Compra</button>
+           
         </div>
-        <div class="row shadow-lg p-3 mb-5">
-            <div class="col">
-                <table id="Tabla_Fact" class="table table-striped table-bordered" style="width:100%">
+        <div class="row  p-3 ">
+            <div class="table-container">
+                <table id="Tabla_Fact" class="custom-table" data-allowed-actions='<%- JSON.stringify(allowedActions) %>'>
                 <thead>
                     <tr>
                         <th>ID Compra</th>
                         <th>Código de Compra</th>
+                        <th>Proveedor</th>
                         <th>Fecha de Compra</th>
                         <th>Total</th>
                         <th>Estado</th>     
@@ -78,66 +61,78 @@
         
         <div class="contenedor-hijo">
             <div class="TituloHijos">
-                <h2>Título del Contenedor 1</h2>
+                <h2>Selección de Elementos</h2>
               </div>
           <!-- Formulario para el Registro de Compra -->
 
         <form id="formDetalle" class="form">
       <!-- Campos del formulario -->
        
-        <!---Seccion de selecion  -->
-        <!--Producto-->
-      <div class="input-container ">
-      <button id="btnSeleccionarProducto" class="btn btn-primary">Seleccionar Producto</button>
-        </div>
-<!--end producto -->
-  <!--Marca-->
-<div class="input-container ">
-    <button id="btnmarcaSeleccionado" class="btn btn-primary" >Seleccionar Marca</button>
+   
+         <!-- Botón para Seleccionar Producto -->
+    <div class="input-container">
+        <button id="btnSeleccionarProducto" class="btn btn-primary">
+            <i class="fas fa-shopping-cart"></i> Seleccionar Producto
+        </button>
+    </div>
 
-</div> 
+<!--end producto -->
+  <!-- Botón para Seleccionar Marca -->
+  <div class="input-container">
+    <button id="btnmarcaSeleccionado" class="btn btn-primary">
+        <i class="fas fa-tags"></i> Seleccionar Marca
+    </button>
+</div>
 <!--end Marca -->
   <!--Talla-->
-  <div class="input-container ">
-    <button id="btntallaSeleccionado" class="btn btn-primary" >Seleccionar Talla</button>
+  <div class="input-container">
+    <button id="btntallaSeleccionado" class="btn btn-primary">
+        <i class="fas fa-shoe-prints"></i> Seleccionar Talla
+    </button>
+</div>
 
-</div> 
 <!--end Tallas -->
   <!--Colores-->
-  <div class="input-container ">
-    <button id="btncolorSeleccionado" class="btn btn-primary" >Seleccionar Color</button>
+  <div class="input-container">
+    <button id="btncolorSeleccionado" class="btn btn-primary">
+        <i class="fas fa-palette"></i> Seleccionar Color
+    </button>
+</div>
 
-</div> 
 <!--end Colores -->
   <!--MaterialZapatos-->
-  <div class="input-container ">
-    <button id="btnMaterialZapatosSeleccionado" class="btn btn-primary" >Seleccionar Material</button>
-
-</div> 
- <!--empleado-->
- <div class="input-container ">
-    <button id="btnInventarioSeleccionado" class="btn btn-primary" >Seleccionar Inventario</button>
-
-</div> 
-<!--end Empleado -->
-  <!--proveedor-->
-  <div class="input-container ">
-    <button id="btnproveedorSeleccionado" class="btn btn-primary" >Seleccionar Proveedor</button>
+  <div class="input-container">
+    <button id="btnMaterialZapatosSeleccionado" class="btn btn-primary">
+        <i class="fas fa-scroll"></i> Seleccionar Material
+    </button>
 </div>
+
+ <!--Inventario-->
+ <div class="input-container">
+    <button id="btnInventarioSeleccionado" class="btn btn-primary">
+        <i class="fas fa-warehouse"></i> Seleccionar Inventario
+    </button>
+</div>
+
+<!--end Inventario -->
+  <!--proveedor-->
+  <div class="input-container">
+    <button id="btnproveedorSeleccionado" class="btn btn-primary">
+        <i class="fas fa-user-tie"></i> Seleccionar Proveedor
+    </button>
+</div>
+
 <!--end Proveedor -->
   <!--Bodega-->
-<div class="input-container ">
-    <button id="btnBodegaSeleccionado" class="btn btn-primary" >Seleccionar Bodega</button>
-</div> 
+  <div class="input-container">
+    <button id="btnBodegaSeleccionado" class="btn btn-primary">
+        <i class="fas fa-warehouse"></i> Seleccionar Bodega
+    </button>
+</div>
+
   <!--Bodega-->
 <!--end Seccion seleccion -->
-                    <!-- Botón para enviar el formulario -->
-                    <div class="BotonesForm">
-                      
-                    <button type="submit" id="btnRegistrarCompraFact" class="Botones">Guardar Compra</button>
                   
-          
-                </div>
                 </form>
                
             </div> <!-- Fin contenedor hijo 1 datos de selecion -->
@@ -145,15 +140,16 @@
             <div class="contenedor-hijo">
                 <!-- Formulario para el Registro de Compra -->
    
-              <form id="formvalores" class="form">
+              <form id="formvalores" class="form_grande">
             <!-- Campos del formulario -->
         
 
             <div class="input-container ">
                 <input id="idproducto" hidden>
                 <!-- Input para mostrar la Producto seleccionado -->
-                <input type="text"  id="nombreProducto" class="input"  readonly >
-                <label for="nombreProducto">Producto:</label>
+                <input type="text"  id="nombreProducto" readonly >
+                <label for="nombreProducto" >Producto:</label>
+     
             </div>
 
          <!---Seccion de selecion Marca imput -->
@@ -161,8 +157,9 @@
          <div class="input-container ">
             <input id="idMarca" hidden>
             <!-- Input para mostrar la marca seleccionado -->
-            <input type="text"  id="marca" class="input"  readonly >
+            <input type="text"  id="marca"   readonly >
             <label for="marca">Marca:</label>
+          
         </div>
             <!--end Seccion de selecion Marca imput-->
             
@@ -171,8 +168,9 @@
       <div class="input-container ">
         <input id="idColor" hidden>
         <!-- Input para mostrar la Color seleccionado -->
-        <input type="text"  id="color" class="input"   readonly>
+        <input type="text"  id="color"   readonly>
         <label for="color">Color:</label>
+     
     </div>
         <!--end Seccion de selecion Color imput-->
         
@@ -181,8 +179,9 @@
   <div class="input-container ">
     <input id="idTalla" hidden>
     <!-- Input para mostrar la Talla seleccionado -->
-    <input type="text"  id="talla" class="input"   readonly>
+    <input type="text"  id="talla"   readonly>
     <label for="talla">TaLLa:</label>
+
 </div>
     <!--end Seccion de selecion Talla imput-->
 
@@ -191,8 +190,9 @@
   <div class="input-container ">
     <input id="idMaterial" hidden>
     <!-- Input para mostrar la Material seleccionado -->
-    <input type="text"  id="material" class="input"   readonly>
-    <label for="material">Material:</label>
+    <input type="text"  id="material"   readonly>
+    <label for="material" >Material:</label>
+
 </div>
     <!--end Seccion de selecion Material imput-->
 
@@ -201,8 +201,9 @@
 <div class="input-container ">
     <input id="idProveedor" hidden>
     <!-- Input para mostrar el proveedor seleccionado -->
-    <input type="text"  id="nombreProveedor" class="input"   readonly>
-    <label for="nombreProveedor">Proveedor:</label>
+    <input type="text"  id="nombreProveedor"   readonly>
+    <label for="nombreProveedor" >Proveedor:</label>
+
 
 </div>
 
@@ -216,8 +217,9 @@
         
     <input id="idEmpleado" value="<%= user.ID_Empleado %>" hidden>
     <!-- Input para mostrar el empleado seleccionado -->
-    <input type="text"  class="input" id="Empeleado" value="<%= user.NombreEmpleado %>"  readonly>
+    <input type="text"  id="Empeleado" value="<%= user.NombreEmpleado %>"  readonly>
     <label for="idEmpleado" >Empleado:</label>
+  
 </div>
 <% } %>
 <!--end Seccion de selecion Empleado imput -->
@@ -226,16 +228,18 @@
 <!---Seccion de Ingreso de  Condicompra imput -->
 <div class="input-container ">
     <!-- Input para mostrar el CondigoCompra  -->
-    <input type="text"  class="input" id="codigoCompra" >
-    <label for="codigoCompra">Codigo Compra:</label>
+    <input type="text"   id="codigoCompra" >
+    <label for="codigoCompra" >Codigo Compra:</label>
+    
 </div>
 
 <!--end Seccion de Ingreso de  fechaCompra imput-->
 
 <!---Seccion de Ingreso de  Condicompra imput -->
 <div class="input-container ">
-    <input type="date" class="input" id="fechaCompra" >
-    <label  for="fechaCompra">Fecha de Compra</label>
+    <input type="date" id="fechaCompra" >
+    <label  for="fechaCompra" >Fecha de Compra</label>
+
 </div>
 <!--end Seccion de Ingreso de  fechaCompra imput-->
 
@@ -243,46 +247,72 @@
 <div class="input-container">
 <input id="idbodega" hidden>
 <!-- Input para mostrar el Nombre de la bodega seleccionada -->
-<input type="text"  id="nombrebodega" class="input"   readonly>
-<label for="nombrebodega">Bodega:</label>
+<input type="text"  id="nombrebodega"    readonly>
+<label for="nombrebodega" >Bodega:</label>
+
 </div>
 <!--end Seccion de selecion Bodega imput -->
 
 
       <!---Seccion de Subtotal imput -->
-          <div class="input-container">
-            <input type="number" class="input " id="Subtotal" readonly>
-            <label for="Subtotal" >Subtotal:</label>
+         
+        <div class="input-container ">
+            <input type="number"   id="Subtotal"  readonly  >
+            <label  >Subtotal:</label>
         </div>
+        
         <!--end Seccion Subtotal imput -->
+          <!---Seccion de Iva imput -->
+          
+      
+        <div class="input-container ">
+       
+            <input type="number"   id="Iva" readonly >
+            <label  >IVA:</label>
+        
+        </div>
+        
+         <!--end Seccion Iva imput -->
 
           <!---Seccion de Total imput -->
-        <div class="input-container">
-            <input type="number" class="input total-input" id="Total"  readonly>
-            <label for="Total">Total:</label>
+        <div class="input-container ">
+          
+            <input type="number"   id="Total" readonly>
+            <label  >Total:</label>
+ 
         </div>
                 <!--end Seccion Total imput -->
                 
-          <!---Seccion de Total imput -->
-        <div class="input-container ">
-            
-            <!---Seccion de Iva imput -->
-            <input type="number"  class="input"  id="Iva" readonly>
-            <label for="Iva" >IVA:</label>
-        </div>
-         <!--end Seccion Iva imput -->
 
         
                   
           
         
                       </form>
-                      <div class="BotonesForm ">
-                        <button  id="btnDetalleCompras" class="Botones">Guardar DetalleCompra</button>
-                 
-                        <button  id="btnGuardarCompracompleta" class="Botones">Guardar Completa</button>
-                        <button  id="btnCancelar" class="Botones ">Cancelar </button>
-                      </div>
+                      <div class="row" style="box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); border-radius: 8px; height: 100px; margin-top: 10px; background-color: #fff;">
+                      
+                        
+                        <button id="btnRegistrarCompraFact" class="btn btn-success btn-block" style="width:180px; height: 50px; margin-left: 20px; margin-top: 20px; background-color: #28a745; border-color: #28a745;">
+                            <i class="fas fa-save"></i>  Registrar Compra
+                        </button>
+                        <button id="btnDetalleCompras" class="btn btn-success btn-block" style="width:170px; height: 50px; margin-left: 20px; margin-top: 20px; background-color: #28a745; border-color: #28a745;">
+                           <i class="fas fa-shopping-cart"></i> Guardar Carrito
+                        </button>
+                        <button id="btnGuardarCompracompleta" class="btn btn-success btn-block" style="width:170px; height: 50px; margin-left: 20px; margin-top: 20px; background-color: #28a745; border-color: #28a745;">
+                            <i class="fas fa-save"></i> Guardar Compra
+                        </button>
+                        <button id="btnCancelar" class="btn btn-danger btn-block" style="width:20%; height: 50px; margin-left: 20px; margin-top: 20px;">
+                            <i class="fas fa-chevron-circle-left" style="color: #fff;"></i>  Cancelar
+                        </button>
+                        <!-- Botón de Información -->
+<button class="btn btn-info info-btn" style="width:50px; height: 50px; margin-top:20px; margin-left: 20px;" data-toggle="modal" data-target="#infoModal">
+    <i class="fas fa-info-circle"></i>
+</button>
+                    </div>
+                    
+                    
+                     
+                    
                    
                   </div> <!-- Fin contenedor hijo 2 datos de calculo -->
             </div> <!-- Fin contenedor padre -->
@@ -293,9 +323,9 @@
 
 
         <div class="container mt-5">
-        <div class="row shadow-lg p-3 mb-5">
-            <div class="col">
-                <table id="Tabladetalle" class="table table-striped table-bordered"  >
+        <div class="row">
+            <div class="table-container">
+                <table id="Tabladetalle" class="custom-table"  >
                 <thead>
                     <tr>
                         <th>condigo</th>
@@ -320,6 +350,30 @@
     </div><!-- fin  Contenedor para el Registro de Compra-->
 
 
+    
+    <!-- Modal para mostrar información adicional -->
+    <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="infoModalLabel">Información Detallada de los Botones</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- Aquí puedes colocar la información detallada de los botones -->
+              <p>Descripción de Registrar Compra: Este botón permite...</p>
+              <p>Descripción de Guardar Carrito: Almacena los productos seleccionados al carrito...</p>
+              <p>Descripción de Guardar Compra: Guarda la compra actual con toda la información...</p>
+              <p>Descripción de Cancelar: Cancela el proceso actual de compra o registro...</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
 <!-- =============================================================================================================================
 MODAL LISTADO DE PRODUCTOS
 ===============================================================================================================================-->
@@ -328,18 +382,21 @@ MODAL LISTADO DE PRODUCTOS
         <div class="modal-content">
             <div class="modal-header bg-gray py-1">
                 <h5 class="modal-title">Listado de Productos</h5>
-                <button type="button" class="btn btn-danger text-white border-0 fs-5" id="btncerrarmodal">
+                <div class=""></div>   <button type="button" class="btn btn-danger text-white border-0 fs-5" id="btncerrarmodal">
                     <i class="far fa-times-circle"></i>
                 </button>
             </div>
-            <button id="btnCrearProductos" style="width:10% ;  position: relative;  top: 10px;" class="btn btn-dark ">Crear</button>
+
+                <button id="btnCrearProductos" class="Boton_Select_models"> <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path></svg>
+                    <span>Crear</span>    
+                
+                </button>
+
   
-            <div class="modal-body   datatable_css">
-              <div class="contenedor_Table"> 
-
-              
-
-                        <table id="tbl_productos" class="table table-striped table-bordered" style="width:100%">
+            <div class="row  p-3">
+              <div class="table-container"> 
+                        <table id="tbl_productos"  class="custom-table">
                             <thead>
                                 <tr>
                                     <th>CODIGO</th>
@@ -373,13 +430,18 @@ MODAL LISTADO DE PROVEEDOR
                     <i class="far fa-times-circle"></i>
                 </button>
             </div>
-            <button id="btnCrearProveedor" style="width:10% ;  position: relative;  top: 10px;" class="btn btn-dark ">Crear</button>
+            <button id="btnCrearProveedor" class="Boton_Select_models"> <span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path></svg>
+                <span>Crear</span>    
+            
+            
+        </button>
 
-            <div class="modal-body   datatable_css">
-              <div class="contenedor_Table"> 
+            <div class="row  p-3">
+                <div class="table-container"> 
 
               
-                <table id="tbl_Proveedor" class="table table-striped table-bordered" style="width:100%">
+                <table id="tbl_Proveedor" class="custom-table">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -424,14 +486,15 @@ MODAL LISTADO DE Marca
                     <i class="far fa-times-circle"></i>
                 </button>
             </div>
-            <button id="btnCrearMarca" style="width:10% ;  position: relative;  top: 10px;" class="btn btn-dark ">Crear</button>
+            <button id="btnCrearMarca" class="Boton_Select_models"> <span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path></svg>
+                <span>Crear</span></button>
 
-            <div class="modal-body   datatable_css">
-              <div class="contenedor_Table"> 
+                <div class="row  p-3">
+                    <div class="table-container"> 
+    
 
-              
-
-                        <table id="tbl_marca" class="table table-striped table-bordered" style="width:100%">
+                        <table id="tbl_marca" class="custom-table">
                             <thead>
                                 <tr>
                                     <th>CODIGO</th>
@@ -464,14 +527,16 @@ MODAL LISTADO DE Color
                     <i class="far fa-times-circle"></i>
                 </button>
             </div>
-            <button id="btnCrearColor" style="width:10% ;  position: relative;  top: 10px;" class="btn btn-dark ">Crear</button>
+            <button id="btnCrearColor" class="Boton_Select_models"> <span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path></svg>
+                <span>Crear</span>    </button>
 
-            <div class="modal-body   datatable_css">
-              <div class="contenedor_Table"> 
+            <div class="row  p-3">
+                <div class="table-container"> 
 
               
 
-                        <table id="tbl_color" class="table table-striped table-bordered" style="width:100%">
+                        <table id="tbl_color"class="custom-table">
                             <thead>
                                 <tr>
                                     <th>CODIGO</th>
@@ -504,14 +569,16 @@ MODAL LISTADO DE TALLAS
                     <i class="far fa-times-circle"></i>
                 </button>
             </div>
-            <button id="btnCrearTalla" style="width:10% ;  position: relative;  top: 10px;" class="btn btn-dark ">Crear</button>
+            <button id="btnCrearTalla" class="Boton_Select_models"> <span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path></svg>
+                <span>Crear</span>    </button>
 
-            <div class="modal-body   datatable_css">
-              <div class="contenedor_Table"> 
+                <div class="row  p-3">
+                    <div class="table-container">
 
               
 
-                        <table id="tbl_talla" class="table table-striped table-bordered" style="width:100%">
+                        <table id="tbl_talla" class="custom-table">
                             <thead>
                                 <tr>
                                     <th>CODIGO</th>
@@ -543,14 +610,16 @@ MODAL LISTADO DE Material
                     <i class="far fa-times-circle"></i>
                 </button>
             </div>
-            <button id="btnCrearMaterial" style="width:10% ;  position: relative;  top: 10px;" class="btn btn-dark ">Crear</button>
+            <button id="btnCrearMaterial"class="Boton_Select_models"> <span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path></svg>
+                <span>Crear</span>    </button>
 
-            <div class="modal-body   datatable_css">
-              <div class="contenedor_Table"> 
+            <div class="row  p-3">
+                <div class="table-container"> 
 
               
 
-                        <table id="tbl_material" class="table table-striped table-bordered" style="width:100%">
+                        <table id="tbl_material" class="custom-table">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -586,13 +655,15 @@ MODAL LISTADO DE Bodega
                     <i class="far fa-times-circle"></i>
                 </button>
             </div>
-            <button id="btnCrearBodega" style="width:10%; position: relative; top: 10px;" class="btn btn-dark">Crear</button>
+            <button id="btnCrearBodega" class="Boton_Select_models"> <span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path></svg>
+                <span>Crear</span>    </button>
 
-            <div class="modal-body">
-                
-                <div class="contenedor_Table">
+                <div class="row  p-3">
+                    <div class="table-container"> 
+    
                     <!-- LISTADO DE PRODUCTOS -->
-                    <table id="tbl_Bodega" class="table table-striped table-bordered" style="width:100%">
+                    <table id="tbl_Bodega" class="custom-table">
                         <thead>
                             <tr>
                                 <th>CODIGO</th>
@@ -625,11 +696,10 @@ MODAL LISTADO DE Inventario
                 </button>
             </div>
 
-            <div class="modal-body">
-                
-                <div class="contenedor_Table">
+            <div class="row  p-3">
+                <div class="table-container"> 
                     <!-- LISTADO DE inventario -->
-                    <table id="tbl_Inventario" class="table table-striped table-bordered" style="width:100%">
+                    <table id="tbl_Inventario" class="custom-table">
                         <thead>
                             <tr>
                         <th>#</th>
@@ -692,11 +762,13 @@ MODAL Detallecompra
                         
                          <!---Seccion de selecion Marca imput -->
                     
+                       
                          <div class="input-container ">
                             <input id="idMarcapro" hidden>
                             <!-- Input para mostrar la marca seleccionado -->
-                            <input type="text"  id="marcapro" class="input"   >
-                            <label for="marcapro">Marca:</label>
+                            <input type="text"  id="marcapro"   >
+                            <label for="marcapro" class="label">Marca:</label>
+                            <div class="underline"></div>
                         </div>
                             <!--end Seccion de selecion Marca imput-->
                             
@@ -705,8 +777,9 @@ MODAL Detallecompra
                       <div class="input-container ">
                         <input id="idColorpro" hidden>
                         <!-- Input para mostrar la Color seleccionado -->
-                        <input type="text"  id="colorpro" class="input"   >
-                        <label for="colorpro">Color:</label>
+                        <input type="text"  id="colorpro" >
+                        <label for="colorpro"  class="label">Color:</label>
+                        <div class="underline"></div>
                     </div>
                         <!--end Seccion de selecion Color imput-->
                         
@@ -715,8 +788,9 @@ MODAL Detallecompra
                   <div class="input-container ">
                     <input id="idTallapro" hidden>
                     <!-- Input para mostrar la Talla seleccionado -->
-                    <input type="text"  id="tallapro" class="input"   >
-                    <label for="tallapro">TaLLa:</label>
+                    <input type="text"  id="tallapro"   >
+                    <label for="tallapro"  class="label">TaLLa:</label>
+                    <div class="underline"></div>
                 </div>
                     <!--end Seccion de selecion Talla imput-->
                 
@@ -725,8 +799,9 @@ MODAL Detallecompra
                   <div class="input-container ">
                     <input id="idMaterialpro" hidden>
                     <!-- Input para mostrar la Material seleccionado -->
-                    <input type="text"  id="materialpro" class="input"   >
-                    <label for="materialpro">Material:</label>
+                    <input type="text"  id="materialpro"   >
+                    <label for="materialpro"  class="label">Material:</label>
+                    <div class="underline"></div>
                 </div>
                     <!--end Seccion de selecion Material imput-->
 
@@ -736,8 +811,9 @@ MODAL Detallecompra
                 <div class="input-container ">
                 <input id="idbodegapro" hidden>
                 <!-- Input para mostrar el Nombre de la bodega seleccionada -->
-                <input type="text"  id="nombrebodegapro" class="input"   >
-                <label for="nombrebodegapro">Bodega:</label>
+                <input type="text"  id="nombrebodegapro"  >
+                <label for="nombrebodegapro"  class="label">Bodega:</label>
+                <div class="underline"></div>
                 </div>
                 <!--end Seccion de selecion Bodega imput -->
                 
@@ -761,7 +837,7 @@ MODAL Para insertar compra
 ===============================================================================================================================-->
    <!--Modal para CRUD-->
    <div id="modalCRUDP" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div  class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">CREAR PRODUCTO</h5>                
@@ -769,23 +845,28 @@ MODAL Para insertar compra
             <form id="formP">    
                 <div class="modal-body form_pequeno">                
                     <input id="id" hidden>
+                  
                     <div class="input-container ">
-                        <input placeholder="" type="text" class="input" id="nombre" >
-                        <label  for=" nombre">Nombre</label>
+                        <input   type="text"  id="nombre" >
+                        <label  for=" nombre" class="label"  >Nombre</label>
+                        <div class="underline"></div>
                     </div>
                     <div class="input-container ">
-                        <input placeholder="" type="text" class="input" id="descripcion" >
-                        <label  for=" descripcion">Descripcion</label>
+                        <input  type="text" id="descripcion" >
+                        <label  for=" descripcion" class="label">Descripcion</label>
+                        <div class="underline"></div>
                     </div>
                     <div class="input-container">               
-                        <select class="input" id="id_categoria" aria-label="select"> </select>
-                            <label for="id_categoria">Categoria</label>
+                        <select  id="id_categoria" aria-label="select"> </select>
+                            <label for="id_categoria" class="label">Categoria</label>
+                            <div class="underline"></div>
                         </div>
                         <div class="input-container">
-                            <select id="estado" class="input">
+                            <select id="estado" >
                                 <option value="Activo">Activo</option>
                             </select>
-                            <label for="estado">Estado</label>
+                            <label for="estado" class="label">Estado</label >
+                            <div class="underline"></div>
                         </div>
                             </div>
                 <div class="modal-footer">
@@ -810,21 +891,25 @@ MODAL INSERCCION MARCA
                     <h5 class="modal-title" id="exampleModalLabel">CREAR MARCA</h5>                
                 </div>
                 <form id="formM">    
-                    <div class="modal-body form_pequeno">                
+                    <div class="modal-body form">                
                             <input id="id" hidden>
+                         
                             <div class="input-container ">
-                                <input placeholder="" type="text" class="input" id="nombrem" >
-                                <label  for=" nombrem">Nombre</label>
+                                <input  type="text" id="nombrem" >
+                                <label  for=" nombrem" class="label">Nombre</label>
+                                <div class="underline"></div>
                             </div>
                             <div class="input-container ">
-                                <input placeholder="" type="text" class="input" id="detalleMarca" >
-                                <label  for="detalleMarca">Detalle</label>
+                                <input  type="text" id="detalleMarca" >
+                                <label  for="detalleMarca" class="label">Detalle</label>
+                                <div class="underline"></div>
                             </div>
                             <div class="input-container">
-                                <select id="estado" class="input">
+                                <select id="estado" >
                                     <option value="Activo">Activo</option>
                                 </select>
-                                <label for="estado">Estado</label>
+                                <label for="estado" class="label">Estado</label>
+                                <div class="underline"></div>
                             </div>
                          
                             
@@ -852,15 +937,19 @@ MODAL INSERCCION TALLA
             <form id="formT">    
                 <div class="modal-body form_pequeno">                
                         <input id="id" hidden>
+                      
+
                         <div class="input-container ">
-                            <input placeholder="" type="text" class="input" id="NumeroTalla" >
-                            <label  for="NumeroTalla">Numero Talla</label>
+                            <input  type="text" id="NumeroTalla" >
+                            <label  for="NumeroTalla" class="label">Numero Talla</label>
+                            <div class="underline"></div>
                         </div>
                         <div class="input-container">
-                            <select id="estado" class="input">
+                            <select id="estado" >
                                 <option value="Activo">Activo</option>
                             </select>
-                            <label for="estado">Estado</label>
+                            <label for="estado" class="label">Estado</label>
+                            <div class="underline"></div>
                         </div>
                      
                         
@@ -888,20 +977,20 @@ MODAL INSERCCION COLOR
             <form id="formC">    
                 <div class="modal-body form_pequeno">                
                         <input id="id" hidden>
+
+
                         <div class="input-container ">
-                            <input placeholder="" type="text" class="input" id="colorr" >
-                            <label  for="colorr">Color</label>
+                            <input type="text" id="colorr" >
+                            <label  for="colorr" class="label">Color</label>
+                            <div class="underline"></div>
                         </div>
                   
                         <div class="input-container">
-                            <select id="estado" class="input">
+                            <select id="estado" >
                                 <option value="Activo">Activo</option>
-                                <option value="Inactivo">Inactivo</option>
-                                <option value="En revisión">En revisión</option>
-                                <option value="Suspendido">Suspendido</option>
-                                <option value="Eliminado">Eliminado</option>
                             </select>
-                            <label for="estado">Estado</label>
+                            <label for="estado" class="label">Estado</label>
+                            <div class="underline"></div>
                         </div>
                      
                         
@@ -930,47 +1019,53 @@ MODAL INSERCCION MATERIAL
             <form id="formMT">    
                 <div class="modal-body form_grande">                
                         <input id="id" hidden>
-                        <div class="input-container">
-                            <input placeholder="" type="text" class="input" id="nombremt" required>
-                            <label  for="nombres">Nombre del Material</label>
-                        </div>
-    
+                        
                         <div class="input-container ">
-                            <textarea placeholder="" class="input" id="descripcionmt" required></textarea>
+                            <input type="text" id="nombremt" >
+                            <label  for="nombremt" class="label">Nombre del Material</label>
                            
-                            <label  for="descripcionmt">Descripción</label>
+                        </div>
+
+                    
+    
+                        <div class="input-container ">
+                            <textarea  id="descripcionmt" required></textarea>
+                            <label  for="descripcionmt" class="label">Descripción</label>
+                       
                         </div>
     
                         <div class="input-container ">
-                            <input placeholder="" type="text" class="input" id="tipoMaterialmt" required>
-                            <label  for="tipoMaterialmt">Tipo de Material</label>
+                            <input  type="text"  id="tipoMaterialmt" required>
+                            <label  for="tipoMaterialmt" class="label">Tipo de Material</label>
+                      
                         </div>
     
                         <div class="input-container ">
-                            <input placeholder="" type="text" class="input" id="tipodeCosturamt" required>
-                            <label  for="tipodeCosturamt">Tipo de Costura</label>
+                            <input  type="text" id="tipodeCosturamt" required>
+                            <label  for="tipodeCosturamt" class="label">Tipo de Costura</label>
+                          
                         </div>
     
                         <div class="input-container ">
-                            <input placeholder="" type="text" class="input" id="tipoSuelamt" required>
-                            <label for="tipoSuelamt">Tipo de Suela</label>
+                            <input  type="text"  id="tipoSuelamt" required>
+                            <label for="tipoSuelamt"  class="label">Tipo de Suela</label>
                         </div>
     
                         <div class="input-container">
-                            <input placeholder="" type="text" class="input" id="fabricantemt" required>
-                            <label for="fabricantemt">Fabricante</label>
+                            <input  type="text" id="fabricantemt" required>
+                            <label for="fabricantemt"  class="label">Fabricante</label>
                         </div>
     
                         <div class="input-container">
-                            <textarea placeholder="" class="input" id="observacionesmt" required></textarea>
-                            <label for="observacionesmt">Observaciones</label>
+                            <textarea  id="observacionesmt" required></textarea>
+                            <label for="observacionesmt"  class="label">Observaciones</label>
                         </div>
 
                         <div class="input-container">
-                            <select id="estadomt" class="input">
+                            <select id="estadomt" >
                                 <option value="Activo">Activo</option>
                             </select>
-                            <label for="estadomt">Estado</label>
+                            <label for="estadomt"  class="label">Estado</label>
                         </div>
                         
                      
@@ -1000,33 +1095,36 @@ MODAL INSERCCION PROVEEDOR
             <form id="formPV">    
                 <div class="modal-body form_grande">                
                         <input id="id" hidden>
+
+
                         <div class="input-container ">
-                            <input placeholder="" type="text" class="input" id="nombrepv" >
-                            <label  for=" nombrepv">Nombre</label>
+                            <input  type="text" id="nombrepv" >
+                            <label  for=" nombrepv" class="label">Nombre</label>
+                      
                         </div>
                        
                         <div class="input-container ">
                           <input placeholder="" type="text" class="input" id="direccionpv" >
-                          <label  for="direccionpv">Direccion</label>
+                          <label  for="direccionpv" class="label">Direccion</label>
                       </div>
                    
                       <div class="input-container ">
-                        <input placeholder="" type="text" class="input" id="telefonopv" >
-                        <label  for="telefonopv">Telefono</label>
+                        <input placeholder="" type="text" id="telefonopv" >
+                        <label  for="telefonopv" class="label">Telefono</label>
                     </div>
                     <div class="input-container ">
-                        <input placeholder="" type="text" class="input" id="rucpv" >
-                        <label  for="rucpv">ruc</label>
+                        <input placeholder="" type="text"  id="rucpv" >
+                        <label  for="rucpv" class="label">ruc</label>
                     </div>
                     <div class="input-container ">
-                        <input placeholder="" type="text" class="input" id="emailProveedorpv" >
-                        <label  for="emailProveedorpv">Email</label>
+                        <input placeholder="" type="text" id="emailProveedorpv" >
+                        <label  for="emailProveedorpv" class="label">Email</label>
                     </div>
                         <div class="input-container">
-                            <select id="estadopv" class="input">
+                            <select id="estadopv">
                                 <option value="Activo">Activo</option>
                             </select>
-                            <label for="estadopv">Estado</label>
+                            <label for="estadopv" class="label">Estado</label>
                         </div>
                      
                         
@@ -1061,19 +1159,25 @@ MODAL INSERCCION BODEGA
                 <div class="modal-body form_pequeno">
                     <!-- Campos del Formulario -->
                     <input id="id" hidden>
+                    
+    
+                 
                     <div class="input-container">
-                        <input placeholder="" type="text" class="input" id="nombreB">
-                        <label for="nombreB">Nombre</label>
+                        <input placeholder="" type="text"  id="nombreB">
+                        <label for="nombreB" class="label">Nombre</label>
+                        <div class="underline"></div>
                     </div>
                     <div class="input-container">
-                        <input placeholder="" type="text" class="input" id="ubicacionB">
-                        <label for="ubicacionB">Ubicacion</label>
+                        <input placeholder="" type="text"  id="ubicacionB">
+                        <label for="ubicacionB" class="label">Ubicacion</label>
+                        <div class="underline"></div>
                     </div>
                     <div class="input-container">
                         <select id="estadoB" class="input">
                             <option value="Activo">Activo</option>
                         </select>
-                        <label for="estadoB">Estado</label>
+                        <label for="estadoB" class="label">Estado</label>
+                        <div class="underline"></div>
                     </div>
                 </div>
 
@@ -1092,29 +1196,6 @@ MODAL INSERCCION BODEGA
 
 <!-- /. End -->
  </section> 
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-
-<!-- Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-
-<!-- Bootstrap JS -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.min.js" integrity="sha384-5h4UG+6GOuV9qXh6HqOLwZMY4mnLPraeTrjT5v07o347pj6IkfuoASuGBhfDsp3d" crossorigin="anonymous"></script>
-
-<!-- DataTables jQuery Plugin -->
-<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-
-<!-- DataTables Bootstrap Plugin -->
-<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap5.min.js"></script>
-
-<!-- DataTables FixedColumns Plugin -->
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
-
-<!-- SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
-
-<!-- Moment.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
 <!-- Otros scripts... -->
 <script type="module" src="/js/ModulosJS/ModuloJSCompra.js"></script>

@@ -16,18 +16,31 @@ class EmpleadoExistenteError extends Error {
 }
 
 export const mostrarEmpleados = async () => {
+  let pool;
   try {
-    const pool = await getConnection();
+    pool = await getConnection();
     const result = await pool
       .request()
-      .query('SELECT ID_Empleado as Codigo, Nombre, Apellido, Direccion, Telefono, Estado FROM Empleados WHERE Estado = \'Activo\'');
+      .query(`SELECT E.ID_Empleado as Codigo, Nombre, E.Apellido, E.Direccion, Telefono,U.IdUsuario,U.LoginUsuario, E.Estado FROM Empleados E
+      INNER JOIN USUARIO U ON U.IdUsuario =E.idUsuario WHERE E.Estado = \'Activo\'`);
     return result.recordset;
   } catch (error) {
     throw error;
+  } finally {
+    if (pool) {
+      try {
+        pool.close();
+        console.log('Conexión cerrada correctamente.');
+      } catch (err) {
+        console.error('Error al cerrar la conexión:', err.message);
+      }
+    }
   }
 };
 
-export const guardarEmpleado = async (nombre, apellido, direccion, telefono, estado) => {
+
+export const guardarEmpleado = async (nombre, apellido, direccion, telefono,idUsuario, estado) => {
+  let pool;
   try {
     // Validación de datos con Joi
     const schema = Joi.object({
@@ -63,7 +76,7 @@ export const guardarEmpleado = async (nombre, apellido, direccion, telefono, est
       throw new ValidationError(validationResult.error.details[0].message);
     }
 
-    const pool = await getConnection();
+   pool = await getConnection();
 
     // Verifica si el empleado ya existe
     const existingEmpleado = await pool
@@ -82,22 +95,34 @@ export const guardarEmpleado = async (nombre, apellido, direccion, telefono, est
       .input('apellido', apellido)
       .input('direccion', direccion)
       .input('telefono', telefono)
+      .input('idUsuario', idUsuario)
       .input('estado', estado)
       .query(`
-        INSERT INTO Empleados (Nombre, Apellido, Direccion, Telefono, Estado)
+        INSERT INTO Empleados (Nombre, Apellido, Direccion, Telefono,IdUsuario, Estado)
         OUTPUT INSERTED.ID_Empleado AS Codigo
-        VALUES (@nombre, @apellido, @direccion, @telefono, @estado)
+        VALUES (@nombre, @apellido, @direccion, @telefono,@idUsuario, @estado)
       `);
 
     return result.recordset[0].Codigo;
   } catch (error) {
     throw error;
+  }finally {
+    if (pool) {
+      try {
+        pool.close();
+        console.log('Conexión cerrada correctamente.');
+      } catch (err) {
+        console.error('Error al cerrar la conexión:', err.message);
+      }
+    }
   }
+
 };
 
-export const actualizarEmpleado = async (codigo, nombre, apellido, direccion, telefono, estado) => {
+export const actualizarEmpleado = async (codigo, nombre, apellido, direccion, telefono,idUsuario, estado) => {
+  let pool;
   try {
-    const pool = await getConnection();
+     pool = await getConnection();
     const result = await pool
       .request()
       .input('codigo', codigo)
@@ -105,6 +130,7 @@ export const actualizarEmpleado = async (codigo, nombre, apellido, direccion, te
       .input('apellido', apellido)
       .input('direccion', direccion)
       .input('telefono', telefono)
+      .input('idUsuario', idUsuario)
       .input('estado', estado)
       .query(`
         UPDATE Empleados
@@ -112,6 +138,7 @@ export const actualizarEmpleado = async (codigo, nombre, apellido, direccion, te
             Apellido = @apellido,
             Direccion = @direccion,
             Telefono = @telefono,
+            IdUsuario =@idUsuario,
             Estado = @estado
         WHERE ID_Empleado = @codigo
       `);
@@ -122,28 +149,84 @@ export const actualizarEmpleado = async (codigo, nombre, apellido, direccion, te
   } catch (error) {
     throw error;
   }
+  finally {
+    if (pool) {
+      try {
+        pool.close();
+        console.log('Conexión cerrada correctamente.');
+      } catch (err) {
+        console.error('Error al cerrar la conexión:', err.message);
+      }
+    }
+  }
 };
 
 export const darDeBajaEmpleado = async (codigo) => {
+ let pool;
   try {
-    const pool = await getConnection();
+     pool = await getConnection();
     await pool
       .request()
       .input('codigo', codigo)
       .query('UPDATE Empleados SET Estado = \'Inactivo\' WHERE ID_Empleado = @codigo');
   } catch (error) {
     throw error;
+  }finally {
+    if (pool) {
+      try {
+        pool.close();
+        console.log('Conexión cerrada correctamente.');
+      } catch (err) {
+        console.error('Error al cerrar la conexión:', err.message);
+      }
+    }
   }
 };
 
 export const activarEmpleado = async (codigo) => {
+ let pool;
   try {
-    const pool = await getConnection();
+     pool = await getConnection();
     await pool
       .request()
       .input('codigo', codigo)
       .query('UPDATE Empleados SET Estado = \'Activo\' WHERE ID_Empleado = @codigo');
   } catch (error) {
     throw error;
+  }finally {
+    if (pool) {
+      try {
+        pool.close();
+        console.log('Conexión cerrada correctamente.');
+      } catch (err) {
+        console.error('Error al cerrar la conexión:', err.message);
+      }
+    }
   }
 };
+
+export const existeEmpleadoPorUsuario = async (idUsuario) => {
+  let pool;
+  try {
+    pool = await getConnection();
+    const result = await pool
+      .request()
+      .input('idUsuario', idUsuario)
+      .query('SELECT TOP 1 1 FROM Empleados WHERE IdUsuario = @idUsuario AND Estado = \'Activo\'');
+
+    return result.recordset.length > 0;
+  } catch (error) {
+    throw error;
+  } finally {
+    if (pool) {
+      try {
+        pool.close();
+        console.log('Conexión cerrada correctamente.');
+      } catch (err) {
+        console.error('Error al cerrar la conexión:', err.message);
+      }
+    }
+  }
+};
+
+

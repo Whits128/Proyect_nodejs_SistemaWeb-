@@ -24,9 +24,13 @@ const priducto = await api.excuteGet('productos');
 // DataTable initialization
 var TablaCompra = $('#Tabla_Fact').DataTable({
     data: compra,
+    "pageLength": 5,
+    "lengthMenu": [5, 10, 20, 100], // Opciones de cantidad de elementos por página
+    "autoWidth": true,
     columns: [
         { data: "Codigo" },
         { data: "CodigoCompra" },
+        { data: "NombreProveedor" },
         {
             data: "FechaCompra",
             "targets": 2,
@@ -157,7 +161,10 @@ $('#Tabla_Fact').on('click', '.btnCompletarCompra', async function () {
         data: inventario,
         "scrollX": true, // Habilita el scroll horizontal
         "scrollCollapse": true, // Colapso de scroll si no es necesario
-                         
+        "pageLength": 5,
+        "lengthMenu": [5, 10, 20, 100], // Opciones de cantidad de elementos por página
+        "order": [[1, "asc"]],
+        "autoWidth": true,       
         columns: [
             { data: "ID_Inventario" },
             {data: "NombreBodega"},
@@ -173,32 +180,57 @@ $('#Tabla_Fact').on('click', '.btnCompletarCompra', async function () {
         // Ocultar columnas
 
         ],
+        columnDefs: [
+            {
+                targets: [2,9],
+                visible: false,
+            }],
         responsive: true,
 language: {
     url: "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
-},
+}, 
     });
 
 
 // DataTable initialization
 tabla = $('#tbl_productos').DataTable({
     data: priducto,
+    "pageLength": 5,
+    "lengthMenu": [5, 10, 20, 100], // Opciones de cantidad de elementos por página
+    "order": [[1, "asc"]],
+    "autoWidth": true,
     columns: [
         { data: "Codigo" },
-        { data: "Nombre" },
+        { 
+    data: "Nombre",
+    render: function (data, type, row) {
+        if (data.length > 15) {
+            return `${data.substr(0, 15)} <i class="fas fa-eye ver-mas-icon" title="${data}"></i>`;
+        } else {
+            return data;
+        }
+    }
+    },
         { 
             data: "Descripcion",
-            render: function (data, type, row, meta) {
-                if (type === 'display' && data.length > 10) {
-                    return '<span title="' + data + '">' + data.substr(0, 10) + '...</span>';
+            render: function (data, type, row) {
+                if (data.length > 15) {
+                    return `${data.substr(0, 15)} <i class="fas fa-eye ver-mas-icon" title="${data}"></i>`;
                 } else {
                     return data;
                 }
             }
         },
+       
         { data: "Categoria" },
         { data: "Estado" },
         { defaultContent: "<div class='text-center'><div class='btn-group'><button class='btn btn-info btn-sm btnSeleccionar'>Seleccionar</button></div></div>" }
+    ],
+    columnDefs: [
+        {
+            targets: [0, 4],
+            visible: false,
+        },
     ],
     responsive: true,
     language: {
@@ -210,12 +242,22 @@ tabla = $('#tbl_productos').DataTable({
      // DataTable initialization
      tablemarca = $('#tbl_marca').DataTable({
         data: Marcas,
+        "pageLength": 5,
+        "lengthMenu": [5, 10, 20, 100], // Opciones de cantidad de elementos por página
+        "order": [[1, "asc"]],
+        "autoWidth": true,
         columns: [
             { data: "Codigo" },
             { data: "Nombre" },
             { data: "DetalleMarca" },
             { data: "Estado" },
             { defaultContent: "<div class='text-center'><div class='btn-group'><button class='btn btn-info btn-sm btnSeleccionarMarca'>Seleccionar</button></div></div>" }
+        ],
+        columnDefs: [
+            {
+                targets: [0, 3],
+                visible: false,
+            },
         ],
         responsive: true,
         language: {
@@ -227,7 +269,10 @@ tabla = $('#tbl_productos').DataTable({
      // DataTable initialization
      tablematerial = $('#tbl_material').DataTable({
         data: MaterialZapato,
-      
+        "pageLength": 5,
+        "lengthMenu": [5, 10, 20, 100], // Opciones de cantidad de elementos por página
+        "order": [[1, "asc"]],
+        "autoWidth": true,
                          
         columns: [
             { data: "Codigo" },
@@ -253,11 +298,21 @@ tabla = $('#tbl_productos').DataTable({
      // DataTable initialization
      tablecolor = $('#tbl_color').DataTable({
         data: colores,
+        "pageLength": 5,
+        "lengthMenu": [5, 10, 20, 100], // Opciones de cantidad de elementos por página
+        "order": [[1, "asc"]],
+        "autoWidth": true,
         columns: [
             { data: "Codigo" },
             { data: "Color" },
             { data: "Estado" },
             { defaultContent: "<div class='text-center'><div class='btn-group'><button class='btn btn-info btn-sm btnSeleccionarcolor'>Seleccionar</button></div></div>" }
+        ],
+        columnDefs: [
+            {
+                targets: [0, 2],
+                visible: false,
+            },
         ],
         responsive: true,
         language: {
@@ -268,11 +323,21 @@ tabla = $('#tbl_productos').DataTable({
          // DataTable initialization
          tabletalla = $('#tbl_talla').DataTable({
             data: tallas,
+            "pageLength": 5,
+            "lengthMenu": [5, 10, 20, 100], // Opciones de cantidad de elementos por página
+            "order": [[1, "asc"]],
+            "autoWidth": true,
             columns: [
                 { data: "Codigo" },
                     { data: "NumeroTalla" },
                 { data: "Estado" },
                 { defaultContent: "<div class='text-center'><div class='btn-group'><button class='btn btn-info btn-sm btnSeleccionartalla'>Seleccionar</button></div></div>" }
+            ],
+            columnDefs: [
+                {
+                    targets: [0, 2],
+                    visible: false,
+                },
             ],
             responsive: true,
             language: {
@@ -284,6 +349,10 @@ tabla = $('#tbl_productos').DataTable({
      // Ocultar las columnas deseadas
      tablaproveedor = $('#tbl_Proveedor').DataTable({
     data: Proveedor,
+    "pageLength": 5,
+    "lengthMenu": [5, 10, 20, 100], // Opciones de cantidad de elementos por página
+    "order": [[1, "asc"]],
+    "autoWidth": true,
     columns: [
         { data: "Codigo" },
         { data: "Nombre" },
@@ -308,12 +377,22 @@ tabla = $('#tbl_productos').DataTable({
      // DataTable initialization
      tablaBodega = $('#tbl_Bodega').DataTable({
         data: bodega,
+        "pageLength": 5,
+        "lengthMenu": [5, 10, 20, 100], // Opciones de cantidad de elementos por página
+        "order": [[1, "asc"]],
+        "autoWidth": true,
         columns: [
             { data: "Codigo" },
             { data: "Nombre" },
             { data: "Ubicacion" },
             { data: "Estado" },
             { defaultContent: "<div class='text-center'><div class='btn-group'><button class='btn btn-info btn-sm btnSeleccionarBodega'>Seleccionar</button></div></div>", }
+        ],
+        columnDefs: [
+            {
+                targets: [0, 3],
+                visible: false,
+            },
         ],
         responsive: true,
         language: {
@@ -347,14 +426,23 @@ tabla = $('#tbl_productos').DataTable({
 
     mostrarVista('vista1');
 
-    $("#btnListaCompras").click(function () {
-        mostrarVista('vista1');
-  
-    });
+   
 
+        // Asigna un controlador de eventos al botón de cancelar
+        $("#btnCancelar").on("click", function() {
+            mostrarVista('vista1');
+        });
     $("#btnRegistrarCompra").click(function () {
         mostrarVista('vista2');
         opcion = 'crear';
+    });
+
+    $('.info-btn').on('click', function () {
+        var title = $(this).data('title');
+        var info = $(this).data('info');
+
+        $('#infoModalLabel').text(title);
+        $('#infoModalBody').text(info);
     });
 
 //SECCION DE MODALES
@@ -484,7 +572,9 @@ $('#tbl_productos tbody').on('click', '.btnSeleccionar', function () {
         // También puedes cerrar el modal si es necesario
         $('#mdlListadoProductos').modal('hide');
     // deshabilitar   el botón
-$("#btnSeleccionarProducto").prop("disabled", true);
+$("#btnInventarioSeleccionado").prop("disabled", true);
+
+
 });
 
 
@@ -610,6 +700,9 @@ PrecioCompraGlobal = data.PrecioCompra;
 
     // También puedes cerrar el modal si es necesario
     $('#mdlListadoInventario').modal('hide');
+    
+    // deshabilitar   el botón
+    $("#btnSeleccionarProducto").prop("disabled", true);
 });
 
 
@@ -644,9 +737,10 @@ $("#btnDetalleCompras").click(function () {
 
     // Habilitar el botón
     $("#btnSeleccionarProducto").prop("disabled", false);
+    $("#btnInventarioSeleccionado").prop("disabled", false);
 
     // Limpiar campos específicos en el formulario con id "formDetalle"
-    $("#marca, #color, #talla, #material, #nombrebodega").val('');
+    $("#nombreProducto, #marca, #color, #talla, #material, #nombrebodega").val('');
 
     // Puedes imprimir los detallesCompra y datosSeleccionados para verificar
     console.log('detallesCompras:', DatosMostrarDetalle);
@@ -725,14 +819,15 @@ $(document).on("click", "#btnDetallecompra", function (event) {
                 "scrollY": "200px",
                 "scrollX": true,
                 "scrollCollapse": true,
-                responsive: true,
-                language: {
-                    url: "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
-                }
+                "autoWidth": true,
+                "responsive": true,
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                },
                 
-                // ... otras opciones ...
             });
         }
+        
     
  // Obtén el precio de compra del objeto data (ajusta esto según la estructura real de tu objeto)
  var preciocompraCapturarInventario = parseFloat(data.detallesExtras.precioCompra) || 0;
@@ -994,18 +1089,64 @@ $("#btnCrearProveedor").click(function () {
 $("#btnCrearBodega").click(function () {
     $('#modalCRUDB').modal('show');
 });
-     
-
+  
  //SECCION DE SUBMIT PARA LOS FORMULARIO 
          // Submit para CREAR y EDITAR
          $('#formP').submit(async function (e) {
-            e.preventDefault();
+        
+                event.preventDefault();
+                toastr.options = {
+                    closeButton: true,
+                    timeOut: 2500, // Duración total de visualización en milisegundos (ejemplo: 2 segundos)
+                    hideDuration: 300 ,// Duración de la animación de ocultar en milisegundos (ejemplo: 0.3 segundos)
+                    progressBar: true, 
+                    closeEasing :'swing',
+                    preventDuplicates: true
+                  };
 
           
         const    nombre = $.trim($('#nombre').val());
         const    descripcion = $("#descripcion").val();
         const     idCategoria = $.trim($('#id_categoria').val());
         const     estado = $("#estado").val();
+
+        // Realiza la validación
+     // Definir reglas de validación para cada campo
+     const reglasValidacion = {
+        nombre: [
+            { validar: () => validator.isLength(nombre, { min: 1 }), mensaje: 'El campo Nombre no puede estar vacío.' },
+            { validar: () => validator.isAlpha(nombre), mensaje: 'El campo Nombre solo debe contener letras.' }
+        ],
+        descripcion: [
+            { validar: () => validator.isLength(descripcion, { min: 1 }), mensaje: 'La descripción no puede estar vacía.' }
+        ],
+        idCategoria: [
+            { validar: () => validator.isInt(idCategoria), mensaje: 'El ID de categoría no es válido.' }
+        ],
+        estado: [
+            { validar: () => validator.isLength(estado, { min: 1 }), mensaje: 'El campo Estado no puede estar vacío.' }
+        ]
+    };
+
+    // Array para almacenar mensajes de error
+    const errores = [];
+
+    // Validar cada campo
+    Object.entries(reglasValidacion).forEach(([campo, reglas]) => {
+        reglas.forEach(({ validar, mensaje }) => {
+            if (!validar()) {
+                errores.push(mensaje);
+            }
+        });
+    });
+
+     // Si hay errores, mostrarlos en toasts y detener la ejecución
+     if (errores.length > 0) {
+        errores.forEach(error => toastr.error(error));
+        return;
+    }
+
+
 
         console.log('data product envio:',nombre,descripcion,idCategoria,estado);
             try {
@@ -1023,7 +1164,7 @@ $("#btnCrearBodega").click(function () {
             }
         });
         //SUBMIT DE MARCA 
-
+ 
 
         $('#formM').submit(async function (e) {
             e.preventDefault();
@@ -1172,46 +1313,39 @@ const    estado = $("#estadopv").val() ;
     });
 
        // Submit para CREAR y EDITAR
-       $('#formDetalle').submit(async function (e) {
-        e.preventDefault();
-  // Obtener los valores de los campos
-  
-  const detallesCompra= obtenerDetallesCompra();
-  const codigoCompra = $.trim($('#codigoCompra').val());
-  const FechaCompra=     $.trim($('#fechaCompra').val());
-  const totalsuma = $('#Total').val(); 
-  const EstadoCompra = 'Pendiente';
-  const compraData = {
-    CodigoCompra: codigoCompra,
-    FechaCompra: FechaCompra,
-    Total:totalsuma,
-    EstadoCompra:EstadoCompra,
-    DetallesCompra: detallesCompra,
-};
-
-  console.log('compraData:',compraData);
-  
-       try {
-           
-             
-        if (opcion === 'crear') {
-            await api.excutePost('compra',compraData);
-        } else if (opcion === 'editar') {
-            await api.excutePut(`compra/editar/${codigoCompraEditar}`,compraData);
-        }
-              
-                
-                
-            //redireccionar al contenedor 1
+       $('#btnRegistrarCompraFact').on('click', async function () {
+        // Obtener los valores de los campos
+        const detallesCompra = obtenerDetallesCompra();
+        const codigoCompra = $.trim($('#codigoCompra').val());
+        const FechaCompra = $.trim($('#fechaCompra').val());
+        const totalsuma = $('#Total').val();
+        const EstadoCompra = 'Pendiente';
+        const compraData = {
+            CodigoCompra: codigoCompra,
+            FechaCompra: FechaCompra,
+            Total: totalsuma,
+            EstadoCompra: EstadoCompra,
+            DetallesCompra: detallesCompra,
+        };
+    
+        console.log('compraData:', compraData);
+    
+        try {
+            if (opcion === 'crear') {
+                await api.excutePost('compra', compraData);
+            } else if (opcion === 'editar') {
+                await api.excutePut(`compra/editar/${codigoCompraEditar}`, compraData);
+            }
+    
+            // Redireccionar al contenedor 1
             mostrarVista('vista1');
             const compras = await api.excuteGet('compra');
             TablaCompra.clear().rows.add(compras).draw();
-         
         } catch (error) {
             console.error('Error al guardar/editar:', error.message);
         }
     });
-
+    
 
 
     // Función para realizar la operación de guardar completa
@@ -1267,5 +1401,18 @@ $(document).on("click", "#btnGuardarCompracompleta", function (event) {
     event.preventDefault();
 guardarCompleta();
 });
+
+
+ // Función para mostrar mensajes de error en el placeholder
+ function mostrarError(elemento, mensaje) {
+    $(elemento).attr('placeholder', mensaje);
+    $(elemento).addClass('error'); // Puedes agregar una clase de estilo para resaltar el error si lo deseas
+}
+
+// Función para ocultar mensajes de error en el placeholder
+function ocultarError(elemento) {
+    $(elemento).attr('placeholder', '');
+    $(elemento).removeClass('error'); // Puedes quitar la clase de estilo de error
+}
 
 });

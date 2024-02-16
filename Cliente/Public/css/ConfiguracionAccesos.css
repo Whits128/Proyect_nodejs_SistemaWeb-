@@ -1,0 +1,107 @@
+/*Importamos variables globales*/
+@import '/css/VariablesGlobales.css'; 
+/* Resto del estilo */
+.vista {
+  display: none;
+}
+.elemento {
+  margin-top: 8px;
+    display: flex;
+    align-items: center; /* Centra verticalmente los elementos en el contenedor */
+    padding: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 5px; /* Agrega un margen inferior de 5px */
+    position: relative;
+    background-color: #3c79d0;
+   
+  }
+  .lista{
+    height: 400px;
+    overflow-y: auto;
+   margin-top: 10px;
+   background: #333;
+  }
+  .buscadorImputConfig {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    border: 2px solid #3498db;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s;
+    font-size: 16px;
+    color: #333;
+  }
+
+  .buscadorImputConfig:focus {
+    border-color: #2ecc71;
+  }
+
+  .contenedorNombre {
+    flex-grow: 1; /* Hace que el contenedor del nombre crezca para ocupar el espacio restante */
+  }
+  
+  .nombreRecurso {
+    display: inline-block;
+    margin-right: 8px;
+  }
+  
+  .seleccionarBtn {
+    background:#333;
+    border: none;
+    cursor: pointer;
+    color: #4285f4; /* Color del icono */
+    outline: none;
+    font-size: 20px; /* Ajusta el tamaño de la fuente del botón */
+    padding: 12px; /* Ajusta el padding del botón */
+
+  }
+  
+  .seleccionarBtn:hover {
+    color: #3c79d0; /* Color del icono al pasar el ratón */
+  }
+  
+
+
+
+/* Agrega este estilo para cambiar el color del texto de los elementos seleccionados */
+ .elemento.seleccionado {
+  background-color: #168371;
+
+}
+
+.elemento.seleccionado .nombreRecurso,
+.elemento.seleccionado .nombreAccion,
+.elemento.seleccionado .nombrerol {
+    color: rgb(255, 255, 255); /* Cambia el color del texto según tu preferencia */
+}
+
+
+#TablaConfiguracionesVer.div.dtsp-panesContainer{
+  background-color: var(--color-3) !important;
+}
+    /* Estilo personalizado para el contenedor del plugin SearchPanes */
+    #searchPanesContainer {
+      background-color: var(--color-3) !important;
+      /* Otros estilos personalizados aquí */
+  }
+  div.dtsp-panesContainer div.dtsp-searchPanes{
+    background-color: var(--color-2) !important;
+  }
+
+  div.dtsp-panesContainer button.dtsp-clearAll{
+   color: var(--color-2) !important;
+  }
+  div.dtsp-panesContainer div.dtsp-searchPanes div.dtsp-searchPane tr>td{
+color: var(--color-3);
+
+
+
+  }
+
+.dtsp-nameColumn span{
+  color: var(--color-5) !important;
+}
+ 

@@ -1,113 +1,117 @@
-<!-- DataTables CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
-
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css" integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK" crossorigin="anonymous">
-
-<!-- DataTables Bootstrap CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap5.min.css">
 
 <script  type="module" src="/js/ModulosJS/MoluloAcceso.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/Formulario.css">
-    
+
+    <link rel="stylesheet" type="text/css" href="/css/ConfiguracionAccesos.css">
+
+    <section class="content" >
+
+
+
+      <div class="row  mb-5" style="box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); border-radius: 8px; height: 100px; margin-top: 10px;">
+       
+          <button id="btnRegistraconfiAccesos" class="btn btn-primary" style="width:400px; height: 50px; margin-left: 20px; margin-top: 20px; background-color: #28a745; border-color: #28a745;">Registrar Configuracion de accesos</button>
+          
+                    
+     
+        <button id="btnCancelar" class="btn btn-danger btn-block" style="width:150px; height: 50px; margin-left: 20px; margin-top: 20px;">
+            <i class="fas fa-chevron-circle-left" style="color: #fff;"></i>  Cancelar
+        </button>
  
-    <section class="Contenido-Main" id="dynamic-content">
-       <div class="Contenedor_Mostrar">
-    
+        <button id="btnMostrarBusqueda" class="btn btn-primary" style="width: 200px; height: 50px; margin-left: 20px; margin-top: 20px; background-color: #28a745; border-color: #28a745;">
+          <i class="fas fa-search"></i> Mostrar Búsqueda
+      </button>
+      
+      <button id="btnOcultarBusqueda" class="btn btn-danger" style="width: 200px; height: 50px; margin-left: 20px; margin-top: 20px;">
+          <i class="fas fa-times"></i> Ocultar Búsqueda
+      </button>
         
-    <div class="container-fluid">
-   <!-- Botón para Activar Modal CRUD -->
-   <button id="btnCrear" class="btn btn-dark">Crear</button>
-        <div class="row shadow-lg p-3 mb-5">
-            <div class="col">
-                <table id="Tabla" class="table table-striped table-bordered" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Ruta</th>
-                        <th>Recurso</th>
-                        <th>Rol</th>
-                           
-                                                  
-                                         
-                        <th class="text-center">ACCIONES</th>                      
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-                </table> 
-            </div>
-        </div>
     </div>
 
-    <!--Modal para CRUD-->
-    <div id="modalCRUD" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"></h5>                
-                </div>
-                <form id="form">    
-                    <div class="modal-body form"> 
-                        <input id="id" hidden>  
-                   
-                            <div class="input-container">
-                                <select id="ruta" class="input">
-                                    <option value="/api/bodega/page">Bodega</option>
-                                    <option value="/api/categorias/page">Categoria</option>
-                                    <option value="/api/color/page">Color</option>
-                                    <option value="/api/configuracion/page">Configuracion</option>
-                                    <option value="/api/empleado/page">Empleado</option>
-                                    <option value="/api/marcas/page">Marca</option>
-                                    <option value="/api/promociones/page">Promocion</option>
-                                    <option value="/api/Proveedor/page">Proveedor</option>
-                                    <option value="/api/rol/page">rol</option>
-                                    <option value="/api/talla/page">Talla</option>
-                                    <option value="/api/materialesZapatos/page">Material Zapato</option>
-                                </select>
-                                <label for="ruta">Rutas</label>
-                            </div>
-                         
-                            <div class="input-container">               
-                                <select class="input" id="idRecurso" aria-label="select"> </select>
-                                    <label for="Recurso">Recurso</label>
-                                </div>
-                                <div class="input-container">     
-                                   
-                                    <select class="input" id="idRol" aria-label="select"> </select>
-                                        <label for="Rol">Rol</label>
-                                    </div>
-                                </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" id="btnGuardar" class="btn btn-dark">Guardar</button>
-                    </div>
-                </form>    
+
+<div id="vista1" class="vista">
+ 
+
+
+
+  <div class="row  p-3 ">
+    <div class="table-container">
+        <table id="TablaConfiguracionesVer" class="custom-table">
+        <thead>
+            <tr>
+                <th>Recurso</th>
+                <th>Accion</th>
+                <th>Rol</th>
+               
+                
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+        </table> 
+    </div>
+</div>
+</div>
+<div id="vista2" class="vista">
+  <div class="row">
+
+    <button id="btnAsignacionMasiva" class="btn btn-primary">Agregar Configuraciones</button>
+  
+  </div>
+  
+        <div class="row">
+          <div class="col-md-4">
+            <div id="miListaRecurso" class="lista">
+              <input type="text" class="buscadorImputConfig" id="buscadorRecurso" placeholder="Buscar en Recurso">
+              <!-- Los elementos se agregarán dinámicamente desde JavaScript -->
             </div>
+          </div>
+          
+          <div class="col-md-4">
+            <div id="miListaAcciones" class="lista">
+              <input type="text"  class="buscadorImputConfig" id="buscadorAcciones" placeholder="Buscar en Acciones">
+              <!-- Los elementos se agregarán dinámicamente desde JavaScript -->
+            </div>
+          </div>
+        
+          <div class="col-md-4">
+            <div id="miListaRol" class="lista">
+              <input type="text"  class="buscadorImputConfig" id="buscadorRol" placeholder="Buscar en Rol">
+              <!-- Los elementos se agregarán dinámicamente desde JavaScript -->
+            </div>
+          </div>
+  
+  
         </div>
-    </div>  
-
-
+        
+        <div class="row hadow-lg p-1 mb-2">
+  
+          <button id="btnCrear" class="btn btn-primary">Crear Configuraciones</button>
+        
+        </div>
+        <div class="row shadow-lg p-3 mb-5">
+          <div class="col">
+              <table id="TablaConfiguracion" class="table table-striped table-bordered" style="width:100%">
+              <thead>
+                  <tr>
+                      <th>CodigoRecurso</th>
+                      <th>NombreRecurso</th>
+                      <th>CodigoAccion</th>
+                      <th>NombreAccion</th>
+                      <th>CodigoRol</th>
+                      <th>NombreRol</th>     
+                      <th class="text-center">ACCIONES</th>                      
+                  </tr>
+              </thead>
+              <tbody>
+              </tbody>
+              </table> 
+          </div>
+      </div>
+       
 </div>
 
-    </section> 
+
+
+    </section>
   
-     <!-- jQuery -->
-<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-
-<!-- Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-
-<!-- Bootstrap JS -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.min.js" integrity="sha384-5h4UG+6GOuV9qXh6HqOLwZMY4mnLPraeTrjT5v07o347pj6IkfuoASuGBhfDsp3d" crossorigin="anonymous"></script>
-
-<!-- DataTables jQuery Plugin -->
-<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-
-<!-- DataTables Bootstrap Plugin -->
-<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap5.min.js"></script>
-
-<!-- SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    
  

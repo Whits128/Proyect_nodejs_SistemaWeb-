@@ -4,76 +4,8 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* Tres columnas de igual ancho */
     grid-template-rows: repeat(2, auto); /* Dos filas de altura automática */
- 
+ gap: 10px;
 }
 
-.contenedor_WidgetsInicio {
-    background-color: var(--color-7);
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    height: 130px;
-    width: 300px;
-    margin: 20px;
-    transition: transform 0.2s; /* Animación de transición en hover */
-}
 
-/* Agregamos la transición para el hover */
-.contenedor_WidgetsInicio:hover {
-    transform: scale(1.05); /* Escalar un poco en hover */
-}
 
-.contenedor_padre_info_icono {
-    display: flex;
-    flex-direction: row;
-    height: 100px;
-    justify-content: space-between;
-}
-
-.contenedor_numero_info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 180px;
-}
-
-.widget-numer {
-    color: var(--color-1);
-    margin-top: 10px; /* Aumenta el margen superior */
-    margin-bottom: 5px; /* Ajusta el margen inferior */
-    font-size: 35px;
-    font-weight: bold;
-}
-
-.widget-name {
-    margin-top: 5px; /* Ajusta el margen superior */
-    font-size: 20px;
-}
-
-.contenedor_icono {
-    display: flex;
-    align-items: center;
-    width: 100px;
-}
-
-.fa-solid {
-    font-size: 80px;
-    color: var(--color-3);
-}
-
-.widget-button {
-    text-decoration: none;
-    color: var(--color-8);
-    font-weight: bold;
-    display: block;
-    text-align: center;
-    padding: 10px;
-    background-color: var(--color-3); /* Hacer el fondo transparente */
-    transition: background-color 0.2s; /* Animación de transición en hover */
-}
-
-/* Agregamos la transición para el hover */
-.widget-button:hover {
-    background-color: var(--color-4); /* Cambiar el fondo en hover */
-color: var(--color-1);
-}

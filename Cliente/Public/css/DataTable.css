@@ -1,44 +1,190 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
+@import '/css/VariablesGlobales.css'; 
+
+/*css para hacer zoom en vista configuracion */
+#imagenZoomContainer {
+    position: fixed;
+    top: 50%; /* Ajusta la posición verticalmente */
+    left: 50%; /* Ajusta la posición horizontalmente */
+    transform: translate(-50%, -50%); /* Centra el contenedor */
+    z-index: 9999;
+    display: none;
 }
 
-.container {
-    max-width: 800px;
-    margin: 0 auto;
+#imagenZoom {
+    width: 400px; /* Tamaño de la imagen de zoom */
+    height: auto;
+    transition: transform 0.3s ease; /* Agrega una transición suave para el efecto de zoom */
 }
 
-.table {
+#imagenZoom:hover {
+    transform: scale(1.5); /* Aumenta la escala al 150% al pasar el cursor sobre la imagen */
+}
+
+
+
+/*css para el contenedor de los botones pricipales*/
+.botones_Cart{
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+     border-radius: 8px;
+     height: 80px;
+      margin-top: 10px;
+      margin: 10px 0 0 10px;
+}
+/*css para los bonones mayormento los de crear en las vistas*/
+.Boton_crearPrincipal{
+width: 80px;
+height: 50px; 
+margin-top:15px;
+margin-left: 10px;
+}
+/*css para el titulo del nombre de la vistas*/
+#page-title {
+    font-size: 2.1rem; /* Tamaño de fuente grande */
+    
+    color: var(--color-5)  !important; /* Color de texto oscuro */
+    text-align: center; /* Alinear al centro */
+    margin-top: 5px; /* Margen superior */
+    margin-bottom: 30px; /* Margen inferior */
+    text-transform: capitalize; /* Convertir texto a mayúscula solo en la primera letra */
+  /*background-color: var(--color-4);*/
+  border-bottom: 1px solid black;
+
+  }
+  
+/* Cambiar la posición del tooltip */
+.tooltip_opcion {
+    position: absolute;
+    top: 0;
+    font-size: 14px;
+    background: #ffffff;
+    color: #0f0f0f;
+    padding: 5px 8px;
+    border-radius: 5px;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  .tooltip_opcion::before {
+    position: absolute;
+    content: "";
+    height: 8px;
+    width: 8px;
+    background: #ffffff;
+    bottom: -3px;
+    left: 50%;
+    transform: translate(-50%) rotate(45deg);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  #btnOpciones:hover .tooltip_opcion {
+    top: -45px;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  
+
+
+
+
+/* Estilos generales de la tabla */
+.dataTables_wrapper {
+    padding: 20px; /* Ajusta el espacio interno */
+    background-color: var(--color-5) !important; /* Color de fondo */
+    border-radius: 8px; /* Borde redondeado */
+   
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+.dataTables_wrapper label,text,span,li{
+    color: var(--color-1) !important;
+}
+/* Estilos generales */
+.table-container {
     width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
+    overflow-x: auto;
+}
+div.dataTables_wrapper div.dataTables_length select{
+    color: var(--color-1) !important;  
+background-color:var(--color-3) ;
+
+}
+div.dataTables_wrapper div.dataTables_filter input{
+    color: var(--color-1) !important;
+    background-color: var(--color-4);
 }
 
-.table th, .table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
+.custom-table {
+    width: 100% !important;
+    
+}
+/* Cambiar el color del texto del contador de registros */
+.dataTables_info {
+    color: var(--color-1) !important;
+}
+/* Cambiar el color del texto de los botones de paginación */
+/* Cambia el color de fondo y el color del texto de los botones "Anterior" y "Siguiente" */
+
+
+/* Cambia el color de fondo y el color del texto de los botones "Anterior" y "Siguiente" cuando están deshabilitados */
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled a {
+    background-color: var(--color-4); /* Cambia 'grey' por el color deseado */
+    color: white; /* Cambia 'white' por el color del texto deseado */
 }
 
-.table th {
+
+
+/* Estilo para el encabezado de la tabla */
+.custom-table th {
     background-color: #f2f2f2;
+    color: #333;
+    font-weight: bold;
+    padding: 12px 15px;
+    border: 1px solid #dee2e6;
+    border-bottom: 2px solid #dee2e6;
+    vertical-align: middle;
+    
 }
 
-.table tbody tr:hover {
-    background-color: #f5f5f5;
+/* Estilo para las celdas de la tabla */
+.custom-table td {
+    padding: 12px 15px;
+    border: 1px solid #dee2e6;
+    vertical-align: middle;
 }
 
-.table-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+
+
+
+/* Estilo para los botones de acción */
+.custom-table .btn {
+    padding: 6px 12px;
+    margin: 2px;
+    font-size: 14px;
+    border-radius: 4px;
 }
 
-.pagination-button {
-    padding: 8px 16px;
-    cursor: pointer;
+.custom-table .btn-editar {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
 }
 
-.pagination-button:hover {
-    background-color: #f2f2f2;
+.custom-table .btn-borrar {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
 }
+
+.custom-table .btn:hover {
+    opacity: 0.8;
+}
+/* Estilo para centrar texto en las celdas de la tabla */
+.custom-table th,
+.custom-table td {
+    text-align: center; /* Centra el texto horizontalmente */
+    color: #333; /* Color del texto */
+    font-weight: bold; /* Establece el texto en negrita */
+}
+

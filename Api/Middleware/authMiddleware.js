@@ -3,8 +3,9 @@ import config from '../../Config/config';
 import { promisify } from 'util';
 import { getConnection, sql } from '../models/connection';
 
+import { verifyToken} from '../Middleware/MiddlewareJWT';
 import * as UsuarioModel from '../models/ConsultaUsuario';
-import { Console } from 'console';
+
 
 
 export const isAuthenticated = async (req, res, next) => {
@@ -12,7 +13,7 @@ export const isAuthenticated = async (req, res, next) => {
       try {
         
       
-        const decodificada = await promisify(jwt.verify)(req.cookies.jwt, config.JWT_SECRET);
+        const decodificada = await verifyToken(req.cookies.jwt);
   
         const pool = await getConnection();
   
@@ -57,6 +58,8 @@ export const isAuthenticated = async (req, res, next) => {
   export const checkAccess = async (req, res, next) => {
     let pool;
     try {
+
+
       // Verifica si el usuario está autenticado
       if (!req.user) {
         return res.status(403).json({ error: 'Acceso denegado. Usuario no autenticado' });
@@ -69,16 +72,21 @@ export const isAuthenticated = async (req, res, next) => {
       // Consulta la configuración de acceso desde la base de datos
       const routeConfig = await getRouteConfig(currentPath);
       console.log('routeConfig', routeConfig);
-  
+ 
       if (!routeConfig) {
         return res.status(403).json({ error: 'Ruta no encontrada' });
       }
   
-      const { IdRecurso, Ruta } = routeConfig;
+      const { IdRecurso, IdAccion,Ruta } = routeConfig;
       const user = req.user; // Objeto del usuario que incluye el rol
       console.log('IdRecurso', IdRecurso);
+      console.log('IdAccion', IdAccion);
       console.log('user', user);
-  
+      console.log('IdRol', user.IdRol);
+         // Obtiene las rutas permitidas para el usuario
+    const allowedRoutes = await getRoutesByUserId(user.IdUsuario);
+    console.log('Rutas permitidas:', allowedRoutes);
+    const allowedActions = await   getActionsByUserId(user.IdUsuario)
       // Normaliza las rutas antes de la comparación
       const normalizedCurrentPath = currentPath.replace(/\\/g, '/');
       const normalizedDbPath = Ruta.replace(/\\/g, '/').toLowerCase();
@@ -90,10 +98,15 @@ export const isAuthenticated = async (req, res, next) => {
       }
   
       // Verifica si el usuario tiene acceso al recurso y rol
-      const hasAccess = await hasUserAccess(user, IdRecurso);
+      const hasAccess = await hasUserAccess(user, IdRecurso,IdAccion);
       console.log('hasAccess', hasAccess);
   
       if (hasAccess > 0) {
+        // Agrega la información de rutas permitidas a res.locals
+        // Agrega la información de rutas permitidas a res.locals
+      res.locals.allowedRoutes = allowedRoutes;
+      res.locals.allowedActions =allowedActions;
+        console.log('acciones  permitidas:',  res.locals.allowedActions); // Imprime la información
         next(); // El usuario tiene acceso al recurso y rol
       } else {
         return res.status(403).json({ error: 'Acceso denegado' });
@@ -106,7 +119,11 @@ export const isAuthenticated = async (req, res, next) => {
     } finally {
       // Cierra la conexión de la base de datos en caso de que se haya abierto
       if (pool) {
-        await pool.close();
+        try {
+          await pool.close();
+        } catch (error) {
+          console.error('Error al cerrar la conexión de la base de datos:', error.message);
+        }
       }
     }
   };
@@ -121,43 +138,151 @@ export const isAuthenticated = async (req, res, next) => {
       const result = await pool
         .request()
         .input('ruta', sql.NVarChar, ruta)
-        .query('SELECT TOP 1 IdRecurso, IdRol,Ruta  FROM ConfiguracionAcceso WHERE Ruta = @ruta');
+        .query(`
+        SELECT TOP 1
+        CA.IdRecurso, 
+        R.NombreRecurso,
+        CA.IdAccion, 
+        A.NombreAccion,
+        CA.IdRol,
+        C.NombreRol,
+        R.Ruta 
+      FROM 
+        ConfiguracionAcceso CA
+        INNER JOIN Recursos R ON CA.IdRecurso = R.IdRecurso
+        INNER JOIN Acciones A ON CA.IdAccion = A.IdAccion
+        INNER JOIN Roles C ON CA.IdRol = C.IdRol where R.Ruta  = @ruta;
+        `);
   
-      return result.recordset[0];
+      const routeConfig = result.recordset[0];
+  
+      if (!routeConfig) {
+        console.error('Configuración de ruta no encontrada.');
+        return null;
+      }
+  
+      console.log('Ruta encontrada:', routeConfig);
+      return routeConfig;
     } catch (error) {
       console.error('Error al obtener la configuración de ruta:', error);
       throw error;
     } finally {
-      // Cierra la conexión de la base de datos en caso de que se haya abierto
       if (pool) {
         await pool.close();
       }
     }
   };
   
+
+  
   // Función para verificar el acceso del usuario en la base de datos
-  const hasUserAccess = async (user, IdRecurso) => {
+const hasUserAccess = async (user, IdRecurso, IdAccion) => {
+  let pool;
+  try {
+    pool = await getConnection();
+    const result = await pool
+      .request()
+      .input('userId', sql.Int, user.IdUsuario)
+      .input('IdRecurso', sql.Int, IdRecurso)
+      .input('IdAccion', sql.Int, IdAccion)
+      .input('IdRol', sql.Int, user.IdRol)
+      .query('SELECT COUNT(*) AS accessCount FROM ConfiguracionAcceso WHERE IdRol = @IdRol AND IdRecurso = @IdRecurso AND IdAccion = @IdAccion');
+    console.log('result', result);
+    return result.recordset[0].accessCount > 0;
+
+  } catch (error) {
+    console.error('Error al verificar el acceso del usuario:', error);
+    throw error;
+  } finally {
+    // Cierra la conexión de la base de datos en caso de que se haya abierto
+    if (pool) {
+      await pool.close();
+    }
+  }
+};
+
+ 
+  export const getRoutesByUserId = async (userId) => {
     let pool;
     try {
       pool = await getConnection();
+  
       const result = await pool
         .request()
-        .input('userId', sql.Int, user.IdUsuario)
-        .input('IdRecurso', sql.Int, IdRecurso)
-        .input('IdRol', sql.Int, user.IdRol)
-        .query('SELECT COUNT(*) AS accessCount FROM ConfiguracionAcceso WHERE IdRol = @IdRol AND IdRecurso = @IdRecurso');
-        console.log('result',result);
-      return result.recordset[0].accessCount > 0;
-     
+        .input('userId', sql.Int, userId)
+        .query(`
+          
+SELECT
+R.NombreRol,
+A.NombreAccion,
+Rec.NombreRecurso,
+Rec.Ruta
+FROM
+USUARIO U
+JOIN Roles R ON U.IdRol = R.IdRol
+JOIN ConfiguracionAcceso RA ON U.IdRol = RA.IdRol
+JOIN Acciones A ON RA.IdAccion = A.IdAccion
+JOIN Recursos Rec ON RA.IdRecurso = Rec.IdRecurso
+WHERE
+U.IdUsuario = @userId;
+
+        `);
+  
+      return result.recordset.map((row) => row.Ruta);
     } catch (error) {
-      console.error('Error al verificar el acceso del usuario:', error);
+      console.error('Error al obtener las rutas por IdUsuario:', error);
       throw error;
     } finally {
-      // Cierra la conexión de la base de datos en caso de que se haya abierto
       if (pool) {
-        await pool.close();
+        try {
+          await pool.close();
+        } catch (error) {
+          console.error('Error al cerrar la conexión de la base de datos:', error.message);
+        }
       }
     }
   };
-  
- 
+
+
+
+  // Función para obtener las acciones permitidas para un usuario
+export const getActionsByUserId = async (userId) => {
+  let pool;
+  try {
+    pool = await getConnection();
+
+    const result = await pool
+      .request()
+      .input('userId', sql.Int, userId)
+      .query(`
+        SELECT
+          R.NombreRol,
+          A.NombreAccion,
+          Rec.NombreRecurso,
+          Rec.Ruta
+        FROM
+          USUARIO U
+          JOIN Roles R ON U.IdRol = R.IdRol
+          JOIN ConfiguracionAcceso RA ON U.IdRol = RA.IdRol
+          JOIN Acciones A ON RA.IdAccion = A.IdAccion
+          JOIN Recursos Rec ON RA.IdRecurso = Rec.IdRecurso
+        WHERE
+          U.IdUsuario = @userId;
+      `);
+
+    return result.recordset.map((row) => ({
+      Accion: row.NombreAccion,
+    }));
+  } catch (error) {
+    console.error('Error al obtener las acciones por IdUsuario:', error);
+    throw error;
+  } finally {
+    if (pool) {
+      try {
+        await pool.close();
+      } catch (error) {
+        console.error('Error al cerrar la conexión de la base de datos:', error.message);
+      }
+    }
+  }
+};
