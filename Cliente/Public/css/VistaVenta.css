@@ -190,6 +190,10 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       max-width: 300px; /* Ajustado el ancho máximo del formulario */
       margin: 0 auto; /* Centrado horizontal */
+      
+    }
+  #codigoVenta .label{
+      color: var(--color-1) !important;
     }
 
     .form-header {
@@ -214,17 +218,9 @@
 
  
 
-    .card-calculo {      
-      overflow: hidden;
-     
-            transition: transform 0.3s;
-        
-    
-    }
 
-    .card-calculo:hover {
-      transform: scale(1.02);
-    }
+
+   
 
     .title {
       padding: 15px;

@@ -56,10 +56,10 @@
                 </button>
             
                 <!-- Elementos para mostrar monto y valor -->
-                <div   style="width:20%; height: 50px; margin-left: 20px; margin-top: 10px;color: black;">
+                <div   style="width:20%; height: 50px; margin-left: 20px; margin-top: 10px;color: black;  font-weight: bold ">
                     <div id="monto"> Monto Nota Credito: </div>
                 </div>
-                <div  style="width:20%; height: 50px;  margin-top: 10px; color: black;">
+                <div  style="width:20%; height: 50px;  margin-top: 10px; color: black;  font-weight: bold ">
                     <div id="valorNotacredito">
                     C$ 0
                     </div>
@@ -82,13 +82,13 @@
                                    <div class="payment-details">
                                      <div class="input-container">
                                        <input type="text" id="codigoVenta" required>
-                                       <label for="codigoVenta" class="label">Código de Venta</label>
+                                       <label for="codigoVenta" class="label" style="color: #FFFFFF !important;">Código de Venta</label>
                                        <div class="underline"></div>
                                      </div>
                            
                                      <div class="input-container">
                                        <input type="date" id="fechaventa" required>
-                                       <label for="fechaventa" class="label">Fecha de Venta</label>
+                                       <label for="fechaventa" class="label" style="color: #FFFFFF !important;">Fecha de Venta</label>
                                        <div class="underline"></div>
                                      </div>
                            
@@ -96,7 +96,7 @@
                                        <% if (user) { %>
                                          <input id="idEmpleado" value="<%= user.ID_Empleado %>" hidden>
                                          <input type="text" id="empleado" required value="<%= user.NombreEmpleado %>">
-                                         <label for="empleado" class="label" >Empleado</label>
+                                         <label for="empleado" class="label" style="color: #FFFFFF !important;">Empleado</label>
                                          <div class="underline"></div>
                                        <% } %>
                                      </div>
@@ -132,7 +132,7 @@
                        <div class="row  p-3   carrito"  >
     
                             <div class="table-container">
-                                   <table id="Tabladetalle"class="custom-table" >
+                                   <table id="Tabladetalle" class="custom-table" >
                                    <thead>
                                        <tr>
                                            <th>condigo_Inventario</th>
@@ -182,7 +182,7 @@ MODAL LISTADO DE Inventario
                 
                 <div class="contenedor_Table">
                     <!-- LISTADO DE inventario -->
-                    <table id="tbl_Inventario" class="table table-striped table-bordered" >
+                    <table id="tbl_Inventario" class="custom-table" >
                         <thead>
                             <tr>
                         <th>#</th>

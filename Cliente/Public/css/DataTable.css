@@ -36,6 +36,13 @@ width: 80px;
 height: 50px; 
 margin-top:15px;
 margin-left: 10px;
+
+}
+
+.Boton_crearPrincipal:hover {
+    background-color: var(--color-2) !important; /* Cambio de color al pasar el mouse */
+    color: var(--color-5) !important;
+    font-weight: bold; /* Texto en negrita al pasar el mouse */
 }
 /*css para el titulo del nombre de la vistas*/
 #page-title {
@@ -56,40 +63,45 @@ margin-left: 10px;
     position: absolute;
     top: 0;
     font-size: 14px;
-    background: #ffffff;
-    color: #0f0f0f;
+    background: #000 !important; /* Fondo completamente negro */
+    color: var(--color-1) !important;
     padding: 5px 8px;
     border-radius: 5px;
-    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
-    opacity: 0;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 1);
+    display: none; /* Inicialmente oculto */
     pointer-events: none;
     transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
+}
   
-  .tooltip_opcion::before {
+.tooltip_opcion::before {
     position: absolute;
     content: "";
     height: 8px;
     width: 8px;
-    background: #ffffff;
+    background: #000 !important; /* Fondo completamente negro */
     bottom: -3px;
     left: 50%;
     transform: translate(-50%) rotate(45deg);
     transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
+}
   
-  #btnOpciones:hover .tooltip_opcion {
+#btnOpciones:hover .tooltip_opcion {
     top: -45px;
-    opacity: 1;
+    display: block; /* Mostrar el tooltip al hacer hover */
     visibility: visible;
     pointer-events: auto;
-  }
+}
+
+
   
 
 
 
 
 /* Estilos generales de la tabla */
+.dataTable td{
+    background-color: var(--color-2) !important;
+}
 .dataTables_wrapper {
     padding: 20px; /* Ajusta el espacio interno */
     background-color: var(--color-5) !important; /* Color de fondo */
@@ -128,7 +140,7 @@ div.dataTables_wrapper div.dataTables_filter input{
 
 
 /* Cambia el color de fondo y el color del texto de los botones "Anterior" y "Siguiente" cuando están deshabilitados */
-.dataTables_wrapper .dataTables_paginate .paginate_button.disabled a {
+.dataTables_wrapper .dataTables_paginate .paginate_button a {
     background-color: var(--color-4); /* Cambia 'grey' por el color deseado */
     color: white; /* Cambia 'white' por el color del texto deseado */
 }
@@ -188,3 +200,7 @@ div.dataTables_wrapper div.dataTables_filter input{
     font-weight: bold; /* Establece el texto en negrita */
 }
 
+div.dataTables_wrapper div.dataTables_length select{
+    width: 60px !important;
+    
+}

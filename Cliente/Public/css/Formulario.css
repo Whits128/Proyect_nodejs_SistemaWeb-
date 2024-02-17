@@ -149,8 +149,8 @@ aside{
 .input-container textarea:focus ~ .label,
 .input-container textarea:valid ~ .label {
     top: -20px;
-    font-size: 14px;
-    color: #333;
+    font-size: 1.1rem;
+    color:var(--color-5) !important;
 }
 
 .input-container .underline {
@@ -174,4 +174,79 @@ aside{
 .input-container textarea:focus ~ .underline,
 .input-container textarea:valid ~ .underline {
     transform: scaleX(1);
+}
+/*Css para los modales */
+ .modal-content {
+    background-color: var(--color-2) !important; /* Fondo gris claro */
+    color: var(--color-5) !important; /* Color de texto */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+
+.modal-header {
+    display: flex; /* Usar flexbox para alinear el contenido */
+    justify-content: space-between; /* Distribuir el espacio entre los elementos */
+    align-items: center; /* Centrar verticalmente el contenido */
+    background-color: var(--color-3) !important; /* Fondo azul claro */
+    color: var(--color-1); /* Color de texto blanco */
+    border-top-left-radius: 10px; /* Bordes redondeados arriba a la izquierda */
+    border-top-right-radius: 10px; /* Bordes redondeados arriba a la derecha */
+    padding: 10px; /* Añadir un poco de espacio alrededor del contenido */
+}
+
+ .modal-header h5 {
+    margin: 0; /* Eliminar el margen del título */
+    flex: 1; /* Ocupar todo el espacio disponible */
+    text-align: center; /* Centrar el texto horizontalmente */
+}
+.modal-footer {
+    background-color: var(--color-4); /* Fondo azul oscuro */
+    border-bottom-left-radius: 10px; /* Bordes redondeados abajo a la izquierda */
+    border-bottom-right-radius: 10px; /* Bordes redondeados abajo a la derecha */
+}
+
+ .input-container input,
+ .input-container select {
+    border: none; /* Sin bordes */
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: var(--color-1); /* Fondo blanco para campos de entrada */
+    color: var(--color-5); /* Color de texto */
+    margin-top: 6px;
+    font-weight: bold !important; /* Texto en negrita al pasar el mouse */
+}
+
+.input-container label {
+    color: var(--color-3) !important; /* Color de la etiqueta en azul claro */
+   
+}
+
+ .input-container .underline {
+    background-color: var(--color-3); /* Color de la línea inferior en azul claro */
+}
+
+ .btn-secondary {
+    background-color: var(--color-5); /* Color de fondo azul oscuro */
+    color: var(--color-1); /* Color de texto blanco */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: background-color 0.3s ease; /* Transición suave */
+}
+
+ .btn-secondary:hover {
+    background-color: var(--color-1) !important; /* Cambio de color al pasar el mouse */
+    color: var(--color-5) !important;
+    font-weight: bold; /* Texto en negrita al pasar el mouse */
+}
+
+ .btn-dark {
+    background-color: var(--color-5) !important; /* Color de fondo azul claro */
+    color: var(--color-1); /* Color de texto blanco */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: background-color 0.3s ease; /* Transición suave */
+}
+
+ .btn-dark:hover {
+    background-color: var(--color-1) !important; /* Cambio de color al pasar el mouse */
+    color: var(--color-5) !important;
+    font-weight: bold; /* Texto en negrita al pasar el mouse */
 }
