@@ -26,24 +26,9 @@ export async function generatePDF(codigoCompra, response) {
 
             // Definir la ruta donde se guardará el archivo PDF
             const fileName = `factura_${codigoCompra}.pdf`;
-            const filePath = path.join(os.homedir(), 'Downloads/', fileName);
-            const bannerFilePath = 'C:/Users/Navas/Desktop/ServerApi/Cliente/Public/imagenes/Baner8.svg';
-            const bannerContent = fs.readFileSync(bannerFilePath, 'utf-8');
-            
-            const headerHeight = 850; // Altura del encabezado
-            const bannerWidth = 1100; // Ancho deseado del banner
-            const bannerHeight = headerHeight; // Igualar altura al encabezado
-            
-
-
-// Ruta y contenido del segundo banner
-const secondBannerFilePath = 'C:/Users/Navas/Desktop/ServerApi/Cliente/Public/imagenes/Baner9.svg';
-const secondBannerContent = fs.readFileSync(secondBannerFilePath, 'utf-8');
-
-const secondBannerWidth = 595; // Ancho deseado del segundo banner
-const secondBannerHeight = 210 // Igualar altura al encabezado
-
-
+            const filePath = path.join('D:', 'Downloads', fileName);
+           
+    
 
 
 
@@ -51,69 +36,59 @@ const secondBannerHeight = 210 // Igualar altura al encabezado
             const doc = new PDFDocument({ margin: 30, size: 'A4' });
             // Ajusta según sea necesario
 const espacioEntreElementos = 10;
-// Definir manualmente las coordenadas X e Y para el banner
-const bannerX = -145; // Cambiar según sea necesario
-const bannerY = -313; // Cambiar según sea necesario
-
-// Función para agregar el banner en la posición correcta
-function addBanner() {
-    svgToPdfKit(doc, bannerContent, bannerX, bannerY, {
-        width: bannerWidth,
-        height: bannerHeight,
-    });
-}
-
-// Escuchar el evento 'pageAdded' para agregar el banner en cada nueva página
-doc.on('pageAdded', addBanner);
-
-// Añadir el banner en la primera página
-addBanner();
 
 
-// Coordenadas para el segundo banner
-const secondBannerX = 0; // Cambiar según sea necesario
-const secondBannerY = 650; // Cambiar según sea necesario
+// Dibujar una línea vertical
+doc.moveTo(20, 5) // Mover a punto inicial (x, y)
+    .lineTo(20, 900) // Dibujar línea vertical hasta punto final (misma x, diferente y)
+    .stroke(); // Dibujar la línea
 
-// Función para agregar el segundo banner en la posición correcta
-function addSecondBanner() {
-    svgToPdfKit(doc, secondBannerContent, secondBannerX, secondBannerY, {
-        width: secondBannerWidth,
-        height: secondBannerHeight,
-    });
-}
 
-// Escuchar el evento 'pageAdded' para agregar el segundo banner en cada nueva página
-doc.on('pageAdded', addSecondBanner);
 
-// Añadir el segundo banner en la primera página
-addSecondBanner();
-           // Encabezado del PDF
-           const headerX =335; // Ajusta según sea necesario
-           const headerY =135; // Ajusta según sea necesario
-           doc.fontSize(25).fillColor('#4f7813').text("Factura de Compra", headerX, headerY);
+// Dibujar una línea vertical
+doc.moveTo(20, 0) // Mover a punto inicial (x, y)
+    .lineTo(20, 900) // Dibujar línea vertical hasta punto final (misma x, diferente y)
+    .stroke(); // Dibujar la línea
 
+
+
+// Dibujar una línea vertical
+doc.moveTo(570, 0) // Mover a punto inicial (x, y)
+    .lineTo(570, 900) // Dibujar línea vertical hasta punto final (misma x, diferente y)
+    .stroke(); // Dibujar la línea
+
+    // Dibujar una línea vertical
+doc.moveTo(420, 0) // Mover a punto inicial (x, y)
+.lineTo(420, 170) // Dibujar línea vertical hasta punto final (misma x, diferente y)
+.stroke(); // Dibujar la línea
+
+// Dibujar una línea horizontal
+doc.moveTo(20, 170) // Mover a punto inicial (x, y)
+    .lineTo(570, 170) // Dibujar línea horizontal hasta punto final (diferente x, misma y)
+    .stroke(); // Dibujar la línea
 
 if (localInfo.LogoLocal) {
     const logoBase64 = await getBase64Image(localInfo.LogoLocal);
     const logoWidth = 100;
     const logoHeight = 100;
-    
-    // Ajustar la posición vertical del logo para alinear con el texto
-    const logoX = doc.page.margins.left; // Ajusta la posición horizontal manualmente
-    const logoY = doc.y + -130; // Ajusta la posición vertical manualmente
-    
-    doc.image(logoBase64, logoX, logoY, { width: logoWidth, height: logoHeight });
+    const logoX = 450; // Ajusta según sea necesario
+const logoY =15; // Ajusta según sea necesario
+// Ajustar la posición vertical del logo para alinear con el texto
+
+doc.image(logoBase64, logoX, logoY, { width: logoWidth, height: logoHeight });
+
+
+
 } else {
     console.warn('La propiedad LogoLocal no está definida en localInfo.');
 }
 // Nombre del Local
-const localNameX = 20; // Ajusta según sea necesario
-const localNameY =6; // Ajusta según sea necesario
-doc.fontSize(20).fillColor('#689d13').text(`${localInfo.NombreNegocio}`, localNameX, localNameY);
-
+const localNameX = 430; // Ajusta según sea necesario
+const localNameY =150; // Ajusta según sea necesario
+doc.fontSize(20).fillColor('000000').text(`${localInfo.NombreNegocio}`, localNameX, localNameY);
 
             // Añadir espaciado 
-            doc.moveDown(4);
+            doc.moveDown();
             
             // Logo del Local
         // Logo a la izquierda
@@ -125,15 +100,15 @@ doc.fontSize(20).fillColor('#689d13').text(`${localInfo.NombreNegocio}`, localNa
             
             // Texto a la izquierda
             const textX = doc.page.margins.left;
-            const textY = doc.y + 30; // Ajusta la posición vertical manualmente
+            const textY = doc.y + -160; // Ajusta la posición vertical manualmente
             
-            doc.fontSize(16).fillColor('#689d13').text(`Código de la Compra: ${compras[0].CodigoCompra}`, textX, textY);
-            doc.fontSize(16).fillColor('#689d13').text(`Fecha de la Compra: ${fechaFormateada}`, textX, textY + 20);
-            doc.fontSize(16).fillColor('#689d13').text(`Estado de la Compra: ${compras[0].EstadoCompra}`, textX, textY + 40);
-            doc.fontSize(16).fillColor('#689d13').text(`Empleado: ${compras[0].NombreEmpleado}`, textX, textY + 60);
-            doc.fontSize(16).fillColor('#689d13').text(`Total General: ${compras[0].TotalGeneral}`, textX, textY + 80);
+            doc.fontSize(16).fillColor('000000').text(`Código de la Compra: ${compras[0].CodigoCompra}`, textX, textY);
+            doc.fontSize(16).fillColor('000000').text(`Fecha de la Compra: ${fechaFormateada}`, textX, textY + 20);
+            doc.fontSize(16).fillColor('000000').text(`Estado de la Compra: ${compras[0].EstadoCompra}`, textX, textY + 40);
+            doc.fontSize(16).fillColor('000000').text(`Empleado: ${compras[0].NombreEmpleado}`, textX, textY + 60);
+            doc.fontSize(16).fillColor('000000').text(`Total General: ${compras[0].TotalGeneral}`, textX, textY + 80);
             // Añadir espaciado entre las dos tablas
-            doc.moveDown(2);
+            doc.moveDown(3);
 
             const table = {
                 title: 'Detalles de la Compra',
@@ -170,12 +145,11 @@ doc.fontSize(20).fillColor('#689d13').text(`${localInfo.NombreNegocio}`, localNa
             // La magia (async/await)
             await doc.table(table, {
                 autoSize: false,
-                prepareHeader: () => doc.fontSize(10).fillColor('#4f7813'),
-                prepareRow: (row, i) => doc.fontSize(9).fillColor(i % 2 === 0 ? '#94d720' : '#385017')
+                prepareHeader: () => doc.fontSize(10).fillColor('000000'),
             });
 
             // Añadir espaciado entre las dos tablas
-            doc.moveDown(2); // Ajusta el valor según la cantidad de espacio que desees
+            doc.moveDown(3); // Ajusta el valor según la cantidad de espacio que desees
 
             // Crear otra tabla con sus propios datos
             const table2 = {
@@ -205,8 +179,8 @@ doc.fontSize(20).fillColor('#689d13').text(`${localInfo.NombreNegocio}`, localNa
             // La magia (async/await)
             await doc.table(table2, {
                 autoSize: false,
-                prepareHeader: () => doc.fontSize(10).fillColor('#4f7813'),
-                prepareRow: (row, i) => doc.fontSize(9).fillColor(i % 2 === 0 ? '#94d720' : '#385017')
+                prepareHeader: () => doc.fontSize(10).fillColor('000000'),
+           
             });
 
 

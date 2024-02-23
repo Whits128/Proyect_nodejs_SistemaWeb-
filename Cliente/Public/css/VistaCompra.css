@@ -161,7 +161,59 @@ margin-left: 10px;
     color: var(--color-4) !important;
     font-size: 20px;
 }
+.form-group {
+    margin-bottom: 20px;
+  }
 
+/* Estilos para los select con Select2 */
+.select2-container--default .select2-selection--single {
+height: 38px;
+line-height: 38px;
+border: 1px solid #ced4da;
+border-radius: 5px;
+background-color: var(--color-3) !important;
+color: var(--color-1);
+padding: 0 12px;
+width: 200px;
+
+}
+.select2-results__option[aria-selected]{
+    background-color: var(--color-4);
+   
+}
+.select2-results__option{
+    background-color: var(--color-3) !important;
+}
+.select2-container--default .select2-selection--single:focus {
+    border-color: var(--color-5);
+    outline: 0;
+  }
+  
+  .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 36px;
+  }
+  .select2-container--default .select2-selection--single .select2-selection__arrow b{
+    border-color: var(--color-2) transparent transparent transparent !important;
+  }
+  .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+    border-color: transparent transparent var(--color-2) transparent !important;
+    border-width: 0 4px 5px 4px;
+}
+
+  
+  
+
+  
+  /* Estilos adicionales para mejorar la apariencia */
+  .select2-container--default .select2-selection--single .select2-selection__arrow {
+    right: 10px;
+  }
+  
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
 /* CSS para el formulario general */
 #formvalores .input-container {
@@ -177,6 +229,7 @@ margin-left: 10px;
     left: 0;
     font-size: 100%;
     background-color: var(--color-5);
+    color: var(--color-2) !important;
 }
 
 #formvalores .input-container input[type="text"],
@@ -203,4 +256,9 @@ margin-left: 10px;
 #formvalores .input-container textarea:focus,
 #formvalores .input-container textarea:valid {
     background-color: var(--color-5);
+}
+
+
+.campo-vacio{
+    background-color: #e90d0d !important;
 }

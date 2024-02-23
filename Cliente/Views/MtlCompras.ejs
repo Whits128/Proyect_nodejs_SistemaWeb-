@@ -60,166 +60,123 @@
          <div class="contenedor-padre">
         
         <div class="contenedor-hijo">
-            <div class="TituloHijos">
-                <h2>Selección de Elementos</h2>
-              </div>
+      
           <!-- Formulario para el Registro de Compra -->
-
-        <form id="formDetalle" class="form">
-      <!-- Campos del formulario -->
-       
-   
-         <!-- Botón para Seleccionar Producto -->
-    <div class="input-container">
-        <button id="btnSeleccionarProducto" class="btn btn-primary">
-            <i class="fas fa-shopping-cart"></i> Seleccionar Producto
-        </button>
-    </div>
-
-<!--end producto -->
-  <!-- Botón para Seleccionar Marca -->
-  <div class="input-container">
-    <button id="btnmarcaSeleccionado" class="btn btn-primary">
-        <i class="fas fa-tags"></i> Seleccionar Marca
-    </button>
-</div>
-<!--end Marca -->
-  <!--Talla-->
-  <div class="input-container">
-    <button id="btntallaSeleccionado" class="btn btn-primary">
-        <i class="fas fa-shoe-prints"></i> Seleccionar Talla
-    </button>
-</div>
-
-<!--end Tallas -->
-  <!--Colores-->
-  <div class="input-container">
-    <button id="btncolorSeleccionado" class="btn btn-primary">
-        <i class="fas fa-palette"></i> Seleccionar Color
-    </button>
-</div>
-
-<!--end Colores -->
-  <!--MaterialZapatos-->
-  <div class="input-container">
-    <button id="btnMaterialZapatosSeleccionado" class="btn btn-primary">
-        <i class="fas fa-scroll"></i> Seleccionar Material
-    </button>
-</div>
-
- <!--Inventario-->
- <div class="input-container">
-    <button id="btnInventarioSeleccionado" class="btn btn-primary">
-        <i class="fas fa-warehouse"></i> Seleccionar Inventario
-    </button>
-</div>
-
-<!--end Inventario -->
-  <!--proveedor-->
-  <div class="input-container">
-    <button id="btnproveedorSeleccionado" class="btn btn-primary">
-        <i class="fas fa-user-tie"></i> Seleccionar Proveedor
-    </button>
-</div>
-
-<!--end Proveedor -->
-  <!--Bodega-->
-  <div class="input-container">
-    <button id="btnBodegaSeleccionado" class="btn btn-primary">
-        <i class="fas fa-warehouse"></i> Seleccionar Bodega
-    </button>
-</div>
-
-  <!--Bodega-->
-<!--end Seccion seleccion -->
-                  
-                </form>
-               
-            </div> <!-- Fin contenedor hijo 1 datos de selecion -->
-
-            <div class="contenedor-hijo">
-                <!-- Formulario para el Registro de Compra -->
-   
-              <form id="formvalores" class="form_grande">
-            <!-- Campos del formulario -->
-        
-
-            <div class="input-container ">
-                <input id="idproducto" hidden>
-                <!-- Input para mostrar la Producto seleccionado -->
-                <input type="text"  id="nombreProducto" readonly >
-                <label for="nombreProducto" >Producto:</label>
-     
-            </div>
-
-         <!---Seccion de selecion Marca imput -->
-    
-         <div class="input-container ">
-            <input id="idMarca" hidden>
-            <!-- Input para mostrar la marca seleccionado -->
-            <input type="text"  id="marca"   readonly >
-            <label for="marca">Marca:</label>
-          
-        </div>
-            <!--end Seccion de selecion Marca imput-->
-            
-      <!---Seccion de selecion Color imput -->
-    
-      <div class="input-container ">
-        <input id="idColor" hidden>
-        <!-- Input para mostrar la Color seleccionado -->
-        <input type="text"  id="color"   readonly>
-        <label for="color">Color:</label>
-     
-    </div>
-        <!--end Seccion de selecion Color imput-->
-        
-  <!---Seccion de selecion Talla imput -->
-    
-  <div class="input-container ">
-    <input id="idTalla" hidden>
-    <!-- Input para mostrar la Talla seleccionado -->
-    <input type="text"  id="talla"   readonly>
-    <label for="talla">TaLLa:</label>
-
-</div>
-    <!--end Seccion de selecion Talla imput-->
-
-  <!---Seccion de selecion Material imput -->
-    
-  <div class="input-container ">
-    <input id="idMaterial" hidden>
-    <!-- Input para mostrar la Material seleccionado -->
-    <input type="text"  id="material"   readonly>
-    <label for="material" >Material:</label>
-
-</div>
-    <!--end Seccion de selecion Material imput-->
-
-
-<!---Seccion de selecion Proveedor imput -->
-<div class="input-container ">
-    <input id="idProveedor" hidden>
-    <!-- Input para mostrar el proveedor seleccionado -->
-    <input type="text"  id="nombreProveedor"   readonly>
-    <label for="nombreProveedor" >Proveedor:</label>
-
-
-</div>
-
-<!--end Seccion de selecion Proveedor imput -->
-
+ <!-- Button to trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+    Abrir Modal
+  </button>
   
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Detalles del Producto</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Formulario -->
+          <form id="formDetalle" class="form">
+            <!-- Inicio del select Producto -->
+            <div class="input-container">
+              <div class="form-group">
+                <label for="selectProducto">Producto:</label>
+                <select class="form-control select2" id="selectProducto"></select>
+              </div>
+            </div>
+            <!-- Fin del select Producto -->
+            
+            <!-- Inicio del select Marca -->
+            <div class="input-container">
+              <div class="form-group">
+                <label for="selectMarca">Marca:</label>
+                <select class="form-control select2" id="selectMarca"></select>
+              </div>
+            </div>
+            <!-- Fin del select Marca -->
+            
+            <!-- Inicio del select Color -->
+            <div class="input-container">
+              <div class="form-group">
+                <label for="selectColor">Color:</label>
+                <select class="form-control select2" id="selectColor"></select>
+              </div>
+            </div>
+            <!-- Fin del select Color -->
+            
+            <!-- Inicio del select Talla -->
+            <div class="input-container">
+              <div class="form-group">
+                <label for="selectTalla">Talla:</label>
+                <select class="form-control select2" id="selectTalla"></select>
+              </div>
+            </div>
+            <!-- Fin del select Talla -->
+            
+            <!-- Inicio del select Material -->
+            <div class="input-container">
+              <div class="form-group">
+                <label for="selectMaterial">Material:</label>
+                <select class="form-control select2" id="selectMaterial"></select>
+              </div>
+            </div>
+            <!-- Fin del select Material -->
+            
+            <!-- Inicio del select Proveedor -->
+            <div class="input-container">
+              <div class="form-group">
+                <label for="selectProveedor">Proveedor:</label>
+                <select class="form-control select2" id="selectProveedor"></select>
+              </div>
+            </div>
+            <!-- Fin del select Proveedor -->
+            
+            <!-- Inicio del select Bodega -->
+            <div class="input-container">
+              <div class="form-group">
+                <label for="selectBodega">Bodega:</label>
+                <select class="form-control select2" id="selectBodega"></select>
+              </div>
+            </div>
+            <!-- Fin del select Bodega -->
+            
+            <!-- Inventario -->
+            <div class="input-container" style="margin-top: 15px;">
+              <button id="btnInventarioSeleccionado" class="btn btn-primary">
+                <i class="fas fa-warehouse"></i> Seleccionar Inventario
+              </button>
+            </div>
+            <!-- Fin del Inventario -->
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="button" id="btnDetalleCompras"  class="btn btn-primary"> <i class="fas fa-shopping-cart"></i> Guardar Carrito</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
+  <form id="formvalores" class="form_grande">
+    <!-- Campos del formulario -->
+
+
+
 
 <!---Seccion de selecion Empleado imput -->
 <% if (user) { %>
 <div class="input-container ">
-        
-    <input id="idEmpleado" value="<%= user.ID_Empleado %>" hidden>
-    <!-- Input para mostrar el empleado seleccionado -->
-    <input type="text"  id="Empeleado" value="<%= user.NombreEmpleado %>"  readonly>
-    <label for="idEmpleado" >Empleado:</label>
-  
+
+<input id="idEmpleado" value="<%= user.ID_Empleado %>" hidden>
+<!-- Input para mostrar el empleado seleccionado -->
+<input type="text"  id="Empeleado" value="<%= user.NombreEmpleado %>"  readonly>
+<label for="idEmpleado" >Empleado:</label>
+
 </div>
 <% } %>
 <!--end Seccion de selecion Empleado imput -->
@@ -227,94 +184,82 @@
 
 <!---Seccion de Ingreso de  Condicompra imput -->
 <div class="input-container ">
-    <!-- Input para mostrar el CondigoCompra  -->
-    <input type="text"   id="codigoCompra" >
-    <label for="codigoCompra" >Codigo Compra:</label>
-    
+<!-- Input para mostrar el CondigoCompra  -->
+<input type="text"   id="codigoCompra" >
+<label for="codigoCompra" >Codigo Compra:</label>
+
 </div>
 
 <!--end Seccion de Ingreso de  fechaCompra imput-->
 
 <!---Seccion de Ingreso de  Condicompra imput -->
 <div class="input-container ">
-    <input type="date" id="fechaCompra" >
-    <label  for="fechaCompra" >Fecha de Compra</label>
+<input type="date" id="fechaCompra" >
+<label  for="fechaCompra" >Fecha de Compra</label>
 
 </div>
 <!--end Seccion de Ingreso de  fechaCompra imput-->
 
-<!---Seccion de selecion Bodega imput -->
-<div class="input-container">
-<input id="idbodega" hidden>
-<!-- Input para mostrar el Nombre de la bodega seleccionada -->
-<input type="text"  id="nombrebodega"    readonly>
-<label for="nombrebodega" >Bodega:</label>
+
+
+<!---Seccion de Subtotal imput -->
+ 
+<div class="input-container ">
+    <input type="number"   id="Subtotal"  readonly  >
+    <label  >Subtotal:</label>
+</div>
+
+<!--end Seccion Subtotal imput -->
+  <!---Seccion de Iva imput -->
+  
+
+<div class="input-container ">
+
+    <input type="number"   id="Iva" readonly >
+    <label  >IVA:</label>
 
 </div>
-<!--end Seccion de selecion Bodega imput -->
 
+ <!--end Seccion Iva imput -->
 
-      <!---Seccion de Subtotal imput -->
-         
-        <div class="input-container ">
-            <input type="number"   id="Subtotal"  readonly  >
-            <label  >Subtotal:</label>
-        </div>
+  <!---Seccion de Total imput -->
+<div class="input-container ">
+  
+    <input type="number"   id="Total" readonly>
+    <label  >Total:</label>
+
+</div>
+        <!--end Seccion Total imput -->
         
-        <!--end Seccion Subtotal imput -->
-          <!---Seccion de Iva imput -->
+
+
           
-      
-        <div class="input-container ">
-       
-            <input type="number"   id="Iva" readonly >
-            <label  >IVA:</label>
-        
-        </div>
-        
-         <!--end Seccion Iva imput -->
+  
 
-          <!---Seccion de Total imput -->
-        <div class="input-container ">
-          
-            <input type="number"   id="Total" readonly>
-            <label  >Total:</label>
- 
-        </div>
-                <!--end Seccion Total imput -->
+              </form>
+              <div class="row" >
+              
                 
-
-        
-                  
-          
-        
-                      </form>
-                      <div class="row" style="box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); border-radius: 8px; height: 100px; margin-top: 10px; background-color: #fff;">
-                      
-                        
-                        <button id="btnRegistrarCompraFact" class="btn btn-success btn-block" style="width:180px; height: 50px; margin-left: 20px; margin-top: 20px; background-color: #28a745; border-color: #28a745;">
-                            <i class="fas fa-save"></i>  Registrar Compra
-                        </button>
-                        <button id="btnDetalleCompras" class="btn btn-success btn-block" style="width:170px; height: 50px; margin-left: 20px; margin-top: 20px; background-color: #28a745; border-color: #28a745;">
-                           <i class="fas fa-shopping-cart"></i> Guardar Carrito
-                        </button>
-                        <button id="btnGuardarCompracompleta" class="btn btn-success btn-block" style="width:170px; height: 50px; margin-left: 20px; margin-top: 20px; background-color: #28a745; border-color: #28a745;">
-                            <i class="fas fa-save"></i> Guardar Compra
-                        </button>
-                        <button id="btnCancelar" class="btn btn-danger btn-block" style="width:20%; height: 50px; margin-left: 20px; margin-top: 20px;">
-                            <i class="fas fa-chevron-circle-left" style="color: #fff;"></i>  Cancelar
-                        </button>
-                        <!-- Botón de Información -->
+                <button id="btnRegistrarCompraFact" class="btn btn-success btn-block" style="width:180px; height: 50px; margin-left: 20px; margin-top: 20px; background-color: #28a745; border-color: #28a745;">
+                    <i class="fas fa-save"></i>  Registrar Compra
+                </button>
+                <button id="btnGuardarCompracompleta" class="btn btn-success btn-block" style="width:170px; height: 50px; margin-left: 20px; margin-top: 20px; background-color: #28a745; border-color: #28a745;">
+                    <i class="fas fa-save"></i> Guardar Compra
+                </button>
+                <button id="btnCancelar" class="btn btn-danger btn-block" style="width:20%; height: 50px; margin-left: 20px; margin-top: 20px;">
+                    <i class="fas fa-chevron-circle-left" style="color: #fff;"></i>  Cancelar
+                </button>
+                <!-- Botón de Información -->
 <button class="btn btn-info info-btn" style="width:50px; height: 50px; margin-top:20px; margin-left: 20px;" data-toggle="modal" data-target="#infoModal">
-    <i class="fas fa-info-circle"></i>
+<i class="fas fa-info-circle"></i>
 </button>
-                    </div>
-                    
-                    
-                     
-                    
-                   
-                  </div> <!-- Fin contenedor hijo 2 datos de calculo -->
+            </div>
+            
+   
+               
+            </div> <!-- Fin contenedor hijo 1 datos de selecion -->
+
+           
             </div> <!-- Fin contenedor padre -->
 
   
@@ -325,7 +270,7 @@
         <div class="container mt-5">
         <div class="row">
             <div class="table-container">
-                <table id="Tabladetalle" class="custom-table"  >
+                <table id="Tabladetalle" class="custom-table display nowrap"  style="width: 100%;">
                 <thead>
                     <tr>
                         <th>condigo</th>
@@ -375,315 +320,6 @@
         </div>
       </div>
 <!-- =============================================================================================================================
-MODAL LISTADO DE PRODUCTOS
-===============================================================================================================================-->
-<div class="modal fade" id="mdlListadoProductos" tabindex="-1">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-gray py-1">
-                <h5 class="modal-title">Listado de Productos</h5>
-                <div class=""></div>   <button type="button" class="btn btn-danger text-white border-0 fs-5" id="btncerrarmodal">
-                    <i class="far fa-times-circle"></i>
-                </button>
-            </div>
-
-                <button id="btnCrearProductos" class="Boton_Select_models"> <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path></svg>
-                    <span>Crear</span>    
-                
-                </button>
-
-  
-            <div class="row  p-3">
-              <div class="table-container"> 
-                        <table id="tbl_productos"  class="custom-table">
-                            <thead>
-                                <tr>
-                                    <th>CODIGO</th>
-                                    <th>NOMBRE</th>
-                                    <th>DESCRIPCION</th>
-                                    <th>CATEGORIA</th>
-                                    <th>ESTADO</th>
-                                    <th class="text-center">ACCIONES</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- /. End -->
-
-
-<!-- =============================================================================================================================
-MODAL LISTADO DE PROVEEDOR
-===============================================================================================================================-->
-<div class="modal fade" id="mdlListadoProveedor" tabindex="-1">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-gray py-1">
-                <h5 class="modal-title">Listado de Proveedores</h5>
-                <button type="button" class="btn btn-danger text-white border-0 fs-5" id="btncerrarmodalProveedor">
-                    <i class="far fa-times-circle"></i>
-                </button>
-            </div>
-            <button id="btnCrearProveedor" class="Boton_Select_models"> <span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path></svg>
-                <span>Crear</span>    
-            
-            
-        </button>
-
-            <div class="row  p-3">
-                <div class="table-container"> 
-
-              
-                <table id="tbl_Proveedor" class="custom-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>NOMBRE</th>
-                            <th>Direccion</th>
-                            <th>Telefono</th>
-                            <th>Ruc</th>
-                            <th>email</th>
-                            <th>ESTADO</th>         
-                            <th class="text-center">ACCIONES</th>    
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-
-                        
-              
-                    </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-<!-- /. End -->
-
-
-
-
-<!-- =============================================================================================================================
-MODAL LISTADO DE Marca 
-===============================================================================================================================-->
-
-<div class="modal fade" id="mdlListadoMarca" tabindex="-1">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-gray py-1">
-                <h5 class="modal-title">Listado de Marca</h5>
-                <button type="button" class="btn btn-danger text-white border-0 fs-5" id="btncerrarmodalMarca">
-                    <i class="far fa-times-circle"></i>
-                </button>
-            </div>
-            <button id="btnCrearMarca" class="Boton_Select_models"> <span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path></svg>
-                <span>Crear</span></button>
-
-                <div class="row  p-3">
-                    <div class="table-container"> 
-    
-
-                        <table id="tbl_marca" class="custom-table">
-                            <thead>
-                                <tr>
-                                    <th>CODIGO</th>
-                                    <th>NOMBRE</th>
-                                    <th>DESCRIPCION</th>
-
-                                    <th>ESTADO</th>
-                                    <th class="text-center">ACCIONES</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- /. End -->
-<!-- =============================================================================================================================
-MODAL LISTADO DE Color 
-===============================================================================================================================-->
-
-<div class="modal fade" id="mdlListadoColor" tabindex="-1">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-gray py-1">
-                <h5 class="modal-title">Listado de Colores</h5>
-                <button type="button" class="btn btn-danger text-white border-0 fs-5" id="btncerrarmodalColor">
-                    <i class="far fa-times-circle"></i>
-                </button>
-            </div>
-            <button id="btnCrearColor" class="Boton_Select_models"> <span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path></svg>
-                <span>Crear</span>    </button>
-
-            <div class="row  p-3">
-                <div class="table-container"> 
-
-              
-
-                        <table id="tbl_color"class="custom-table">
-                            <thead>
-                                <tr>
-                                    <th>CODIGO</th>
-                                    <th>COLOR</th>
-                                    <th>ESTADO</th>
-                                    <th class="text-center">ACCIONES</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- /. End -->
-
-
-<!-- =============================================================================================================================
-MODAL LISTADO DE TALLAS 
-===============================================================================================================================-->
-
-<div class="modal fade" id="mdlListadotalla" tabindex="-1">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-gray py-1">
-                <h5 class="modal-title">Listado de Tallas</h5>
-                <button type="button" class="btn btn-danger text-white border-0 fs-5" id="btncerrarmodaltalla">
-                    <i class="far fa-times-circle"></i>
-                </button>
-            </div>
-            <button id="btnCrearTalla" class="Boton_Select_models"> <span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path></svg>
-                <span>Crear</span>    </button>
-
-                <div class="row  p-3">
-                    <div class="table-container">
-
-              
-
-                        <table id="tbl_talla" class="custom-table">
-                            <thead>
-                                <tr>
-                                    <th>CODIGO</th>
-                                    <th>NUMERO TALLA</th>
-                                    <th>ESTADO</th>
-                                    <th class="text-center">ACCIONES</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- /. End -->
-
-<!-- =============================================================================================================================
-MODAL LISTADO DE Material 
-===============================================================================================================================-->
-
-<div class="modal fade" id="mdlListadoMaterial" tabindex="-1">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-gray py-1">
-                <h5 class="modal-title">Listado de Tallas</h5>
-                <button type="button" class="btn btn-danger text-white border-0 fs-5" id="btncerrarmodalmaterial">
-                    <i class="far fa-times-circle"></i>
-                </button>
-            </div>
-            <button id="btnCrearMaterial"class="Boton_Select_models"> <span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path></svg>
-                <span>Crear</span>    </button>
-
-            <div class="row  p-3">
-                <div class="table-container"> 
-
-              
-
-                        <table id="tbl_material" class="custom-table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>NOMBRE</th>
-                                    <th>Descripcion</th>
-                                    <th>T.Material</th>
-                                    <th>T.Costura</th>
-                                    <th>T.Suela</th>
-                                    <th>Fabricante</th>
-                                    <th>Observaciones</th>
-                                    <th>ESTADO</th>
-                                    <th class="text-center">ACCIONES</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- /. End -->
-<!-- =============================================================================================================================
-MODAL LISTADO DE Bodega 
-===============================================================================================================================-->
-<div class="modal fade" id="mdlListadoBodega" tabindex="-1">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-gray py-1">
-                <h5 class="modal-title">Listado de Bodega</h5>
-                <button type="button" class="btn btn-danger text-white border-0 fs-5" id="btncerrarmodalBodega">
-                    <i class="far fa-times-circle"></i>
-                </button>
-            </div>
-            <button id="btnCrearBodega" class="Boton_Select_models"> <span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path></svg>
-                <span>Crear</span>    </button>
-
-                <div class="row  p-3">
-                    <div class="table-container"> 
-    
-                    <!-- LISTADO DE PRODUCTOS -->
-                    <table id="tbl_Bodega" class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>CODIGO</th>
-                                <th>NOMBRE</th>
-                                <th>UBICACION</th>
-                                <th>ESTADO</th>
-                                <th class="text-center">ACCIONES</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Table body content goes here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- /. End -->
-<!-- =============================================================================================================================
 MODAL LISTADO DE Inventario 
 ===============================================================================================================================-->
 <div class="modal fade" id="mdlListadoInventario" tabindex="-1">
@@ -725,113 +361,6 @@ MODAL LISTADO DE Inventario
     </div>
 </div>
 <!-- /. End -->
-
-
-
-
-<!-- =============================================================================================================================
-MODAL Detallecompra
-===============================================================================================================================-->
-<div class="modal fade" id="mdlDetallecompra"  tabindex="-1">
-
-    <div class="modal-dialog modal-xl" role="document">
-
-        <!-- contenido del modal -->
-        <div class="modal-content">
-
-            <!-- cabecera del modal -->
-            <div class="modal-header bg-gray py-1">
-
-                <h5 class="modal-title">Detalle del producto</h5>
-
-                <button type="button" class="btn btn-danger text-white border-0 fs-5"  id="btnDetallecompra">
-                    <i class="far fa-times-circle"></i>
-                </button>
-
-            </div>
-
-            <!-- cuerpo del modal -->
-            <div class="modal-body">
-
-                <div class="row">
-
-                    <div class="col-12">
-                        <!--LISTADO DE PRODUCTOS -->
-                        <form id="formvaloress" class="form">
-                            <!-- Campos del formulario -->
-                        
-                         <!---Seccion de selecion Marca imput -->
-                    
-                       
-                         <div class="input-container ">
-                            <input id="idMarcapro" hidden>
-                            <!-- Input para mostrar la marca seleccionado -->
-                            <input type="text"  id="marcapro"   >
-                            <label for="marcapro" class="label">Marca:</label>
-                            <div class="underline"></div>
-                        </div>
-                            <!--end Seccion de selecion Marca imput-->
-                            
-                      <!---Seccion de selecion Color imput -->
-                    
-                      <div class="input-container ">
-                        <input id="idColorpro" hidden>
-                        <!-- Input para mostrar la Color seleccionado -->
-                        <input type="text"  id="colorpro" >
-                        <label for="colorpro"  class="label">Color:</label>
-                        <div class="underline"></div>
-                    </div>
-                        <!--end Seccion de selecion Color imput-->
-                        
-                  <!---Seccion de selecion Talla imput -->
-                    
-                  <div class="input-container ">
-                    <input id="idTallapro" hidden>
-                    <!-- Input para mostrar la Talla seleccionado -->
-                    <input type="text"  id="tallapro"   >
-                    <label for="tallapro"  class="label">TaLLa:</label>
-                    <div class="underline"></div>
-                </div>
-                    <!--end Seccion de selecion Talla imput-->
-                
-                  <!---Seccion de selecion Material imput -->
-                    
-                  <div class="input-container ">
-                    <input id="idMaterialpro" hidden>
-                    <!-- Input para mostrar la Material seleccionado -->
-                    <input type="text"  id="materialpro"   >
-                    <label for="materialpro"  class="label">Material:</label>
-                    <div class="underline"></div>
-                </div>
-                    <!--end Seccion de selecion Material imput-->
-
-
-                
-                <!---Seccion de selecion Bodega imput -->
-                <div class="input-container ">
-                <input id="idbodegapro" hidden>
-                <!-- Input para mostrar el Nombre de la bodega seleccionada -->
-                <input type="text"  id="nombrebodegapro"  >
-                <label for="nombrebodegapro"  class="label">Bodega:</label>
-                <div class="underline"></div>
-                </div>
-                <!--end Seccion de selecion Bodega imput -->
-                
-                
-                         <!--end Seccion Iva imput -->
-                                      </form>
-                    </div>
-
-                 </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
 <!-- =============================================================================================================================
 MODAL Para insertar compra
 ===============================================================================================================================-->

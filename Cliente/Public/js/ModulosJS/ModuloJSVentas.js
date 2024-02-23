@@ -6,7 +6,7 @@ $(document).ready(async function () {
     let tablainventario;
 
     let codigoNotaCredito
-
+    let TablaCompra
   
     const ventasT = await api.excuteGet('ventas');
 
@@ -16,7 +16,7 @@ $(document).ready(async function () {
 
 
 // DataTable initialization
-var TablaCompra = $('#Tabla_Fact').DataTable({
+ TablaCompra = $('#Tabla_Fact').DataTable({
     data: ventasT,
     columns: [
         { data: "Codigo" },
@@ -127,11 +127,11 @@ $('#Tabla_Fact tbody').on('click', '.btnDevoluciones', function () {
             { data: "ID_Inventario" },
             { data: "NombreBodega" },
             { data: "Codigo" },
-            { data: "Nombre", className: "nombre-completo" },
+            { data: "NombreProductoZapatos", className: "nombre-completo" },
             { data: "NombreMarca" },
             { data: "NumeroTalla" },
             { data: "Color" },
-            { data: "NombreMaterial" ,className: "nombre-completo"},
+            { data: "NombreMaterialZapatos" ,className: "nombre-completo"},
             { data: "PrecioVenta" },
             {data: "UnidadesExistencias"},
             { data: "Estado" },
@@ -844,8 +844,15 @@ async function guardarCompleta() {
 
   
         await api.excutePost('venta', VentaData);
+        
      // Mostrar una alerta si la venta se completa con éxito con duración de 2 segundos
      toastr.success('Venta completada con éxito.');
+     mostrarVista('vista1');
+     const ventas= await api.excuteGet('ventas');
+     TablaCompra.clear().rows.add(ventas).draw();
+      // Actualizar la tabla con las nuevas rol
+     
+
     } catch (error) {
  // Mostrar una alerta si hay un error durante la venta con duración de 2 segundos
  toastr.error('Error completo: ' + error.message);
@@ -857,10 +864,11 @@ async function guardarCompleta() {
 
 
 
-    $(document).on("click", "#btnRealizarVenta",  function (event) {
+    $(document).on("click", "#btnRealizarVenta", async function (event) {
         // Evitar que el formulario se envíe por defecto
         event.preventDefault();
         guardarCompleta();
+       
       
     });
 

@@ -13,38 +13,27 @@
     transition: background-color 0.3s ease;
     margin-bottom: 5px; /* Agrega un margen inferior de 5px */
     position: relative;
-    background-color: var(--color-3);
+    background-color: #3c79d0;
    
-  }
-  #btnAsignacionMasiva{
-    color: #fff;
-    background-color:var(--color-4);
-
-  }
-  #btnCrear{
-    color: #fff;
-    background-color:var(--color-4);
-    
   }
   .lista{
     height: 400px;
     overflow-y: auto;
    margin-top: 10px;
-
-   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-margin: 8px 3px 5px;
+   background: #333;
   }
   .buscadorImputConfig {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
     box-sizing: border-box;
-    border: 2px solid var(--color-3);
+    border: 2px solid #3498db;
     border-radius: 4px;
     outline: none;
     transition: border-color 0.3s;
     font-size: 16px;
-    color: var(--color-5);} 
+    color: #333;
+  }
 
   .buscadorImputConfig:focus {
     border-color: #2ecc71;
@@ -79,7 +68,7 @@ margin: 8px 3px 5px;
 
 /* Agrega este estilo para cambiar el color del texto de los elementos seleccionados */
  .elemento.seleccionado {
-  background-color: var(--color-5);
+  background-color: #168371;
 
 }
 
@@ -112,17 +101,7 @@ color: var(--color-3);
 
   }
 
-div.dtsp-panesContainer div.dtsp-searchPanes div.dtsp-searchPane tr>td {
-  color: var(--color-3)  !important;
-  background-color: var(--color-4) !important;
-  padding: 5px; /* Ajusta el valor según el espacio deseado */
-  border: 1px solid var(--color-1); /* Borde de 1px sólido con el color deseado */
+.dtsp-nameColumn span{
+  color: var(--color-5) !important;
 }
-
-div.dtsp-panesContainer div.dtsp-searchPanes div.dtsp-searchPane tr>td:hover {
-  background-color: var(--color-5) !important; /* Cambia este valor al color deseado */
-}
-div.dtsp-panesContainer button.dtsp-clearAll:hover{
-  background-color: var(--color-3) !important; /* Cambia este valor al color deseado */
-
-}
+ 

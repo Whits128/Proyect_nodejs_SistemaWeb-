@@ -186,7 +186,44 @@ miLista3.on("change", ".seleccionarRol", function(event) {
 });
 
 
-// Función para actualizar la visualización de configuracionAcceso
+    $('#TablaConfiguracion').on('draw.dt', function () {
+        var dataTable = $('#TablaConfiguracion').DataTable();
+        var pageInfo = dataTable.page.info();
+        var totalPages = pageInfo.pages;
+        var currentPage = pageInfo.page + 1;
+        
+        // Ocultar todos los botones de página
+        $('.dataTables_paginate .paginate_button').hide();
+        
+        // Mostrar el botón de retroceder si no estamos en la primera página
+        if (currentPage > 1) {
+            $('.dataTables_paginate .previous').show();
+        }
+        
+        // Calcular los números de página que deseas mostrar
+        var startPage = Math.max(currentPage - 2, 1);
+        var endPage = Math.min(startPage + 4, totalPages);
+        var visiblePages = endPage - startPage + 1;
+        
+        // Ajustar los números de página si hay menos de 4 disponibles
+        if (visiblePages < 4 && startPage > 1) {
+            startPage = Math.max(endPage - 3, 1);
+        }
+        if (visiblePages < 4 && endPage < totalPages) {
+            endPage = Math.min(startPage + 3, totalPages);
+        }
+        
+        // Mostrar los números de página calculados
+        for (var i = startPage; i <= endPage; i++) {
+            $('.dataTables_paginate .paginate_button[data-dt-idx="' + i + '"]').show();
+        }
+        
+        // Mostrar el botón de avanzar si no estamos en la última página
+        if (currentPage < totalPages) {
+            $('.dataTables_paginate .next').show();
+        }
+    });
+    
 
      tablaConfi = $('#TablaConfiguracion').DataTable({
         data: configuracionAcceso,
@@ -222,6 +259,7 @@ miLista3.on("change", ".seleccionarRol", function(event) {
         },
     });
    
+    
   // Ocultar panel de búsqueda al cargar la página
   $('.dtsp-searchPane').slideUp()
 
@@ -565,9 +603,8 @@ const dataEnviar = {
         await api.excutePost('configuracionAcceso/crear', dataEnviar);
         // Mostrar una notificación de éxito
      
-     // Mostrar una alerta si la venta se completa con éxito con duración de 2 segundos
      toastr.success('Configuracion de accesos  completada con éxito.');
-    
+     mostrarVista('vista1');
        
     
     } catch (error) {

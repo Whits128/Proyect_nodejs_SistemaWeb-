@@ -1,0 +1,102 @@
+<!-- Incluir los archivos de biblioteca de Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<link rel="stylesheet" type="text/css" href="/css/Informes.css">
+
+
+<section class="content">
+<!-- Inicio filtros para inventario-->
+    <div class="row" style="background-color: darkslategray;">
+        <div class="col-md-4">
+          <div id="miListaCategoria" class="lista">
+            <input type="text" class="buscadorImputConfig" id="buscadorRecurso" placeholder="Buscar Categoria">
+            <!-- Los elementos se agregarán dinámicamente desde JavaScript -->
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+            <!-- Sección de estado -->
+            <div class="row">
+                <div class="col">
+                    <label for="estadoSelect" class="form-label">Estado:</label>
+                    <select class="form-select" id="estadoSelect">
+                        <option value="">Seleccionar Estado</option>
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+      
+        <div class="col-md-4">
+          <!-- seccioin de fechas-->
+          <div class="col">
+            <label for="fechaIngreso" class="form-label">Fecha de Ingreso:</label>
+            <input type="date" class="form-control" id="fechaIngreso">
+          </div>
+        
+
+
+
+        </div>
+
+
+      </div><!-- Fin filtros para inventario-->
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card card-danger direct-chat direct-chat-danger">
+                <div class="card-header">
+                    <h3 class="card-title">Grafico de Barra inventario </h3>
+                    <div class="card-tools">
+                        <button type="button"  id="mostrarCartBarra" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button"   class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body" id="miBoxBody">
+                    <canvas id="myChart" style="height: 309px; width: 618px;" height="309" width="618"></canvas>
+                </div>
+                <!-- /.card-body -->
+            </div> <!--Fin de  la chart barra inventario-->
+            
+           
+            
+        </div> <!--Fin de  la col-md-6-->
+        <div class="col-md-6">
+       
+            <div class="card card-danger direct-chat direct-chat-danger">
+                <div class="card-header">
+                    <h3 class="card-title">Grafico de pastel Inventario </h3>
+                    <div class="card-tools">
+                        <button type="button"  id="mostrarCartBarra" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button"   class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body" id="miBoxBody">
+                    <canvas id="myChartPastel" style="height: 309px; width: 618px;" height="309" width="618"></canvas>
+                </div>
+                <!-- /.card-body -->
+            </div> <!--Fin de  la chart pastel inventario-->
+            
+            
+        </div> <!--Fin de  la col-md-6-->
+
+
+    </div> <!--Fin de  la Row-->
+    
+
+</section>
+
+
+<script  type="module" src="/js/ModulosJS/ModeloJSInformes.js"></script>

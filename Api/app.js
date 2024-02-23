@@ -23,6 +23,7 @@ import InventarioRoute from './Routes/InventarioRoute';
 import CompraRoutes from './Routes/CompraRoutes';
 import UsuariosRoute from './Routes/UsuariosRoute';
 import VentasRoutes from './Routes/VentasRoutes';
+import InformesRoute from './Routes/InformesRoute';
 import configuracionesMiddleware from './Middleware/Middlewareparaconfiguraciones'; // Ajusta la ruta según tu estructura
 import * as  authMiddleware from './Middleware/authMiddleware'; // Ajusta la ruta según tu estructura
 
@@ -87,4 +88,5 @@ app.use(InventarioRoute);
 app.use(CompraRoutes);
 app.use(UsuariosRoute);
 app.use(VentasRoutes);
+app.use(InformesRoute);
 export default app;

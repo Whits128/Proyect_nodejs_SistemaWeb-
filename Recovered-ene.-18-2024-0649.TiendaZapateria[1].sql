@@ -69,6 +69,7 @@ GO
 -- Insertar datos en la tabla Recursos
 INSERT INTO Recursos (NombreRecurso, Ruta)
 VALUES 
+('Informes ', '/api/informes/page'),
 ('Proveedor ', '/api/Proveedor/page'),
 ('Configuracion ', '/api/configuracion/page'),
 ('configuracion Acceso', '/api/configuracionAcceso/page'),
@@ -297,7 +298,6 @@ CREATE TABLE Ventas (
 );
 GO
 
-SELECT ID_Venta as Codigo, CodigoVenta, Fecha, Total, Estado FROM Ventas
 
 -- Tabla DetalleVenta
 CREATE TABLE DetalleVenta (
@@ -450,14 +450,14 @@ GO
 INSERT INTO Roles (NombreRol)
 VALUES
     ('Administrador'),
-    ('Usuario Regular'),
-    ('Moderador'),
-    ('Invitado');
+    ('Vendedor'),
+    ('Comprador');
 go 
 INSERT INTO ConfiguracionAcceso (IdRecurso, IdAccion,IdRol)
 VALUES
-  (1, 2,1); -- IdRecurso y IdAccion para 'Usuarios' y 'Crear'
-  
+(11,5,1),
+  (14,5,1); -- IdRecurso y IdAccion para 'Usuarios' y 'Crear'
+     -- IdRecurso y IdAccion para 'Usuarios' y 'Crear
 GO
 	   -- Tabla Marcas
 INSERT INTO Marcas (Nombre, DetalleMarca, Estado)
@@ -689,10 +689,6 @@ END;
 
 GO
 
-
-
-
-go
 CREATE PROCEDURE GestionarCompra
     @CodigoCompra NVARCHAR(100),
     @FechaCompra DATE,
@@ -1856,4 +1852,195 @@ JOIN Roles r ON ca.IdRol = r.IdRol
 JOIN Acciones a ON ca.IdAccion = a.IdAccion
 JOIN Recursos rec ON ca.IdRecurso = rec.IdRecurso;
 
+go
+CREATE PROCEDURE ObtenerDevolucionPorCodigoVenta
+    @CodigoVenta NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
 
+    SELECT
+        ID_Devolucion,
+        CodigoVenta,
+        ID_Inventario,
+        ID_Empleado,
+        CantidadDevuelta,
+        Motivo,
+        Fecha,
+        EstadoDevolucion
+    FROM
+        DevolucionesVentas
+    WHERE
+        CodigoVenta = @CodigoVenta;
+END;
+
+go
+CREATE VIEW VistaInventarioCantidadCategoria AS
+SELECT 
+    PZ.ID_Categoria,
+    C.Nombre AS 'Categoría del Producto',
+    SUM(I.UnidadesExistencias) AS 'Cantidad en Inventario'
+FROM 
+    Inventario AS I
+JOIN 
+    Productos_Zapatos AS PZ ON I.ID_ProductoZapatos = PZ.ID_ProductoZapatos
+JOIN
+    Categorias AS C ON PZ.ID_Categoria = C.ID_Categoria
+GROUP BY
+    PZ.ID_Categoria, C.Nombre;
+
+go
+CREATE VIEW VistaInventario AS
+SELECT 
+    I.ID_Inventario,
+    I.ID_BODEGA,
+    I.ID_ProductoZapatos,
+    I.ID_Marca,
+    I.ID_Talla,
+    I.ID_Colores,
+    I.ID_MaterialZapatos,
+    I.UnidadesExistencias,
+    I.FechaIngreso,
+    I.PrecioCompra,
+    I.Descuento,
+    I.PrecioVenta,
+    I.ExistenciasMinimas,
+    I.Estado,
+    PZ.Nombre AS NombreProducto,
+    M.Nombre AS NombreMarca,
+    T.NumeroTalla AS TallaProducto,
+    C.Color AS ColorProducto,
+    MZ.TipoMaterial AS MaterialProducto,
+    CA.Nombre AS NombreCategoria  -- Se agrega la columna NombreCategoria
+FROM 
+    Inventario AS I
+JOIN 
+    Productos_Zapatos AS PZ ON I.ID_ProductoZapatos = PZ.ID_ProductoZapatos
+JOIN 
+    Marcas AS M ON I.ID_Marca = M.ID_Marca
+JOIN 
+    Tallas AS T ON I.ID_Talla = T.ID_Talla
+JOIN 
+    Colores AS C ON I.ID_Colores = C.ID_Colores
+JOIN 
+    MaterialesZapatos AS MZ ON I.ID_MaterialZapatos = MZ.ID_MaterialZapatos
+JOIN
+    Categorias AS CA ON PZ.ID_Categoria = CA.ID_Categoria;  -- Se agrega la tabla Categorias y la relación con Productos_Zapatos
+
+
+
+	go
+	CREATE PROCEDURE ObtenerDetallesVentaPorCodigo
+    @CodigoVenta NVARCHAR(100)
+AS
+BEGIN
+    -- Verificar si la venta existe
+    IF NOT EXISTS (SELECT 1 FROM Ventas WHERE CodigoVenta = @CodigoVenta)
+    BEGIN
+        -- Si no se encuentra la venta, terminar la ejecución
+        RETURN;
+    END
+
+    -- Seleccionar los detalles de la venta y los productos asociados
+    SELECT
+        V.CodigoVenta,
+        V.Fecha,
+        V.Estado,
+		V.Total as TotalGeneral,
+		V.Subtotal as SubtotalGeneral,
+		V.IVA as IvaGeneral,
+        DV.ID_Inventario,
+        DV.Cantidad,
+        DV.PrecioVenta,
+        DV.Descuento,
+        DV.Total,
+        DV.Subtotal,
+        DV.IVA,
+        I.ID_ProductoZapatos as Codigo,
+        P.Nombre AS Nombre,
+        I.ID_Marca,
+        M.Nombre AS NombreMarca,
+        I.ID_Talla,
+        T.NumeroTalla AS NombreTalla,
+        I.ID_Colores,
+        Co.Color AS NombreColor,
+        I.ID_MaterialZapatos,
+        Mat.Nombre AS NombreMaterial,
+        I.ID_BODEGA,
+        B.Nombre AS NombreBodega,
+        DV.ID_Empleado,
+        E.Nombre AS NombreEmpleado
+    FROM Ventas V
+    INNER JOIN DetalleVenta DV ON V.CodigoVenta = DV.CodigoVenta
+    INNER JOIN Inventario I ON DV.ID_Inventario = I.ID_Inventario
+    LEFT JOIN Productos_Zapatos P ON I.ID_ProductoZapatos = P.ID_ProductoZapatos
+    LEFT JOIN Marcas M ON I.ID_Marca = M.ID_Marca
+    LEFT JOIN Tallas T ON I.ID_Talla = T.ID_Talla
+    LEFT JOIN Colores Co ON I.ID_Colores = Co.ID_Colores
+    LEFT JOIN MaterialesZapatos Mat ON I.ID_MaterialZapatos = Mat.ID_MaterialZapatos
+    LEFT JOIN BODEGA B ON I.ID_BODEGA = B.ID_BODEGA
+    LEFT JOIN Empleados E ON DV.ID_Empleado = E.ID_Empleado
+    WHERE V.CodigoVenta = @CodigoVenta;
+END;
+
+go
+CREATE PROCEDURE ObtenerDevolucionPorCodigoVenta
+    @CodigoVenta NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        ID_Devolucion,
+        CodigoVenta,
+        ID_Inventario,
+        ID_Empleado,
+        CantidadDevuelta,
+        Motivo,
+        Fecha,
+        EstadoDevolucion
+    FROM
+        DevolucionesVentas
+    WHERE
+        CodigoVenta = @CodigoVenta;
+END;
+
+
+
+go 
+CREATE VIEW Vista_Inventario AS
+SELECT 
+    I.ID_Inventario,
+    B.ID_BODEGA,
+    PZ.ID_ProductoZapatos as Codigo,
+    M.ID_Marca,
+    T.ID_Talla,
+    C.ID_Colores,
+    MZ.ID_MaterialZapatos,
+    B.Nombre AS NombreBodega,
+    PZ.Nombre AS NombreProductoZapatos,
+    M.Nombre AS NombreMarca,
+    T.NumeroTalla,
+    C.Color,
+    MZ.Nombre AS NombreMaterialZapatos,
+    I.UnidadesExistencias,
+    I.FechaIngreso,
+    I.PrecioCompra,
+    I.Descuento,
+    I.PrecioVenta,
+    I.ExistenciasMinimas,
+    I.Estado
+FROM 
+    Inventario I
+JOIN 
+    BODEGA B ON I.ID_BODEGA = B.ID_BODEGA
+JOIN 
+    Productos_Zapatos PZ ON I.ID_ProductoZapatos = PZ.ID_ProductoZapatos
+JOIN 
+    Marcas M ON I.ID_Marca = M.ID_Marca
+JOIN 
+    Tallas T ON I.ID_Talla = T.ID_Talla
+JOIN 
+    Colores C ON I.ID_Colores = C.ID_Colores
+JOIN 
+    MaterialesZapatos MZ ON I.ID_MaterialZapatos = MZ.ID_MaterialZapatos;

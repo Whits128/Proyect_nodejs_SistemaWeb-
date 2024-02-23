@@ -6,7 +6,6 @@ const router = express.Router();
 
 // Agrupar rutas bajo el prefijo '/api/categorias'
 router.get('/api/inventario', InventarioController.GetInventario);
-router.get('/api/inventario/page',authMiddleware.isAuthenticated, InventarioController.renderInventarioPage);
-router.post('/api/inventario', InventarioController.agregarProducto);
-router.put('/api/inventario/:id', InventarioController.actualizarProducto);
+router.get('/api/inventario/page',authMiddleware.isAuthenticated,authMiddleware.checkAccess, InventarioController.renderInventarioPage);
+router.put('/api/inventario/:id', InventarioController.actualizarInventario);
 export default router;
