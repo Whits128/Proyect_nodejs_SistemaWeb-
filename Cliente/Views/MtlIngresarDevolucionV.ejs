@@ -1,5 +1,3 @@
-<link rel="stylesheet" type="text/css" href="/css/DataTable.css">
-<link rel="stylesheet" type="text/css" href="/css/Formulario.css">
 
 <section class="content" >
 
@@ -17,7 +15,7 @@
                 <div class="underline"></div>
             <% } %>
         </div>
-        
+ 
     <div class="input-container">
         <input type="date" id="fechaventa" required>
         <label for="fechaventa" class="label">Fecha de Venta</label>
@@ -29,7 +27,7 @@
         <% if (user) { %>
           <input id="idEmpleado" value="<%= user.ID_Empleado %>" hidden>
           <input type="text" id="empleado" readonly value="<%= user.NombreEmpleado %>">
-          <label for="empleado" class="label" >Empleado</label>
+          <label  class="label" >Empleado</label>
           <div class="underline"></div>
         <% } %>
       </div>
@@ -46,8 +44,8 @@
     
     
     <div class="col mt-2  "  >
-        <div class="contenedor_Table">
-                <table id="TablaDetalleDevolucion" class="table table-striped table-bordered " style="width: 100%;"  >
+        <div class="table-container">
+                <table id="TablaDetalleDevolucion"  class="custom-table"  style="width: 100%;"  >
                 <thead>
                     <tr>
                         <th>ID_Inventario</th>

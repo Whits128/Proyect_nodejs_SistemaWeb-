@@ -21,7 +21,7 @@
   overflow: hidden;
   position: relative;
   box-shadow: 10px 10px 20px rgba(0,0,0,.05);
-  background-color: #fff;
+  background-color: var(--color-5);
   color: #121212;
   border: none;
   cursor: pointer;

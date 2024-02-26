@@ -5,8 +5,11 @@ $(document).ready(async function () {
     var TablaDetalleDevolucion,TablaDevolucion;
     const devolucion = await api.excuteGet('devolucion');
 
+let CodigoV = $('#idCodigoVenta').val();
 
-    console.log('dev:',devolucion);
+
+
+
 
     TablaDevolucion = $('#Tabla_Dev').DataTable({
       data: devolucion,
@@ -142,39 +145,70 @@ return `${año}-${mes}-${dia}`;
 
             // Aquí puedes realizar cualquier otra lógica necesaria, como enviar el ID_Inventario al servidor para eliminación en la base de datos.
         });
-   
+  
+        // Obtener la cantidad disponible en la venta
         function obtenerDetallesDevolucion() {
           const detallesDevoluciones = [];
         
           $('#TablaDetalleDevolucion tbody tr').each(function () {
             const fila = TablaDetalleDevolucion.row($(this)).data(); // Obtener los datos de la fila como un array
-        
-            const cantidadDevuelta = $(this).find('input[name="cantidad[]"]').val();
+          
+            
+        cantidadDevuelta = $(this).find('input[name="cantidad[]"]').val();
             let motivo = $(this).find('input[name="motivo[]"]').val(); // Asegúrate de obtener el valor del motivo
+        
+           
         
             // Verificar si la cantidadDevuelta es mayor que 0 y hay un motivo
             if (cantidadDevuelta && parseInt(cantidadDevuelta) > 0 && motivo) {
-              // Convertir el motivo a cadena si no lo es
-              if (typeof motivo !== 'string') {
-                motivo = motivo.toString();
-              }
+                // Convertir el motivo a cadena si no lo es
+                if (typeof motivo !== 'string') {
+                    motivo = motivo.toString();
+                }
         
-              const item = {
-                ID_Inventario: fila[0], // Ajusta según la posición de ID_Inventario en tu fila de DataTable
-                CantidadDevuelta: parseInt(cantidadDevuelta),
-                Motivo: motivo
-                // Agrega otros campos según sea necesario
-              };
+                const item = {
+                    ID_Inventario: fila[0], // Ajusta según la posición de ID_Inventario en tu fila de DataTable
+                    CantidadDevuelta: parseInt(cantidadDevuelta),
+                    Motivo: motivo
+                    // Agrega otros campos según sea necesario
+                };
         
-              detallesDevoluciones.push(item);
+                detallesDevoluciones.push(item);
             }
-          });
+        });
+        
         
           console.log('detallesdevolucion:', detallesDevoluciones);
           return detallesDevoluciones;
         }
         
-       
+ // Agrega un evento de entrada al campo de devolución
+ $('#TablaDetalleDevolucion tbody').on('input', 'input[name="cantidad[]"]', async  function () {
+  const DatosporCodigo = await api.excuteGet('venta/detalleVenta/' + CodigoV);
+  // Obtener el nombre del producto de la fila actual
+  const nombreProducto = $(this).closest('tr').find('td:eq(0)').text().trim();
+  
+  // Encontrar los datos del producto correspondiente al nombre en DatosporCodigo
+  const producto = DatosporCodigo.find(detalle => detalle.Nombre === nombreProducto);
+
+  if (producto) {
+      // Obtener la cantidad disponible en la venta para el producto actual
+      const cantidadActual = producto.Cantidad;
+
+      // Obtener la cantidad devuelta ingresada en este momento
+      const cantidadDevuelta = parseInt($(this).val());
+
+      // Verificar si la cantidad ingresada es mayor que la disponible en la venta
+      if (cantidadDevuelta > cantidadActual) {
+          // Muestra un mensaje de error
+          toastr.error(`La cantidad solicitada es mayor que la disponible en Venta para ${nombreProducto}. Cantidad en venta: ${cantidadActual}`);
+          // Establece la cantidad en el input a la cantidad máxima disponible
+          $(this).val(cantidadActual);
+      }
+  }
+});
+
+
       
       
 
