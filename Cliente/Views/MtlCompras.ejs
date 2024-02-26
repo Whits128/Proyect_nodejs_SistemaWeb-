@@ -63,9 +63,60 @@
       
           <!-- Formulario para el Registro de Compra -->
  <!-- Button to trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-    Abrir Modal
-  </button>
+ <div class="SeccionBotonesSeleccion" >
+    <div class="button-container">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" style="width:300px;">
+            Abrir Modal
+          </button>
+          
+          <div class="button-container2">
+  <h3>   Crear Datos </h3>              <label class="popup" style=" z-index: 1;">
+            <input type="checkbox">
+            <div class="burger" tabindex="0">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <nav class="popup-window">
+              <legend>Opciones</legend>
+              <ul>
+                <li>
+                  <button  id="btnCrearProductos">
+                    <i class="fas fa-shopping-cart"></i>Crear Producto
+                  </button>
+                </li>
+                <li>
+                  <button id="btnCrearMarca">
+                    <i class="fas fa-tags"></i>Crear Marca
+                  </button>
+                </li>
+                <hr>
+                <li>
+                  <button id="btnCrearTalla">
+                    <i class="fas fa-shoe-prints"></i>Crear Talla
+                  </button>
+                </li>
+                <li>
+                  <button id="btnCrearColor" >
+                    <i class="fas fa-palette"></i>Crear Color
+                  </button>
+                </li>
+                <hr>
+                <li>
+                  <button id="btnCrearMaterial">
+                    <i class="fas fa-scroll"></i>Crear Material
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </label>
+          </div> 
+  
+    </div>
+
+
+</div>
+
   
   <!-- Modal -->
   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -273,6 +324,7 @@
                 <table id="Tabladetalle" class="custom-table display nowrap"  style="width: 100%;">
                 <thead>
                     <tr>
+                        <th>condigo_Array</th>
                         <th>condigo</th>
                         <th>Producto</th>
                         <th>cantidad </th>
@@ -365,9 +417,9 @@ MODAL LISTADO DE Inventario
 MODAL Para insertar compra
 ===============================================================================================================================-->
    <!--Modal para CRUD-->
-   <div id="modalCRUDP" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div id="modalCRUDP" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
     <div  class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
+        <div class="modal-content" style=" z-index: 2;">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">CREAR PRODUCTO</h5>                
             </div>
@@ -724,6 +776,110 @@ MODAL INSERCCION BODEGA
 
 
 <!-- /. End -->
+
+<!-- =============================================================================================================================
+MODAL Detallecompra
+===============================================================================================================================-->
+<div class="modal fade" id="mdlDetallecompra"  tabindex="-1">
+
+    <div class="modal-dialog modal-xl" role="document">
+
+        <!-- contenido del modal -->
+        <div class="modal-content">
+
+            <!-- cabecera del modal -->
+            <div class="modal-header bg-gray py-1">
+
+                <h5 class="modal-title">Detalle del producto</h5>
+
+                <button type="button" class="btn btn-danger text-white border-0 fs-5"  id="btnDetallecompra">
+                    <i class="far fa-times-circle"></i>
+                </button>
+
+            </div>
+
+            <!-- cuerpo del modal -->
+            <div class="modal-body">
+
+                <div class="row">
+
+                    <div class="col-12">
+                        <!--LISTADO DE PRODUCTOS -->
+                        <form id="formvaloress" class="form">
+                            <!-- Campos del formulario -->
+                        
+                         <!---Seccion de selecion Marca imput -->
+                    
+                       
+                         <div class="input-container ">
+                            <input id="idMarcapro" hidden>
+                            <!-- Input para mostrar la marca seleccionado -->
+                            <input type="text"  id="marcapro"   >
+                            <label for="marcapro" class="label">Marca:</label>
+                            <div class="underline"></div>
+                        </div>
+                            <!--end Seccion de selecion Marca imput-->
+                            
+                      <!---Seccion de selecion Color imput -->
+                    
+                      <div class="input-container ">
+                        <input id="idColorpro" hidden>
+                        <!-- Input para mostrar la Color seleccionado -->
+                        <input type="text"  id="colorpro" >
+                        <label for="colorpro"  class="label">Color:</label>
+                        <div class="underline"></div>
+                    </div>
+                        <!--end Seccion de selecion Color imput-->
+                        
+                  <!---Seccion de selecion Talla imput -->
+                    
+                  <div class="input-container ">
+                    <input id="idTallapro" hidden>
+                    <!-- Input para mostrar la Talla seleccionado -->
+                    <input type="text"  id="tallapro"   >
+                    <label for="tallapro"  class="label">TaLLa:</label>
+                    <div class="underline"></div>
+                </div>
+                    <!--end Seccion de selecion Talla imput-->
+                
+                  <!---Seccion de selecion Material imput -->
+                    
+                  <div class="input-container ">
+                    <input id="idMaterialpro" hidden>
+                    <!-- Input para mostrar la Material seleccionado -->
+                    <input type="text"  id="materialpro"   >
+                    <label for="materialpro"  class="label">Material:</label>
+                    <div class="underline"></div>
+                </div>
+                    <!--end Seccion de selecion Material imput-->
+
+
+                
+                <!---Seccion de selecion Bodega imput -->
+                <div class="input-container ">
+                <input id="idbodegapro" hidden>
+                <!-- Input para mostrar el Nombre de la bodega seleccionada -->
+                <input type="text"  id="nombrebodegapro"  >
+                <label for="nombrebodegapro"  class="label">Bodega:</label>
+                <div class="underline"></div>
+                </div>
+                <!--end Seccion de selecion Bodega imput -->
+                
+                
+                         <!--end Seccion Iva imput -->
+                                      </form>
+                    </div>
+
+                 </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
  </section> 
 
 <!-- Otros scripts... -->

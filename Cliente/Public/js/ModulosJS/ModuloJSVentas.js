@@ -319,7 +319,7 @@ console.log("data:",data);
         idinventario: data.ID_Inventario,
         idProducto: data.Codigo,
         detallesExtras: {
-            nombre:data.Nombre,
+            nombre:data.NombreProductoZapatos,
             idmarca: data.ID_Marca,
             marca: data.NombreMarca,
             idcolor: data.ID_Colores,

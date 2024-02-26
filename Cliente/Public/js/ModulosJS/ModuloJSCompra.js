@@ -225,13 +225,36 @@ priducto.forEach(producto => {
     selectProducto.append(`<option value="${producto.Codigo}">${producto.Nombre}</option>`);
 });
 
-// Cargar datos en el selector de Proveedor
+let lastClickTime = 0;
+let campoSeleccionHabilitado = true;
+
 const selectProveedor = $('#selectProveedor');
+
+// Cargar datos en el selector de Proveedor
 selectProveedor.append('<option value="">Seleccionar Proveedor</option>'); // Opción por defecto
 Proveedor.forEach(proveedor => {
     selectProveedor.append(`<option value="${proveedor.Codigo}">${proveedor.Nombre}</option>`);
 });
 
+
+// Controlador de eventos para detectar cuando se selecciona un proveedor
+selectProveedor.change(function() {
+    if ($(this).val()) {
+        $(this).prop('disabled', true);
+        toastr.info('Campo de selección deshabilitado.');
+
+        // Simular un input deshabilitado
+        selectProveedor.after('<div class="input-overlay"></div>');
+
+    }
+});
+
+ function habilitarSelectProveedor() {
+    $('#selectProveedor').prop('disabled', false);
+  }
+ // Agregar un listener para el evento dblclick al formulario utilizando jQuery
+ $('#formDetalle').on('dblclick', habilitarSelectProveedor);
+   
 // Cargar datos en el selector de Marca
 const selectMarca = $('#selectMarca');
 selectMarca.append('<option value="">Seleccionar Marca</option>'); // Opción por defecto
@@ -254,7 +277,9 @@ selectTalla.append('<option value="">Seleccionar Talla</option>'); // Opción po
 
 tallas.forEach(talla => {
     selectTalla.append(`<option value="${talla.Codigo}">${talla.NumeroTalla}</option>`);
-});
+}
+
+);
 
 // Cargar datos en el selector de Material
 const selectMaterial = $('#selectMaterial');
@@ -438,6 +463,18 @@ $('#tbl_Inventario tbody').on('click', '.btnSeleccionarInventario', function () 
 
 
 
+
+
+
+function generarCodigoDetalle() {
+    const numeroAleatorio = Math.floor(Math.random() * 1000); // Generar un número aleatorio entre 0 y 999
+    const codigoDetalle = `DET${numeroAleatorio.toString().padStart(3, '0')}`; // Agregar ceros a la izquierda si es necesario
+    return codigoDetalle;
+}
+
+
+
+
 $("#btnDetalleCompras").click(function () {
     // Configuración de Toastr
     toastr.options = {
@@ -454,13 +491,18 @@ $("#btnDetalleCompras").click(function () {
         !$("#selectColor").val() ||
         !$("#selectTalla").val() ||
         !$("#selectMaterial").val() ||
-        !$("#selectBodega").val()) {
+        !$("#selectBodega").val() ||
+        !$("#selectProveedor").val()
+        )
+      
+         {
         toastr.error('Debes seleccionar un valor en cada campo.', 'Error');
         return; // Detiene la ejecución si algún select no tiene valor seleccionado
     }
 
     // Recopila datos del primer formulario
     var detalle = {
+        CodigoDetalle: generarCodigoDetalle(),
         idProducto: $("#selectProducto").val(),
         detallesExtras: {
             nombre: $("#selectProducto option:selected").text(),
@@ -559,14 +601,16 @@ $(document).on("click", ".btnVerdetalle", function (event) {
     event.preventDefault();
 
     // Obtén el código de la fila seleccionada
-    var codigoProducto = $(this).closest('tr').find('td:first').text().trim();
-    console.log("Código del producto:", codigoProducto);
+    var row = tableDetalle.row($(this).closest('tr'));
+
+    // Obtén el código de la fila seleccionada desde la columna "Producto"
+    var codigoDetalle= $(tableDetalle.cell(row, 0).node()).text();
+console.log("c:",codigoDetalle)
 
     // Encuentra el detalle correspondiente en el array DatosMostrarDetalle
-    var detalleProducto = DatosMostrarDetalle.find(detalle => detalle.idProducto.toString() === codigoProducto);
+    var detalleProducto = DatosMostrarDetalle.find(detalle => detalle.CodigoDetalle.toString() === codigoDetalle);
 console.log("datos a mostrar:",detalleProducto);
-console.log("Marca:", detalleProducto.detallesExtras.marca);
-console.log("Color:", detalleProducto.detallesExtras.color);
+
     // Comprueba si se encontró el detalle antes de mostrar el modal
     if (detalleProducto) {
         console.log("Detalle Producto:", detalleProducto);
@@ -623,7 +667,13 @@ $(document).on("click", "#btnDetallecompra", function (event) {
                 "responsive": true,
                 "language": {
                     "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
-                },
+                },columnDefs: [
+                    {
+                        targets: [0,1], // Asegúrate de incluir las columnas de Subtotal e Iva aquí
+                        visible: false,
+                    },
+                    
+                ],
                 
             });
         }
@@ -641,6 +691,7 @@ $(document).on("click", "#btnDetallecompra", function (event) {
          var descuentoInput = '<input type="number" class="form-control" name="descuento" value="0">';
     
         var rowNode = tableDetalle.row.add([
+            `<span class="codigoDetalle">${data.CodigoDetalle}</span>`,
             `<span class="codigoProducto">${data.idProducto}</span>`, // Agrega una clase a la celda del Código
             `<span class="nombreProducto">${data.detallesExtras.nombre}</span>`, // Agrega una clase a la celda del Producto
             cantidadInput,
@@ -747,16 +798,17 @@ function actualizarCamposEntrada() {
 
     let codigoProducto;
     function obtenerDetallesCompra() {
+        // Obtener datos del formulario
         const detallesCompra = [];
         const idEmpleado = $('#idEmpleado').val();
-        const idProveedor =  $("#selectProveedor").val();
-    
-        // Objeto para almacenar los detalles de cada producto
-        const detallesPorProducto = {};
+        const idProveedor =  $("#selectProveedor").val();    
     
         // Recorrer la tabla de detalles y obtener los datos
         $('#Tabladetalle tbody tr').each(function () {
-            const codigoProducto = parseFloat($(this).find('.codigoProducto').text()) || 0; 
+            // Obtener los valores numéricos y formatearlos 
+            const fila = tableDetalle.row($(this)).data();
+            const codigoDetalle = $(fila[0]).text();
+            const codigoProducto =  $(fila[1]).text();
             const cantidad = parseFloat($(this).find('input[name="cantidad"]').val()) || 0;
             const precioCompra = parseFloat($(this).find('input[name="p.compra"]').val()) || 0;
             const descuento = parseFloat($(this).find('input[name="descuento"]').val()) || 0;
@@ -764,51 +816,47 @@ function actualizarCamposEntrada() {
             const iva = parseFloat($(this).find('.iva').text()) || 0;
             const total = parseFloat($(this).find('.total').text()) || 0;
     
+     
             // Obtener detallesExtras desde DatosMostrarDetalle
-            const detallesEncontrados = DatosMostrarDetalle.filter(detalle => detalle.idProducto === codigoProducto.toString());
-    
+            const detallesEncontrados = DatosMostrarDetalle.filter(detalle => detalle.CodigoDetalle === codigoDetalle.toString());
+         
+
             if (detallesEncontrados.length > 0) {
-                detallesEncontrados.forEach(detalleEncontrado => {
-                    const detallesExtras = detalleEncontrado.detallesExtras;
-    
-                    const detalleProducto = {
-                        ID_ProductoZapatos: codigoProducto,
-                        Cantidad: cantidad, 
-                        PrecioCompra: precioCompra,
-                        Descuento: descuento,
-                        Subtotal: subtotal,
-                        IVA: iva,
-                        Total: total,
-                        ID_Marca: detallesExtras.idmarca,
-                        ID_Colores: detallesExtras.idcolor,
-                        ID_BODEGA: detallesExtras.idbodega,
-                        ID_MaterialZapatos: detallesExtras.idmaterial,
-                        ID_Talla: detallesExtras.idtalla,
-                        ID_Empleado: idEmpleado,
-                        ID_Proveedor: idProveedor
-                    };
-    
-                    // Verificar si ya existe un array de detalles para este producto
-                    if (!detallesPorProducto.hasOwnProperty(codigoProducto)) {
-                        detallesPorProducto[codigoProducto] = [];
-                    }
-    
-                    // Agregar el detalle al array de detalles del producto
-                    detallesPorProducto[codigoProducto].push(detalleProducto);
-                });
+                // Supongamos que solo estás interesado en el primer detalle encontrado
+                const detallesExtras = detallesEncontrados[0].detallesExtras;
+                const detalleProducto = {
+                   
+                    ID_ProductoZapatos: codigoProducto,
+                    Cantidad: cantidad, 
+                    PrecioCompra: precioCompra,
+                    Descuento: descuento,
+                    Subtotal: subtotal,
+                    IVA: iva,
+                    Total: total,
+                    ID_Marca: detallesExtras.idmarca,
+                    ID_Colores: detallesExtras.idcolor,
+                    ID_BODEGA: detallesExtras.idbodega,
+                    ID_MaterialZapatos: detallesExtras.idmaterial,
+                    ID_Talla: detallesExtras.idtalla,
+                    ID_Empleado: idEmpleado,
+                    ID_Proveedor: idProveedor
+                };
+                detallesCompra.push(detalleProducto);
+           
+                // Resto del código utilizando detallesExtras
             } else {
+                // Manejo de caso cuando no se encuentra ningún detalle
                 console.error(`No se encontraron detalles para el producto con código ${codigoProducto}`);
             }
+
+                
         });
-    
-        // Agregar los detalles de cada producto al array detallesCompra
-        for (const codigoProducto in detallesPorProducto) {
-            detallesCompra.push(...detallesPorProducto[codigoProducto]);
-        }
     
         console.log('detallesCompra', detallesCompra);
         return detallesCompra;
     }
+    
+
     
     
     
@@ -957,21 +1005,54 @@ $("#btnCrearBodega").click(function () {
             
 
                 $('#modalCRUDP').modal('hide');
-                  // Actualizar la tabla con las nuevas productos
-                  const nuevasproductos = await api.excuteGet('productos');
-                  tabla.clear().rows.add(nuevasproductos).draw();
-               
+                // Actualizar el contenido del select con los nuevos productos
+                // Llamar a la función para actualizar el select de productos
+actualizarSelect('#selectProducto', 'productos');
+                  toastr.success('Producto creado exitosamente.');
+
+              
             } catch (error) {
                 console.error('Error al guardar/editar:', error.message);
             }
         });
-        //SUBMIT DE MARCA 
+        
+// Función para actualizar dinámicamente el contenido del select de productos
+async function actualizarSelect(selector, endpoint) {
+    try {
+        // Obtener la lista actualizada de elementos
+        const nuevosElementos = await api.excuteGet(endpoint);
+
+        // Limpiar el contenido actual del select
+        $(selector).empty();
+
+        // Agregar la opción por defecto
+        $(selector).append('<option value="">Seleccionar elemento</option>');
+
+        // Agregar las nuevas opciones del select basadas en la lista actualizada de elementos
+        nuevosElementos.forEach(elemento => {
+            $(selector).append(`<option value="${elemento.Codigo}">${elemento.Nombre}</option>`);
+        });
+    } catch (error) {
+        console.error(`Error al actualizar el select de ${endpoint}:`, error.message);
+    }
+}
+
+
+
+    //SUBMIT DE MARCA 
  
 
         $('#formM').submit(async function (e) {
             e.preventDefault();
 
-        
+            toastr.options = {
+                closeButton: true,
+                timeOut: 2500, // Duración total de visualización en milisegundos (ejemplo: 2 segundos)
+                hideDuration: 300 ,// Duración de la animación de ocultar en milisegundos (ejemplo: 0.3 segundos)
+                progressBar: true, 
+                closeEasing :'swing',
+                preventDuplicates: true
+              };
           const  nombre = $.trim($('#nombrem').val());
           const detalleMarca = $.trim($('#detalleMarca').val());
           const  estado = $("#estado").val() ;   
@@ -981,12 +1062,9 @@ $("#btnCrearBodega").click(function () {
                     await api.excutePost('marcas',{nombre,detalleMarca, estado });
                       
                     $('#modalCRUDM').modal('hide');
-                    $("#formM")[0].reset();
-                  // Actualizar la tabla con las nuevas categorías
-                  const nuevasmarcas= await api.excuteGet('marcas');
-                  tablemarca.clear().rows.add(nuevasmarcas).draw();
-
-
+        
+                  actualizarSelect('#selectMarca', 'marcas');
+                  toastr.success('Marca creado exitosamente.');
 
             } catch (error) {
                 console.error('Error al guardar/editar:', error.message);
@@ -995,28 +1073,61 @@ $("#btnCrearBodega").click(function () {
  // Submit para CREAR talla
  $('#formT').submit(async function (e) {
     e.preventDefault();
-
+    toastr.options = {
+        closeButton: true,
+        timeOut: 2500, // Duración total de visualización en milisegundos (ejemplo: 2 segundos)
+        hideDuration: 300 ,// Duración de la animación de ocultar en milisegundos (ejemplo: 0.3 segundos)
+        progressBar: true, 
+        closeEasing :'swing',
+        preventDuplicates: true
+      };
  const NumeroTalla = $.trim($('#NumeroTalla').val());
  const  estado = $("#estado").val();
 
     try {
 
             await api.excutePost('talla', { NumeroTalla, estado });
-      
-
-        // Actualizar la tabla con las nuevas talla
-        const nuevastalla = await api.excuteGet('talla');
-        tabletalla.clear().rows.add(nuevastalla).draw();
-
+            actualizarSelectTalla() 
+        toastr.success('Talla creado exitosamente.');
         $('#modalCRUDT').modal('hide');
     } catch (error) {
         console.error('Error al guardar/editar:', error.message);
     }
 });
+// Función para actualizar dinámicamente el contenido del select de productos
+async function actualizarSelectTalla() {
+    try {
+        // Obtener la lista actualizada de productos
+        const elemento= await api.excuteGet('talla');
+
+        // Limpiar el contenido actual del select
+        $('#selectTalla').empty();
+
+        // Agregar la opción por defecto
+        $('#selectTalla').append('<option value="">Seleccionar Elemento</option>');
+
+        // Agregar las nuevas opciones del select basadas en la lista actualizada de productos
+        elemento.forEach(talla => {
+            selectTalla.append(`<option value="${talla.Codigo}">${talla.NumeroTalla}</option>`);
+        });
+    } catch (error) {
+        console.error('Error al actualizar el select de productos:', error.message);
+    }
+}
+
+
+
  // Submit PARA CREAR COLOR
  $('#formC').submit(async function (e) {
     e.preventDefault();
-
+    toastr.options = {
+        closeButton: true,
+        timeOut: 2500, // Duración total de visualización en milisegundos (ejemplo: 2 segundos)
+        hideDuration: 300 ,// Duración de la animación de ocultar en milisegundos (ejemplo: 0.3 segundos)
+        progressBar: true, 
+        closeEasing :'swing',
+        preventDuplicates: true
+      };
    
   const  color = $.trim($('#colorr').val());
   const  estado = $("#estado").val();
@@ -1024,20 +1135,46 @@ $("#btnCrearBodega").click(function () {
     try {
        
             await api.excutePost('color',{color, estado });
-       
-        // Actualizar la tabla
-        const nuevascolor = await api.excuteGet('color');
-        tablecolor.clear().rows.add(nuevascolor).draw();
-
-        $('#modalCRUDC').modal('hide');
+            $('#modalCRUDC').modal('hide');
+            actualizarSelectTalla()
+        toastr.success('Color creado exitosamente.');
+      
     } catch (error) {
         console.error('Error al guardar/editar:', error.message);
     }
 });
+
+
+async function actualizarSelectTalla() {
+    try {
+        // Obtener la lista actualizada de productos
+        const elemento= await api.excuteGet('color');
+
+        // Limpiar el contenido actual del select
+        $('#selectColor').empty();
+
+        // Agregar la opción por defecto
+        $('#selectColor').append('<option value="">Seleccionar Elemento</option>');
+
+        elemento.forEach(color => {
+    selectColor.append(`<option value="${color.Codigo}">${color.Color}</option>`);
+});
+    } catch (error) {
+    }}
+
+
+
  // Submit para CREAR Material
  $('#formMT').submit(async function (e) {
     e.preventDefault();
-
+    toastr.options = {
+        closeButton: true,
+        timeOut: 2500, // Duración total de visualización en milisegundos (ejemplo: 2 segundos)
+        hideDuration: 300 ,// Duración de la animación de ocultar en milisegundos (ejemplo: 0.3 segundos)
+        progressBar: true, 
+        closeEasing :'swing',
+        preventDuplicates: true
+      };
    
    const nombre = $.trim($('#nombremt').val());
    const descripcion =$.trim($('#descripcionmt').val());
@@ -1051,11 +1188,14 @@ $("#btnCrearBodega").click(function () {
     try {
 
             await api.excutePost('materialesZapatos',{nombre, descripcion, tipoMaterial, tipodeCostura, tipoSuela, fabricante, observaciones, estado });
-        // Actualizar la tabla con las nuevas categorías
-        const nuevasmaterialesZapatos = await api.excuteGet('materialesZapatos');
-        tablematerial.clear().rows.add(nuevasmaterialesZapatos).draw();
 
+     
+
+z
         $('#modalCRUD').modal('hide');
+     
+        actualizarSelect('#selectMaterial', 'materialesZapatos');
+        toastr.success('Material creado exitosamente.');
     } catch (error) {
         console.error('Error al guardar/editar:', error.message);
     }
@@ -1151,48 +1291,71 @@ const    estado = $("#estadopv").val() ;
 
 
     // Función para realizar la operación de guardar completa
-async function guardarCompleta() {
-   
-     // Obtener los valores de los campos
-const detallesCompra = obtenerDetallesCompra();
-const codigoCompra = $.trim($('#codigoCompra').val());
-const fechaCompra = $.trim($('#fechaCompra').val());
-const totalSuma = $('#Total').val();
-const estadoCompra = 'Pendiente';
-
-// Datos para la creación y completación de la compra
-const compraData = {
-    CodigoCompra: codigoCompra,
-    FechaCompra: fechaCompra,
-    Total: totalSuma,
-    EstadoCompra: estadoCompra,
-    DetallesCompra: detallesCompra,
-};
-console.log('compraData completada',compraData )
-/*
-
-// Realizar la creación y completación de la compra
-try {
+    async function guardarCompleta() {
+        // Obtener los valores de los campos
+        const detallesCompra = obtenerDetallesCompra();
+        const codigoCompra = $.trim($('#codigoCompra').val());
+        const fechaCompra = $.trim($('#fechaCompra').val());
+        const totalSuma = $('#Total').val();
+        const estadoCompra = 'Pendiente';
   
-    const response =   await api.excutePost('compra/crear-y-completar',compraData);
-
-    if (response.success) {
-        // Redireccionar al contenedor 1
-        mostrarVista('vista1');
-        const compras = await api.excuteGet('compra');
-        TablaCompra.clear().rows.add(compras).draw();
-        console.log('Compra insertada y completada exitosamente.');
-    } else {
-        console.error('Error al crear y completar la compra:', response.error, response.details);
-        // Manejar el error, mostrar un mensaje al usuario, etc.
-    }
-} catch (error) {
-    console.error('Error en la operación:', error);
-
-}*/
-
-   
+ // Validar cada campo individualmente
+ if (!codigoCompra) {
+    toastr.error('Por favor ingresa el código de compra');
+    return; // Salir de la función si falta el código de compra
 }
+
+if (!fechaCompra) {
+    toastr.error('Por favor ingresa la fecha de compra');
+    return; // Salir de la función si falta la fecha de compra
+}
+
+if (!totalSuma) {
+    toastr.error('Por favor ingresa el total de la compra');
+    return; // Salir de la función si falta el total de la compra
+}
+        // Datos para la creación y completación de la compra
+        const compraData = {
+            CodigoCompra: codigoCompra,
+            FechaCompra: fechaCompra,
+            Total: totalSuma,
+            EstadoCompra: estadoCompra,
+            DetallesCompra: detallesCompra,
+        };
+    
+        // Mostrar mensaje de confirmación con SweetAlert2
+        const result = await Swal.fire({
+            title: '<span style="color:Black !important; font-size: 24px;">¿Estás seguro?</span>',
+            text: '¿Quieres completar la compra?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Sí',
+            cancelButtonText: 'Cancelar'
+        });
+    
+        if (result.isConfirmed) {
+            // Realizar la creación y completación de la compra
+            try {
+                const response = await api.excutePost('compra/crear-y-completar', compraData);
+    
+                if (response.success) {
+                    // Redireccionar al contenedor 1
+                    mostrarVista('vista1');
+                    const compras = await api.excuteGet('compra');
+                    TablaCompra.clear().rows.add(compras).draw();
+                    console.log('Compra insertada y completada exitosamente.');
+                } else {
+                    console.error('Error al crear y completar la compra:', response.error, response.details);
+                    // Manejar el error, mostrar un mensaje al usuario, etc.
+                }
+            } catch (error) {
+                console.error('Error en la operación:', error);
+            }
+        } else {
+            console.log('Compra cancelada.');
+        }
+    }
+    
 
 $(document).on("click", "#btnGuardarCompracompleta", function (event) {
     event.preventDefault();
