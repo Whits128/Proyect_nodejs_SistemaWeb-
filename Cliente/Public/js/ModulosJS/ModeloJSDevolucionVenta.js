@@ -145,7 +145,7 @@ return `${año}-${mes}-${dia}`;
 
             // Aquí puedes realizar cualquier otra lógica necesaria, como enviar el ID_Inventario al servidor para eliminación en la base de datos.
         });
-  
+       let cantidadDevuelta;
         // Obtener la cantidad disponible en la venta
         function obtenerDetallesDevolucion() {
           const detallesDevoluciones = [];
@@ -196,9 +196,8 @@ return `${año}-${mes}-${dia}`;
       const cantidadActual = producto.Cantidad;
 
       // Obtener la cantidad devuelta ingresada en este momento
-      const cantidadDevuelta = parseInt($(this).val());
-
-      // Verificar si la cantidad ingresada es mayor que la disponible en la venta
+      cantidadDevuelta = parseInt($(this).val());
+     // Verificar si la cantidad ingresada es mayor que la disponible en la venta
       if (cantidadDevuelta > cantidadActual) {
           // Muestra un mensaje de error
           toastr.error(`La cantidad solicitada es mayor que la disponible en Venta para ${nombreProducto}. Cantidad en venta: ${cantidadActual}`);
