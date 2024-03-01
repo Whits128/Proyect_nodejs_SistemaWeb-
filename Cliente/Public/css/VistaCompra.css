@@ -319,7 +319,8 @@ width: 200px;
 }
 
 /* popup settings 👆 */
-
+#infoModal p{
+  color: var(--color-5) !important ;}
 .popup {
   display: inline-block;
   text-rendering: optimizeLegibility;

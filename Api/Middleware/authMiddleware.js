@@ -34,7 +34,7 @@ export const isAuthenticated = async (req, res, next) => {
                 IdRol: detallesUsuario.IdRol || 'Id rol por defecto',
                 IdUsuario: detallesUsuario.IdUsuario || 'Id IdUsuario por defecto',
                 ID_Empleado:  detallesUsuario.ID_Empleado || 'Id Empleado por defecto',
-                NombreEmpleado:  detallesUsuario.NombreEmpleado || 'NombreEmpleado por defecto',
+                NombreEmpleado:  detallesUsuario.NombreEmpleado ,
               };
               req.user = res.locals.userData; // Asegúrate de establecer req.user correctamente
  console.log('req.user ',req.user );

@@ -455,10 +455,33 @@ VALUES
 go 
 INSERT INTO ConfiguracionAcceso (IdRecurso, IdAccion,IdRol)
 VALUES
+(1,5,1),
+(2,5,1),
+(3,5,1),
+(4,5,1),
+(5,5,1),
+(6,5,1),
+(7,5,1),
+(8,5,1),
+(9,5,1),
+(10,5,1),
 (11,5,1),
-  (14,5,1); -- IdRecurso y IdAccion para 'Usuarios' y 'Crear'
-     -- IdRecurso y IdAccion para 'Usuarios' y 'Crear
+(12,5,1),
+(13,5,1),
+(14,5,1),
+(15,5,1),
+(16,5,1),
+(17,5,1),
+(18,5,1),
+(19,5,1),
+(20,5,1),
+(21,5,1),
+(22,5,1),
+(23,5,1);
+
 GO
+INSERT INTO USUARIO (Nombres,Apellidos,LoginUsuario,LoginClave,IdRol)
+VALUES  ('UsuarioInicial','UsuarioInicial','SuperAdmin','$2b$10$HuURQk8iSD.Kw/JeJarPU.jBa1DRKKBPDLeChriQkjHrbcwCRfCLm',1);
 	   -- Tabla Marcas
 INSERT INTO Marcas (Nombre, DetalleMarca, Estado)
 VALUES

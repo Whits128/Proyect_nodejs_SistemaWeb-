@@ -1262,6 +1262,29 @@ const    estado = $("#estadopv").val() ;
         const FechaCompra = $.trim($('#fechaCompra').val());
         const totalsuma = $('#Total').val();
         const EstadoCompra = 'Pendiente';
+
+        const emp = $.trim($('#Empeleado').val());
+        // Validar cada campo individualmente
+        
+       if (!emp) {
+           toastr.error('Por favor ingresa Empleado de la compra');
+           return; // Salir de la función si falta el total de la compra
+       }
+        if (!codigoCompra) {
+           toastr.error('Por favor ingresa el código de compra');
+           return; // Salir de la función si falta el código de compra
+       }
+       
+       if (!FechaCompra) {
+           toastr.error('Por favor ingresa la fecha de compra');
+           return; // Salir de la función si falta la fecha de compra
+       }
+       
+       if (!totalsuma) {
+           toastr.error('Por favor ingresa el total de la compra');
+           return; // Salir de la función si falta el total de la compra
+       }
+
         const compraData = {
             CodigoCompra: codigoCompra,
             FechaCompra: FechaCompra,
@@ -1270,19 +1293,54 @@ const    estado = $("#estadopv").val() ;
             DetallesCompra: detallesCompra,
         };
     
-        console.log('compraData:', compraData);
+    
     
         try {
+
+
+                  // Mostrar mensaje de confirmación con SweetAlert2
+        const result = await Swal.fire({
+            title: '<span style="color:Black !important; font-size: 24px;">¿Estás seguro?</span>',
+            text: '¿Quieres Registrar la compra?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Sí',
+            cancelButtonText: 'Cancelar'
+        });
             if (opcion === 'crear') {
-                await api.excutePost('compra', compraData);
+
+                if (result.isConfirmed) {
+                    // Realizar la creación y completación de la compra
+                    try {
+                        const response =  await api.excutePost('compra', compraData);
+            
+                        if (response.success) {
+                            // Redireccionar al contenedor 1
+                            mostrarVista('vista1');
+                           
+                            const compras = await api.excuteGet('compra');
+                            TablaCompra.clear().rows.add(compras).draw();
+                            console.log('Compra insertada y completada exitosamente.');
+                        } else {
+                            console.error('Error al Registrar la compra:', response.error, response.details);
+                            // Manejar el error, mostrar un mensaje al usuario, etc.
+                        }
+                    } catch (error) {
+                        console.error('Error en la operación:', error);
+                    }
+                } else {
+                    console.log('Compra cancelada.');
+                }
+            
             } else if (opcion === 'editar') {
                 await api.excutePut(`compra/editar/${codigoCompraEditar}`, compraData);
+                mostrarVista('vista1');
+                const compras = await api.excuteGet('compra');
+                TablaCompra.clear().rows.add(compras).draw();
             }
     
             // Redireccionar al contenedor 1
-            mostrarVista('vista1');
-            const compras = await api.excuteGet('compra');
-            TablaCompra.clear().rows.add(compras).draw();
+          
         } catch (error) {
             console.error('Error al guardar/editar:', error.message);
         }
@@ -1298,8 +1356,13 @@ const    estado = $("#estadopv").val() ;
         const fechaCompra = $.trim($('#fechaCompra').val());
         const totalSuma = $('#Total').val();
         const estadoCompra = 'Pendiente';
-  
+   const emp = $.trim($('#Empeleado').val());
  // Validar cada campo individualmente
+ 
+if (!emp) {
+    toastr.error('Por favor ingresa Empleado de la compra');
+    return; // Salir de la función si falta el total de la compra
+}
  if (!codigoCompra) {
     toastr.error('Por favor ingresa el código de compra');
     return; // Salir de la función si falta el código de compra
